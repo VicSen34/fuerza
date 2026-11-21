@@ -4,7 +4,7 @@
  */
 'use strict';
 
-const VERSION = '0.2.1';
+const VERSION = '0.2.2';
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pad = n => String(n).padStart(2, '0');
@@ -92,7 +92,11 @@ function derive() {
     {goalPerWeek: me.goalPerWeek || S.bundled.plan.goalPerWeek || 2, extras: me.extras || S.bundled.plan.extras || []});
   S.logs = S.allLogs.filter(l => (l.user || S.user) === S.user).sort((a, b) => (a.start || '').localeCompare(b.start || ''));
 }
-const kneeOn = () => S.settings['knee_' + S.user] ?? (S.me && S.me.kneeCheck != null ? !!S.me.kneeCheck : true);
+// pain check after a session: users.json "painCheck": "rodilla" | "espalda" | … (old "kneeCheck": true = rodilla)
+const painArea = () => (S.me && (S.me.painCheck || (S.me.kneeCheck ? 'rodilla' : null))) || 'rodilla';
+const kneeOn = () => S.settings['knee_' + S.user] ?? !!(S.me && (S.me.painCheck || S.me.kneeCheck || S.me.id === 'yo'));
+const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
+const painTxt = l => { const v = l.pain ?? l.knee; return v != null ? ` · ${l.painArea || 'rodilla'} ${v}/10` : ''; };
 
 /* ------------------------------------------------------------------ sync with the private GitHub data repo
  * Offline first: every change is applied locally and queued in kv "outbox"; sync() = flush outbox, then pull.
@@ -715,7 +719,8 @@ function curToLog() {
   const tut = sets.reduce((a, x) => a + (x.skipped ? 0 : (x.time || 0) * (x.side ? 2 : 1) + (x.reps || 0) * (tempoSum(x.tempo) || 3) * (x.side ? 2 : 1)), 0);
   return {id: S.cur.id, date: S.cur.date, routineId: S.cur.routineId, name: S.cur.name, start: S.cur.start, end: end.toISOString(),
     durationMin: Math.max(1, Math.round((end - new Date(S.cur.start)) / 60000)), tutSec: tut, sets,
-    feel: S.cur.feel ?? null, knee: S.cur.knee ?? null, notes: S.cur.notes || '', app: VERSION};
+    feel: S.cur.feel ?? null, pain: kneeOn() ? S.cur.knee ?? 0 : null, painArea: kneeOn() ? painArea() : null,
+    knee: kneeOn() && painArea() === 'rodilla' ? S.cur.knee ?? 0 : null, notes: S.cur.notes || '', app: VERSION};
 }
 views.fin = () => {
   if (!S.cur) return go('#/hoy');
@@ -729,7 +734,7 @@ views.fin = () => {
       <div class="grow"><div class="big-num">${Math.round(log.tutSec / 60)}</div><div class="mut small">min en tensión</div></div></div></div>
     ${prs.length ? `<div class="card"><h3 class="pr">🏆 ${prs.length === 1 ? 'Nuevo récord' : prs.length + ' récords'}</h3><ul class="list">${prs.map(p => `<li><div class="grow"><b>${esc(S.ex[p.ex].name)}</b><div class="small mut">${esc(p.now)} <span class="tiny">(antes ${esc(p.prev)})</span></div></div></li>`).join('')}</ul></div>` : ''}
     <h2>¿Cómo fue?</h2><div class="feel">${FEELS.map((f, i) => `<button data-feel="${i}" class="${S.cur.feel === i ? 'on' : ''}">${f[0]}<small>${f[1]}</small></button>`).join('')}</div>
-    ${kneeOn() ? `<h2>Rodilla (0 = nada, 10 = mucho): <span id="kv">${S.cur.knee ?? 0}</span></h2><input type="range" min="0" max="10" step="1" value="${S.cur.knee ?? 0}" id="knee">` : ''}
+    ${kneeOn() ? `<h2>${cap(painArea())} (0 = nada, 10 = mucho): <span id="kv">${S.cur.knee ?? 0}</span></h2><input type="range" min="0" max="10" step="1" value="${S.cur.knee ?? 0}" id="knee">` : ''}
     <h2>Notas (opcional)</h2><textarea id="notes" rows="2" placeholder="p. ej. la búlgara izquierda cuesta más">${esc(S.cur.notes || '')}</textarea>
     <button class="btn primary big" style="margin-top:16px" id="save">Guardar sesión</button>
     ${n < N ? `<button class="btn ghost big" style="margin-top:8px" id="back">Volver a la sesión</button>` : ''}`;
@@ -761,7 +766,7 @@ views.historial = (sub) => {
     for (const [m, ls] of Object.entries(byWeek)) {
       const n = ls.filter(isMain).length;
       html += `<h2>Semana del ${esc(short(m))} <span class="chip ${n >= (S.plan.goalPerWeek || 2) ? 'acc' : ''}">${n}/${S.plan.goalPerWeek || 2}</span></h2><div class="card"><ul class="list">${ls.map(l =>
-        `<li><a class="li" href="#/log/${encodeURIComponent(l.id)}"><div class="grow"><b>${esc(l.name)}</b><div class="mut small">${esc(short(l.date))} · ${l.durationMin} min · ${l.sets.filter(x => !x.skipped).length} series${l.knee != null ? ` · rodilla ${l.knee}/10` : ''}${l.prs && l.prs.length ? ' · <span class="pr">🏆</span>' : ''}</div></div><span style="font-size:1.4rem">${l.feel != null ? FEELS[l.feel][0] : ''}</span></a></li>`).join('')}</ul></div>`;
+        `<li><a class="li" href="#/log/${encodeURIComponent(l.id)}"><div class="grow"><b>${esc(l.name)}</b><div class="mut small">${esc(short(l.date))} · ${l.durationMin} min · ${l.sets.filter(x => !x.skipped).length} series${painTxt(l)}${l.prs && l.prs.length ? ' · <span class="pr">🏆</span>' : ''}</div></div><span style="font-size:1.4rem">${l.feel != null ? FEELS[l.feel][0] : ''}</span></a></li>`).join('')}</ul></div>`;
     }
   } else {
     const cnt = {}; S.logs.forEach(l => new Set(l.sets.filter(s => !s.skipped).map(s => s.ex)).forEach(ex => cnt[ex] = (cnt[ex] || 0) + 1));
@@ -778,7 +783,7 @@ views.log = (id) => {
   const rows = l.sets.map(s => { const e = S.ex[s.ex] || {name: s.ex, measure: 'reps'};
     return `<tr><td>${esc(e.name)}</td><td>${s.set}</td><td>${s.skipped ? '<span class="mut">saltada</span>' : esc(e.measure === 'time' ? `${s.time} s` : `${s.reps}`)}${s.side ? '<span class="tiny mut"> /lado</span>' : ''}</td><td>${s.kg ? s.kg + ' kg' : ''}</td></tr>`; }).join('');
   app().innerHTML = `<a href="#/historial" class="small">‹ Historial</a><h1>${esc(l.name)}</h1>
-    <p class="mut">${esc(nice(l.date))} · ${l.durationMin} min · ${Math.round((l.tutSec || 0) / 60)} min en tensión ${l.feel != null ? '· ' + FEELS[l.feel][0] : ''}${l.knee != null ? ` · rodilla ${l.knee}/10` : ''}</p>
+    <p class="mut">${esc(nice(l.date))} · ${l.durationMin} min · ${Math.round((l.tutSec || 0) / 60)} min en tensión ${l.feel != null ? '· ' + FEELS[l.feel][0] : ''}${painTxt(l)}</p>
     ${l.notes ? `<div class="note">${esc(l.notes)}</div>` : ''}
     ${l.prs && l.prs.length ? `<p class="pr">🏆 ${l.prs.map(p => esc((S.ex[p.ex] || {name: p.ex}).name) + ': ' + esc(p.now)).join(' · ')}</p>` : ''}
     <div class="card"><table><tr><th>Ejercicio</th><th>Serie</th><th>Hecho</th><th>Carga</th></tr>${rows}</table></div>
@@ -813,7 +818,7 @@ function exDetailHTML(e, inSheet) {
     <div style="margin-top:10px">${flipHTML(e)}</div>
     <p style="margin-top:12px"><b>Por qué:</b> ${esc(e.why || '')}</p>
     <p class="mut">${esc(e.desc || '')}</p>
-    <div>${(e.equip || []).map(q => `<span class="chip">${esc(EQUIP[q] || q)}</span>`).join('')}<span class="chip">${e.measure === 'time' ? 'Por tiempo' : 'Por repeticiones'}${e.side ? ' · por lado' : ''}</span>${e.knee === 'care' ? '<span class="chip warn">Rodilla: vigilar dolor</span>' : e.knee === 'avoid' ? '<span class="chip warn">Rodilla: aún no</span>' : '<span class="chip acc">Rodilla OK</span>'}</div>
+    <div>${(e.equip || []).map(q => `<span class="chip">${esc(EQUIP[q] || q)}</span>`).join('')}<span class="chip">${e.measure === 'time' ? 'Por tiempo' : 'Por repeticiones'}${e.side ? ' · por lado' : ''}</span>${painArea() !== 'rodilla' ? '' : e.knee === 'care' ? '<span class="chip warn">Rodilla: vigilar dolor</span>' : e.knee === 'avoid' ? '<span class="chip warn">Rodilla: aún no</span>' : '<span class="chip acc">Rodilla OK</span>'}</div>
     <h2>Claves</h2><ul class="cues">${(e.cues || []).map(c => `<li>${esc(c)}</li>`).join('')}</ul>
     ${e.steps && e.steps.length ? `<h2>Paso a paso</h2><ol class="cues">${e.steps.map(c => `<li>${esc(c)}</li>`).join('')}</ol>` : ''}
     ${e.tips && e.tips.length ? `<h2>Consejos</h2><ul class="cues">${e.tips.map(c => `<li>${esc(c)}</li>`).join('')}</ul>` : ''}
@@ -1015,7 +1020,7 @@ views.ajustes = () => {
   const pending = S.ui.pending ?? '…';
   app().innerHTML = `<h1>Ajustes</h1>
     <div class="card"><div class="row between"><div><div class="mut small">Usuario</div><b style="font-size:1.2rem">${esc(S.me.name)}</b></div>${S.users.length > 1 ? '<button class="btn small" id="who">Cambiar</button>' : ''}</div></div>
-    <div class="card"><ul class="list">${tog('sound', 'Pitidos en descansos y sostenes', s.sound)}${navigator.vibrate ? tog('vibrate', 'Vibración', s.vibrate) : ''}${tog('knee_' + S.user, 'Preguntar por la rodilla al terminar', kneeOn())}</ul></div>
+    <div class="card"><ul class="list">${tog('sound', 'Pitidos en descansos y sostenes', s.sound)}${navigator.vibrate ? tog('vibrate', 'Vibración', s.vibrate) : ''}${tog('knee_' + S.user, `Preguntar por la ${painArea()} al terminar`, kneeOn())}</ul></div>
     <h2>Sincronización</h2><div class="card">${synced()
       ? `<p class="small">Repo <b>${esc(S.cfg.repo)}</b> · <span id="syncline">${syncLine()}</span></p><p class="small mut">Cambios pendientes de subir: <span id="pend">${pending}</span></p>
          <div class="row wrap" style="margin-top:8px"><button class="btn" id="sync-now">⟳ Sincronizar ahora</button><button class="btn ghost" id="invite">📱 Añadir otro móvil</button></div>
