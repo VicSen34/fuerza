@@ -4,7 +4,7 @@
  */
 'use strict';
 
-const VERSION = '0.5.0';
+const VERSION = '0.5.1';
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pad = n => String(n).padStart(2, '0');
@@ -12,8 +12,8 @@ const DAYS = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
 const DAYS_L = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
 const MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
 const FEELS = [['😌', 'Fácil'], ['🙂', 'Bien'], ['😮‍💨', 'Dura'], ['🥵', 'Al límite']];
-const ZONES = {legs: 'Pierna y cadera', iso: 'Isométricos', calf: 'Pie y gemelo', plyo: 'Pliometría', upper: 'Tren superior', shoulder: 'Hombro', core: 'Core', pilates: 'Pilates y movilidad'};
-const EQUIP = {kb: 'Kettlebell', db: 'Mancuernas', band: 'Goma', bar: 'Torre', box: 'Cajón', rope: 'Comba', bw: 'Peso corporal'};
+const ZONES = {legs: 'Pierna y cadera', iso: 'Isométricos', calf: 'Pie y gemelo', plyo: 'Pliometría', upper: 'Tren superior', shoulder: 'Hombro', core: 'Core', pilates: 'Pilates y movilidad', cardio: 'Cardio'};
+const EQUIP = {kb: 'Kettlebell', db: 'Mancuernas', band: 'Goma', bar: 'Torre', box: 'Cajón', rope: 'Comba', bw: 'Peso corporal', gym: 'Gimnasio'};
 
 /* ------------------------------------------------------------------ dates */
 const urlToday = new URLSearchParams(location.search).get('hoy'); // ?hoy=2026-11-23 for testing
@@ -353,6 +353,8 @@ function suggestFor(exId, it) {
   const kg = Math.max(...done.map(x => x.kg || 0));
   if (e.load === 'kb') { const nx = KBS.find(k => k > kg);
     return nx ? {txt: `Completaste todas las series: prueba ${nx} kg (vuelve a ${bottom} reps)`, apply: {kg: nx, reps: bottom}} : {txt: 'Ya usas la KB más pesada: tempo más lento (4-1-1) o pausa abajo'}; }
+  if (e.load === 'machine') { const nx = kg >= 50 ? kg + 5 : kg + 2.5;
+    return {txt: `Completaste todas las series: prueba ${nx} kg (vuelve a ${bottom} reps)`, apply: {kg: nx, reps: bottom}}; }
   if (e.load === 'db') return {txt: 'Completaste todas las series: hoy tempo más lento (4-1-1) o una pausa abajo. Las mancuernas siguen a un solo peso.'};
   return {txt: `Completaste todas las series: prueba ${top + 1} reps o una variante más difícil`, apply: {reps: top + 1}};
 }
@@ -440,12 +442,12 @@ function startFlip() {
 }
 function targetText(st) {
   const sides = st.side ? ' /lado' : '';
-  const v = st.measure === 'time' ? `${st.time} s` : st.repsMax ? `${st.reps}–${st.repsMax}` : `${st.reps}`;
+  const v = st.measure === 'time' ? (st.time >= 120 ? `${Math.round(st.time / 60)} min` : `${st.time} s`) : st.repsMax ? `${st.reps}–${st.repsMax}` : `${st.reps}`;
   return `${v}${sides}${st.kg ? ` · ${st.kg} kg` : ''}`;
 }
 function itemSummary(it) {
   const e = S.ex[it.ex] || {name: it.ex};
-  const v = it.time ? `${it.time} s` : Array.isArray(it.reps) ? `${it.reps[0]}–${it.reps[1]}` : it.reps;
+  const v = it.time ? (it.time >= 120 ? `${Math.round(it.time / 60)} min` : `${it.time} s`) : Array.isArray(it.reps) ? `${it.reps[0]}–${it.reps[1]}` : it.reps;
   return `${it.sets ? it.sets + ' × ' : ''}${v}${e.side ? '/lado' : ''}${it.kg ? ` · ${it.kg} kg` : ''}`;
 }
 function openSheet(html) { const s = $('#sheet'); s.innerHTML = `<div class="panel">${html}</div>`; s.hidden = false; }
@@ -601,13 +603,13 @@ views.sesion = () => {
       return `<div class="note up">⬆ ${esc(sg.txt)}${sg.apply ? ' <button class="btn small" data-act="apply">Aplicar</button>' : ''}</div>`; })()}
     <ul class="cues">${(e.cues || []).map(c => `<li>${esc(c)}</li>`).join('')}</ul>
     <div class="steppers">
-      ${st.measure === 'time' ? stepper('time', 'segundos', v.time, '') : stepper('reps', st.side ? 'reps / lado' : 'reps', v.reps, '')}
+      ${st.measure === 'time' ? (v.time >= 120 ? stepper('time', 'minutos', mmss(v.time), '') : stepper('time', 'segundos', v.time, '')) : stepper('reps', st.side ? 'reps / lado' : 'reps', v.reps, '')}
       ${st.load ? stepper('kg', 'kg', kgLabel, '') : ''}
     </div>
     ${lt ? `<div class="last">${esc(lt)}</div>` : ''}
     <div style="margin-top:14px">
       ${st.measure === 'time'
-        ? `<button class="btn primary big" data-act="timer">▶ Empezar ${v.time} s${st.side ? ' por lado' : ''}</button>
+        ? `<button class="btn primary big" data-act="timer">▶ Empezar ${v.time >= 120 ? mmss(v.time) + ' min' : v.time + ' s'}${st.side ? ' por lado' : ''}</button>
            <button class="btn ghost" style="width:100%;margin-top:8px" data-act="done">✓ Ya lo hice</button>`
         : `<button class="btn primary big" data-act="done">✓ Serie hecha</button>`}
     </div>
@@ -622,14 +624,15 @@ views.sesion = () => {
   app().onclick = onPlayer;
 };
 
-function kgOptions(st) { return st.load === 'kb' ? [0, 12, 16, 20] : [0, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 14.5, 15]; }
+const MACHINE_KG = [0, ...Array.from({length: 20}, (_, i) => 2.5 * (i + 1)), ...Array.from({length: 30}, (_, i) => 55 + 5 * i)];
+function kgOptions(st) { return st.load === 'machine' ? MACHINE_KG : st.load === 'kb' ? [0, 12, 16, 20] : [0, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 13.5, 14, 14.5, 15]; }
 async function onPlayer(ev) {
   const st = curStep(); const v = stepVals(st);
   const inc = ev.target.closest('[data-inc]'), dec = ev.target.closest('[data-dec]');
   if (inc || dec) {
     const k = (inc || dec).dataset[inc ? 'inc' : 'dec'], d = inc ? 1 : -1;
     if (k === 'reps') v.reps = Math.max(0, (v.reps || 0) + d);
-    if (k === 'time') v.time = Math.max(5, (v.time || 0) + 5 * d);
+    if (k === 'time') v.time = Math.max(5, (v.time || 0) + (v.time >= 300 ? 60 : 5) * d);
     if (k === 'kg') { const o = kgOptions(st); let i = o.indexOf(v.kg); if (i < 0) i = o.findIndex(x => x >= v.kg); v.kg = o[Math.min(o.length - 1, Math.max(0, i + d))]; }
     // carry the change forward to the remaining sets of the same exercise
     S.cur.steps.slice(S.cur.idx + 1).filter(s => s.item === st.item && s.ex === st.ex && !S.cur.vals[s.key]).forEach(s => { S.cur.vals[s.key] = Object.assign(prefill(s), {[k]: v[k]}); });
@@ -730,7 +733,7 @@ function holdTimer(st, v) {
   const phases = [{k: 'prep', t: 3, lab: 'Prepárate'}, {k: 'work', t: v.time, lab: st.side ? 'Lado 1' : 'Aguanta'}];
   if (st.side) phases.push({k: 'switch', t: 5, lab: 'Cambia de lado'}, {k: 'work', t: v.time, lab: 'Lado 2'});
   let pi = 0, end = Date.now() + phases[0].t * 1000, paused = null, held = [];
-  const draw = () => overlay(`<div class="phase" id="ph">${phases[pi].lab}</div><div class="ring">${ring(1)}<div class="count" id="cnt">${phases[pi].t}</div></div>
+  const draw = () => overlay(`<div class="phase" id="ph">${phases[pi].lab}</div><div class="ring">${ring(1)}<div class="count" id="cnt">${phases[pi].t >= 120 ? mmss(phases[pi].t) : phases[pi].t}</div></div>
     <div class="exname" style="margin-top:12px">${esc(e.name)}</div>
     <div class="row"><button class="btn" id="pause">Pausa</button><button class="btn primary" id="stop">Parar y guardar</button></div>
     <button class="btn ghost small" id="cancel" style="margin-top:14px">Cancelar</button>`, phases[pi].k === 'work' ? 'work' : '');
@@ -745,7 +748,7 @@ function holdTimer(st, v) {
   runTicker(once => {
     if (paused != null) return;
     const p = phases[pi]; const left = (end - Date.now()) / 1000; const c = $('#cnt'); if (!c) return stopTicker();
-    const s = Math.ceil(left); c.textContent = s; setRing(left / p.t);
+    const s = Math.ceil(left); c.textContent = p.t >= 120 ? mmss(s) : s; setRing(left / p.t);
     if (s <= 3 && s > 0 && once(`${pi}-${s}`)) audio.beep(p.k === 'work' ? 660 : 520, 0.1);
     if (left <= 0) {
       if (p.k === 'work') held.push(p.t);

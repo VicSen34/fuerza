@@ -2856,5 +2856,526 @@
   ],
   "credit": "repdb",
   "met": 5.0
+ },
+ {
+  "id": "leg-press",
+  "name": "Leg Press",
+  "measure": "reps",
+  "load": "machine",
+  "zone": "legs",
+  "equip": [
+   "gym"
+  ],
+  "knee": "care",
+  "why": "Fuerza de cuádriceps y glúteo con la espalda apoyada y el recorrido controlado.",
+  "cues": [
+   "Pies a la anchura de las caderas, en el centro de la plataforma",
+   "Baja solo hasta ~60–90° de rodilla, sin dolor",
+   "No bloquees las rodillas arriba"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un movimiento compuesto en máquina para cuádriceps y glúteos.",
+  "steps": [
+   "Siéntate en la prensa de piernas con los pies a la anchura de los hombros sobre la plataforma.",
+   "Suelta los seguros y baja la plataforma doblando las rodillas.",
+   "Empuja la plataforma hacia arriba hasta que las piernas queden casi rectas.",
+   "No bloquees las rodillas en la parte superior.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén la zona lumbar pegada al respaldo en todo momento.",
+   "Baja solo hasta donde la cadera no se despegue."
+  ],
+  "images": [
+   "img/leg-press/start.webp",
+   "img/leg-press/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "leg-extension",
+  "name": "Leg Extension",
+  "measure": "reps",
+  "load": "machine",
+  "zone": "legs",
+  "equip": [
+   "gym"
+  ],
+  "knee": "care",
+  "why": "Cuádriceps aislado; con rótula sensible, en el tramo de 90° a 45° y con poco peso.",
+  "cues": [
+   "Rodilla alineada con el eje de la máquina",
+   "Sube lento hasta ~45° (sin estirar del todo si molesta)",
+   "Baja en 3 s"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un ejercicio de aislamiento para los cuádriceps usando una máquina.",
+  "steps": [
+   "Siéntate en la máquina de extensión de piernas con los tobillos detrás del rodillo.",
+   "Extiende las piernas hasta que queden rectas.",
+   "Aprieta los cuádriceps en la parte superior.",
+   "Baja con control.",
+   "Repite."
+  ],
+  "tips": [
+   "Alinea las rodillas con el eje de giro de la máquina.",
+   "Sube el peso sin lanzarlo con impulso."
+  ],
+  "images": [
+   "img/leg-extension/start.webp",
+   "img/leg-extension/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "leg-curl",
+  "name": "Leg Curl",
+  "measure": "reps",
+  "load": "machine",
+  "zone": "legs",
+  "equip": [
+   "gym"
+  ],
+  "knee": "ok",
+  "why": "Isquiotibiales fuertes: protegen la rodilla y equilibran el cuádriceps.",
+  "cues": [
+   "Rodilla alineada con el eje",
+   "Flexiona hasta ~90° sin levantar la cadera",
+   "Baja lento"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un ejercicio de aislamiento para los isquiotibiales usando la máquina de curl de piernas.",
+  "steps": [
+   "Túmbate boca abajo en la máquina de curl de piernas con los tobillos bajo el rodillo.",
+   "Lleva los talones hacia los glúteos.",
+   "Aprieta los isquiotibiales en la parte superior.",
+   "Baja con control.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén las caderas pegadas al banco durante todo el recorrido.",
+   "Evita arquear la zona lumbar al subir los talones."
+  ],
+  "images": [
+   "img/leg-curl/start.webp",
+   "img/leg-curl/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "box-squat",
+  "name": "Box Squat (sit-to-stand)",
+  "measure": "reps",
+  "load": "db",
+  "zone": "legs",
+  "equip": [
+   "gym",
+   "bw"
+  ],
+  "knee": "care",
+  "why": "Sentarse y levantarse de un banco alto: sentadilla segura que limita lo que baja la rodilla.",
+  "cues": [
+   "Banco o cajón a la altura de la rodilla (más alto si molesta)",
+   "Siéntate atrás sin dejarte caer",
+   "Levántate empujando el suelo, rodillas sobre los pies"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Una sentadilla realizada hasta una caja o banco, que fija la profundidad y enseña a sentarse hacia atrás en las caderas.",
+  "steps": [
+   "Ponte de pie frente a una caja o banco, con los pies al ancho de los hombros y los brazos extendidos hacia adelante para el equilibrio.",
+   "Empuja las caderas hacia atrás y flexiona las rodillas, sentándote hacia la caja en lugar de bajar en línea recta.",
+   "Toca la caja ligeramente con los glúteos sin dejarte caer sobre ella.",
+   "Empuja con los pies para volver a ponerte de pie, apretando los glúteos arriba.",
+   "Repite las repeticiones deseadas."
+  ],
+  "tips": [
+   "Usa una altura de caja que permita que los muslos queden aproximadamente paralelos al suelo, y bájala a medida que mejore tu movilidad.",
+   "Mantén el peso en el centro de los pies — no te inclines hacia los dedos."
+  ],
+  "images": [
+   "img/box-squat/start.webp",
+   "img/box-squat/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "glute-bridge",
+  "name": "Glute Bridge",
+  "measure": "reps",
+  "load": null,
+  "zone": "legs",
+  "equip": [
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "Glúteo fuerte = menos carga en la rodilla al andar y subir escaleras.",
+  "cues": [
+   "Talones cerca del glúteo",
+   "Sube hasta alinear hombro-cadera-rodilla",
+   "Pausa 1–2 s arriba"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un ejercicio de activación de glúteos con el peso corporal realizado tumbado en el suelo.",
+  "steps": [
+   "Túmbate boca arriba con las rodillas flexionadas y los pies planos en el suelo.",
+   "Eleva las caderas apretando los glúteos.",
+   "Mantén brevemente en la parte alta con las caderas totalmente extendidas.",
+   "Baja las caderas de forma controlada.",
+   "Repite."
+  ],
+  "tips": [
+   "Empuja con los talones para activar mejor los glúteos.",
+   "Evita arquear la zona lumbar al extender las caderas."
+  ],
+  "images": [
+   "img/glute-bridge/start.webp",
+   "img/glute-bridge/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 3.5
+ },
+ {
+  "id": "terminal-knee-extension",
+  "name": "Banded Terminal Knee Extension",
+  "measure": "reps",
+  "load": null,
+  "zone": "legs",
+  "equip": [
+   "band"
+  ],
+  "knee": "ok",
+  "why": "Activa el cuádriceps (vasto interno) en los últimos grados de extensión, sin carga en la rótula.",
+  "cues": [
+   "Goma por detrás de la rodilla, anclada delante",
+   "Estira la rodilla del todo contra la goma",
+   "Aprieta 2 s el cuádriceps"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Un ejercicio de aislamiento que extiende la rodilla contra la banda, usado para el VMO y rehabilitación.",
+  "steps": [
+   "Ancla una banda elástica a un poste firme a la altura de la rodilla.",
+   "Pasa el bucle de modo que la banda quede detrás de una rodilla.",
+   "Da un paso atrás para que la banda flexione ligeramente la rodilla.",
+   "Extiende la rodilla completamente contra la banda, contrayendo el cuádriceps.",
+   "Regresa lentamente. Repeticiones por lado y cambia."
+  ],
+  "tips": [
+   "Contrae fuerte el cuádriceps en la extensión completa.",
+   "Mantén el pie plano — no levantes el talón."
+  ],
+  "images": [
+   "img/terminal-knee-extension/start.webp",
+   "img/terminal-knee-extension/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "seated-hip-abduction",
+  "name": "Seated Hip Abduction",
+  "measure": "reps",
+  "load": null,
+  "zone": "legs",
+  "equip": [
+   "gym",
+   "band"
+  ],
+  "knee": "ok",
+  "why": "Glúteo medio: mantiene la rodilla alineada y descarga la rótula.",
+  "cues": [
+   "Sentado, goma sobre las rodillas (o máquina de abductores)",
+   "Abre las rodillas y vuelve lento",
+   "Espalda recta"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Este ejercicio de aislamiento trabaja el glúteo medio y mayor al rotar externamente las caderas contra la resistencia de una banda mientras estás sentado.",
+  "steps": [
+   "Siéntate en un banco o silla con una banda elástica alrededor de tus rodillas.",
+   "Mantén los pies apoyados en el suelo, separados al ancho de tus caderas, y conserva una postura erguida.",
+   "Empuja tus rodillas hacia afuera contra la banda, activando tus glúteos.",
+   "Sostén la contracción máxima brevemente, luego regresa lentamente tus rodillas a la posición inicial.",
+   "Controla el movimiento a lo largo de todo el rango de movimiento."
+  ],
+  "tips": [
+   "Concéntrate en apretar tus glúteos para iniciar el movimiento.",
+   "Evita inclinarte hacia atrás o usar el impulso; mantén tu torso estable."
+  ],
+  "images": [
+   "img/seated-hip-abduction/start.webp",
+   "img/seated-hip-abduction/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "calf-raise",
+  "name": "Calf Raise",
+  "measure": "reps",
+  "load": "db",
+  "zone": "calf",
+  "equip": [
+   "bw",
+   "db"
+  ],
+  "knee": "ok",
+  "why": "Gemelo fuerte para andar más y mejor.",
+  "cues": [
+   "De pie, sube a puntillas 2 s",
+   "Baja 2 s",
+   "Agárrate a algo para equilibrio"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Una elevación de talones con el propio peso corporal, un ejercicio básico para fortalecer los gemelos.",
+  "steps": [
+   "Colócate de pie con los pies separados al ancho de las caderas sobre una superficie plana.",
+   "Sube de puntillas lo más alto posible.",
+   "Aprieta los gemelos en la parte superior.",
+   "Baja los talones al suelo de forma controlada.",
+   "Repite el número deseado de repeticiones."
+  ],
+  "tips": [
+   "Reparte el peso entre todos los dedos al subir.",
+   "Mantén las piernas rectas para centrar el trabajo en el gemelo."
+  ],
+  "images": [
+   "img/calf-raise/start.webp",
+   "img/calf-raise/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 3.5
+ },
+ {
+  "id": "lat-pulldown",
+  "name": "Lat Pulldown",
+  "measure": "reps",
+  "load": "machine",
+  "zone": "upper",
+  "equip": [
+   "gym"
+  ],
+  "knee": "ok",
+  "why": "Espalda y brazos; buena postura y más músculo para gastar más energía.",
+  "cues": [
+   "Agarre algo más ancho que los hombros",
+   "Baja la barra al pecho llevando los codos abajo",
+   "Sin balancear el tronco"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un ejercicio en máquina de polea que trabaja el dorsal ancho.",
+  "steps": [
+   "Siéntate en la máquina de jalón con los muslos sujetos bajo los rodillos.",
+   "Agarra la barra ancha con un agarre en pronación.",
+   "Jala la barra hasta la parte superior del pecho apretando los dorsales.",
+   "Regresa la barra lentamente a la posición inicial.",
+   "Repite."
+  ],
+  "tips": [
+   "Inicia el tirón bajando los omóplatos, no doblando los codos.",
+   "Evita balancear el torso para mover el peso."
+  ],
+  "images": [
+   "img/lat-pulldown/start.webp",
+   "img/lat-pulldown/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "seated-cable-row",
+  "name": "Seated Cable Row",
+  "measure": "reps",
+  "load": "machine",
+  "zone": "upper",
+  "equip": [
+   "gym"
+  ],
+  "knee": "ok",
+  "why": "Espalda media y postura.",
+  "cues": [
+   "Espalda recta, rodillas algo flexionadas",
+   "Lleva el agarre al ombligo juntando escápulas",
+   "Vuelve lento"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un ejercicio de espalda en una máquina de remo con polea, tirando de una manija hacia el torso estando sentado.",
+  "steps": [
+   "Siéntate en la estación de remo y coloca los pies en los apoyos.",
+   "Sujeta la manija y siéntate erguido con una ligera inclinación hacia adelante.",
+   "Lleva los codos hacia atrás y tira de la manija hacia la parte baja del abdomen.",
+   "Contrae los omóplatos al final del tirón.",
+   "Extiende los brazos con control de vuelta a la posición inicial.",
+   "Repite el número de repeticiones deseado."
+  ],
+  "tips": [
+   "Mantén el torso erguido con un balanceo mínimo.",
+   "Lleva los codos directamente hacia atrás, no hacia los lados."
+  ],
+  "images": [
+   "img/seated-cable-row/start.webp",
+   "img/seated-cable-row/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "chest-press",
+  "name": "Chest Press (machine or cable)",
+  "measure": "reps",
+  "load": "machine",
+  "zone": "upper",
+  "equip": [
+   "gym"
+  ],
+  "knee": "ok",
+  "why": "Pecho, hombro y tríceps sentado o de pie, sin cargar las rodillas.",
+  "cues": [
+   "Asiento a la altura de los agarres = mitad del pecho",
+   "Empuja sin bloquear los codos",
+   "Vuelve lento"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un press de pecho de pie en polea que ofrece tensión constante sobre el pectoral durante todo el recorrido.",
+  "steps": [
+   "Ajusta los cables a la altura del pecho y colócate de espaldas a la máquina.",
+   "Sujeta un agarre en cada mano y da un paso adelante adoptando una postura escalonada.",
+   "Empuja los agarres hacia adelante hasta extender los brazos completamente.",
+   "Aprieta el pecho en la parte superior.",
+   "Vuelve de forma controlada y repite."
+  ],
+  "tips": [
+   "Evita que los hombros se adelanten al extender los brazos.",
+   "Mantén el core activo para no perder el equilibrio."
+  ],
+  "images": [
+   "img/chest-press/start.webp",
+   "img/chest-press/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "treadmill-walk",
+  "name": "Incline Treadmill Walk",
+  "measure": "time",
+  "load": null,
+  "zone": "cardio",
+  "equip": [
+   "gym"
+  ],
+  "knee": "ok",
+  "why": "Gasta energía sin impacto; la inclinación suave trabaja glúteo y gemelo.",
+  "cues": [
+   "Ritmo vivo, que cueste hablar un poco",
+   "Inclinación 3–6 % (menos si molesta la rodilla)",
+   "Sin agarrarte a las barras"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Una caminata cuesta arriba sostenida sobre una cinta inclinada, manteniendo siempre un pie en contacto con la banda para que glúteos e isquiotibiales trabajen duro casi sin impacto.",
+  "steps": [
+   "Arranca la banda a velocidad de caminata lenta, súbete y luego eleva la inclinación hasta la pendiente que buscas.",
+   "Camina con una zancada larga y deliberada, rodando del talón a la punta y empujando la banda hacia atrás en cada paso.",
+   "Mantente erguido e inclínate hacia la cuesta desde los tobillos, sin doblarte hacia delante por la cintura.",
+   "Mantén al menos un pie sobre la banda en todo momento — camina la cuesta, no la trotes.",
+   "Deja que los brazos se balanceen con naturalidad o apóyalos suavemente en los raíles para equilibrarte, sin descargar el peso en ellos.",
+   "Sostén la pendiente durante el tiempo deseado, luego bájala y camina en llano unos minutos para terminar."
+  ],
+  "tips": [
+   "Elige una velocidad a la que todavía puedas caminar. En cuanto necesites una fase de vuelo para seguir el ritmo, baja la velocidad o la inclinación — es una caminata, no una carrera.",
+   "Colgar el peso del cuerpo de los pasamanos elimina casi todo el trabajo que la cuesta está ahí para generar; tócalos solo para equilibrarte."
+  ],
+  "images": [
+   "img/treadmill-walk/main.webp"
+  ],
+  "credit": "repdb",
+  "met": 8.0
+ },
+ {
+  "id": "stationary-bike",
+  "name": "Stationary Bike",
+  "measure": "time",
+  "load": null,
+  "zone": "cardio",
+  "equip": [
+   "gym"
+  ],
+  "knee": "ok",
+  "why": "Calienta la rodilla y mueve la articulación sin impacto.",
+  "cues": [
+   "Sillín alto: rodilla casi estirada abajo",
+   "Resistencia suave, cadencia alta (80–90)",
+   "Si molesta la rótula, sube el sillín"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un ejercicio cardiovascular sentado que mueve un volante de inercia mediante un pedaleo continuo, trabajando las piernas sin impacto sobre las articulaciones.",
+  "steps": [
+   "Ajusta la altura del sillín para que la rodilla quede ligeramente flexionada en el punto más bajo del pedaleo, siéntate y apoya la parte anterior de los pies en los pedales.",
+   "Sujeta el manillar con un agarre relajado y siéntate erguido, con la espalda neutra y los hombros bajos.",
+   "Empuja un pedal hacia abajo y hacia delante mientras el otro sube, manteniendo el esfuerzo en las piernas en lugar de tirar del manillar.",
+   "Sigue pedaleando en un círculo suave y regular a una cadencia constante, respirando al ritmo del pedaleo.",
+   "Ajusta la resistencia para sostener el esfuerzo que buscas y continúa durante el tiempo o la distancia deseados."
+  ],
+  "tips": [
+   "Ajusta el sillín antes de empezar: demasiado bajo castiga las rodillas y demasiado alto hace que la cadera bascule de lado a lado en cada pedalada.",
+   "Empuja con las piernas y mantén el tren superior quieto — agarrarte y tirar del manillar solo añade tensión en el cuello y los hombros."
+  ],
+  "images": [
+   "img/stationary-bike/main.webp"
+  ],
+  "credit": "repdb",
+  "met": 8.0
+ },
+ {
+  "id": "walking",
+  "name": "Walk",
+  "measure": "time",
+  "load": null,
+  "zone": "cardio",
+  "equip": [
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "La base de perder peso: caminar a buen ritmo casi todos los días.",
+  "cues": [
+   "Ritmo vivo",
+   "Llanos o cuestas suaves al principio",
+   "Zapatilla cómoda y amortiguada"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Marcha natural sobre terreno llano, manteniendo siempre un pie en contacto con el suelo, lo que la convierte en la forma de menor impacto de acumular trabajo aeróbico.",
+  "steps": [
+   "Ponte erguido, con el peso sobre la parte media de los pies y los hombros relajados, sin llevarlos hacia atrás.",
+   "Da un paso al frente y apoya primero el talón, luego rueda sobre el pie y empuja con la almohadilla y los dedos.",
+   "Mantén al menos un pie en el suelo en todo momento — en cuanto ambos se despegan estás corriendo, no caminando.",
+   "Deja que los brazos oscilen con naturalidad desde el hombro, brazo contrario a pierna contraria, con los codos ligeramente flexionados.",
+   "Mira al frente en lugar de a los pies y respira con un ritmo constante y sostenible.",
+   "Continúa el tiempo o la distancia deseados, eligiendo un ritmo al que todavía podrías mantener una conversación."
+  ],
+  "tips": [
+   "El ritmo lo es todo aquí. Un paseo y una caminata enérgica son estímulos distintos, así que elige uno a propósito en vez de dejarte llevar.",
+   "Alarga el empuje por detrás en lugar de estirar más hacia delante: la zancada larga te hace aterrizar con la pierna recta y frena cada paso."
+  ],
+  "images": [
+   "img/walking/main.webp"
+  ],
+  "credit": "repdb",
+  "met": 3.5
  }
 ]
