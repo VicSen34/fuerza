@@ -1,0 +1,12 @@
+{
+ "updated": "2026-11-21",
+ "goalPerWeek": 2,
+ "weekly": {"1": "fuerza-a", "4": "fuerza-b"},
+ "extras": ["prehab-cadera", "pies-gemelos"],
+ "dates": {
+  "2026-11-23": {"routine": "fuerza-a", "note": "Primera con la app. Rodilla: si el Goblet o la búlgara pasan de 3/10, pulsa «Cambiar»."},
+  "2026-11-26": {"routine": "fuerza-b"},
+  "2026-11-30": {"routine": "fuerza-a"},
+  "2026-12-03": {"routine": "fuerza-b"}
+ }
+}

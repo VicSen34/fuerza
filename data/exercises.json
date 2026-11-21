@@ -1,0 +1,2087 @@
+[
+ {
+  "id": "goblet-squat",
+  "name": "Goblet Squat",
+  "measure": "reps",
+  "load": "kb",
+  "zone": "legs",
+  "equip": [
+   "kb"
+  ],
+  "knee": "care",
+  "why": "La base de cuádriceps y glúteo: es lo que sostiene la zancada en las bajadas.",
+  "cues": [
+   "KB pegada al pecho, codos por dentro de las rodillas",
+   "Baja 3 s, rodillas hacia fuera",
+   "Pecho alto, talones apoyados"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Una sentadilla apta para principiantes con una pesa rusa sujetada a la altura del pecho que mejora la postura y la profundidad.",
+  "steps": [
+   "Sujeta una pesa rusa a la altura del pecho con ambas manos.",
+   "Baja en sentadilla manteniendo el peso cerca del pecho.",
+   "Vuelve a subir.",
+   "Repite."
+  ],
+  "tips": [
+   "La posición goblet favorece de forma natural un torso erguido.",
+   "Empuja las rodillas hacia afuera en la parte baja."
+  ],
+  "images": [
+   "img/goblet-squat/start.webp",
+   "img/goblet-squat/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "bulgarian-split-squat",
+  "name": "Bulgarian Split Squat",
+  "measure": "reps",
+  "load": "db",
+  "zone": "legs",
+  "equip": [
+   "db",
+   "box"
+  ],
+  "knee": "care",
+  "why": "Pierna a pierna, como corres: corrige diferencias izquierda/derecha y carga el glúteo.",
+  "cues": [
+   "Pie de atrás sobre el cajón, empeine apoyado",
+   "Torso algo inclinado = más glúteo",
+   "Rodilla delantera en línea con el pie, sin irse hacia dentro"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Una variante de sentadilla unilateral con el pie trasero elevado.",
+  "steps": [
+   "Colócate de pie frente a un banco y apoya un pie detrás sobre el banco.",
+   "Sujeta mancuernas a los lados.",
+   "Baja el cuerpo hasta que el muslo delantero quede paralelo al suelo.",
+   "Empuja con el talón delantero para volver a la posición de pie.",
+   "Repite en ambos lados."
+  ],
+  "tips": [
+   "Mantén casi todo el peso sobre la pierna adelantada.",
+   "Ajusta la distancia al banco hasta que la zancada sea estable."
+  ],
+  "images": [
+   "img/bulgarian-split-squat/start.webp",
+   "img/bulgarian-split-squat/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "reverse-lunge",
+  "name": "Reverse Lunge",
+  "measure": "reps",
+  "load": "db",
+  "zone": "legs",
+  "equip": [
+   "db"
+  ],
+  "knee": "care",
+  "why": "Más amable con la rodilla que la zancada hacia delante y muy específica de carrera.",
+  "cues": [
+   "Paso largo hacia atrás",
+   "Baja vertical, la rodilla de atrás casi toca",
+   "Empuja con el talón de delante"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Una variación de la zancada que da un paso hacia atrás para mayor estabilidad de rodilla.",
+  "steps": [
+   "Párate sosteniendo mancuernas a los costados.",
+   "Da un paso hacia atrás con una pierna y baja la rodilla hacia el suelo.",
+   "Baja hasta que el muslo delantero quede paralelo al suelo.",
+   "Empuja con el talón delantero para volver a la posición de pie.",
+   "Repite en ambos lados."
+  ],
+  "tips": [
+   "Da el paso atrás lo bastante largo para que la rodilla delantera no pase del pie.",
+   "Mantén el torso erguido y las mancuernas pegadas al cuerpo."
+  ],
+  "images": [
+   "img/reverse-lunge/start.webp",
+   "img/reverse-lunge/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "box-step-up",
+  "name": "Box Step-Up",
+  "measure": "reps",
+  "load": "db",
+  "zone": "legs",
+  "equip": [
+   "db",
+   "box"
+  ],
+  "knee": "care",
+  "why": "La subida de trail en casa: empuje de cadera y cuádriceps a una pierna.",
+  "cues": [
+   "Todo el pie sobre el cajón",
+   "Sube empujando con la pierna de arriba, sin impulsarte con la de abajo",
+   "Baja lento (3 s)"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Una subida a un cajón o banco con una pierna que entrena cuádriceps y glúteos de forma funcional.",
+  "steps": [
+   "Párate frente a una caja o banco resistente.",
+   "Coloca un pie completamente sobre la superficie de la caja.",
+   "Empuja a través de ese talón para subir el cuerpo a la caja.",
+   "Sube el pie de atrás para quedar completamente sobre la caja.",
+   "Baja con el mismo pie que subió primero.",
+   "Alterna piernas o completa todas las repeticiones de un lado antes de cambiar."
+  ],
+  "tips": [
+   "Apoya todo el pie sobre la superficie del cajón.",
+   "Impulsa con el talón de la pierna que sube, no con la de atrás."
+  ],
+  "images": [
+   "img/box-step-up/start.webp",
+   "img/box-step-up/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "romanian-deadlift",
+  "name": "Romanian Deadlift",
+  "measure": "reps",
+  "load": "db",
+  "zone": "legs",
+  "equip": [
+   "db"
+  ],
+  "knee": "ok",
+  "why": "Isquios y glúteo fuertes = zancada potente y menos riesgo de rotura de isquio.",
+  "cues": [
+   "Rodillas algo flexionadas y fijas",
+   "Lleva la cadera atrás, las mancuernas rozan los muslos",
+   "Espalda neutra; para cuando tire el isquio"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un peso muerto rumano con mancuernas que enfatiza el estiramiento de los isquiotibiales mediante una bisagra de cadera.",
+  "steps": [
+   "Ponte de pie sujetando mancuernas frente a los muslos con una ligera flexión de rodillas.",
+   "Inclínate desde las caderas y empuja los glúteos hacia atrás.",
+   "Baja las mancuernas a lo largo de las piernas hasta sentir el estiramiento en los isquiotibiales.",
+   "Mantén la espalda recta y los hombros hacia atrás.",
+   "Empuja las caderas hacia adelante para volver a la posición de pie.",
+   "Repite el número de repeticiones deseado."
+  ],
+  "tips": [
+   "Baja hasta donde tu flexibilidad lo permita, sin forzar.",
+   "Mantén la misma flexión suave de rodillas en todo el recorrido."
+  ],
+  "images": [
+   "img/romanian-deadlift/start.webp",
+   "img/romanian-deadlift/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "single-leg-rdl",
+  "name": "Single-Leg RDL",
+  "measure": "reps",
+  "load": "kb",
+  "zone": "legs",
+  "equip": [
+   "kb"
+  ],
+  "knee": "ok",
+  "why": "Estabilidad de cadera y tobillo en apoyo único: justo lo que pide el terreno técnico.",
+  "cues": [
+   "KB en la mano contraria a la pierna de apoyo",
+   "Cadera cuadrada al suelo, no la abras",
+   "Pierna de atrás estirada como un balancín"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Un peso muerto a una pierna con pesa rusa que fortalece glúteos e isquiotibiales y pone a prueba el equilibrio.",
+  "steps": [
+   "Sostén una pesa rusa en una mano y párate en la pierna contraria.",
+   "Bisagra en la cadera y baja la pesa rusa hacia el suelo.",
+   "Extiende la pierna libre hacia atrás para mantener el equilibrio.",
+   "Baja hasta que el torso quede paralelo al suelo.",
+   "Empuja a través del talón de apoyo para volver a ponerte de pie.",
+   "Completa las repeticiones en un lado y luego cambia."
+  ],
+  "tips": [
+   "Mantén la cadera cuadrada, sin abrirla hacia el lado libre.",
+   "Fija la mirada en un punto del suelo para equilibrarte mejor."
+  ],
+  "images": [
+   "img/single-leg-rdl/start.webp",
+   "img/single-leg-rdl/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "single-leg-glute-bridge",
+  "name": "Single-Leg Glute Bridge",
+  "measure": "reps",
+  "load": null,
+  "zone": "legs",
+  "equip": [
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "Glúteo mayor sin carga en la rodilla; buen calentamiento para la cadera.",
+  "cues": [
+   "Talón cerca del glúteo",
+   "Sube hasta alinear hombro-cadera-rodilla",
+   "Pelvis nivelada, sin que caiga un lado"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Un puente de glúteo unilateral que carga un glúteo a la vez y ayuda a corregir desequilibrios laterales.",
+  "steps": [
+   "Acuéstate boca arriba con una rodilla flexionada y el pie plano, la otra pierna extendida recta.",
+   "Activa el core y contrae el glúteo del lado que trabaja.",
+   "Empuja las caderas arriba presionando con el talón de trabajo.",
+   "Pausa arriba con el cuerpo en línea recta de hombros a rodilla.",
+   "Baja con control. Repeticiones por lado, luego cambia."
+  ],
+  "tips": [
+   "Mantén la pierna extendida en línea con el muslo de trabajo.",
+   "Contrae el glúteo arriba — no empujes desde la zona lumbar."
+  ],
+  "images": [
+   "img/single-leg-glute-bridge/start.webp",
+   "img/single-leg-glute-bridge/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "hip-thrust",
+  "name": "Kettlebell Hip Thrust",
+  "measure": "reps",
+  "load": "kb",
+  "zone": "legs",
+  "equip": [
+   "kb",
+   "box"
+  ],
+  "knee": "ok",
+  "why": "El ejercicio con más trabajo de glúteo: motor de la extensión de cadera al correr.",
+  "cues": [
+   "Espalda alta apoyada en el cajón, KB sobre la cadera",
+   "Barbilla recogida, sube con el glúteo, no con la lumbar",
+   "Pausa de 2 s arriba"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Este ejercicio trabaja eficazmente el glúteo mayor y los isquiotibiales, utilizando una kettlebell para añadir resistencia y lograr una potente extensión de cadera y desarrollo de glúteos.",
+  "steps": [
+   "Siéntate en el suelo con la parte superior de tu espalda apoyada en un banco, las rodillas flexionadas y los pies planos.",
+   "Coloca una kettlebell sobre tus caderas, sujetándola firmemente con ambas manos.",
+   "Impúlsate a través de tus talones, levantando tus caderas del suelo hasta que tu cuerpo forme una línea recta desde los hombros hasta las rodillas.",
+   "Contrae tus glúteos con fuerza en la parte superior del movimiento.",
+   "Baja lentamente tus caderas de vuelta a la posición inicial con control."
+  ],
+  "tips": [
+   "Mantén tu barbilla pegada al pecho para mantener una columna vertebral neutra.",
+   "Concéntrate en empujar a través de tus talones para maximizar la activación de los glúteos."
+  ],
+  "images": [
+   "img/hip-thrust/start.webp",
+   "img/hip-thrust/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "kettlebell-swing",
+  "name": "Kettlebell Swing",
+  "measure": "reps",
+  "load": "kb",
+  "zone": "legs",
+  "equip": [
+   "kb"
+  ],
+  "knee": "ok",
+  "why": "Potencia de cadera y cadena posterior; sube pulsaciones sin impacto.",
+  "cues": [
+   "Es una bisagra, no una sentadilla",
+   "Golpe de cadera explosivo; los brazos solo guían",
+   "La KB sube a la altura del pecho, no más"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un movimiento explosivo de bisagra de cadera con pesa rusa para potencia y acondicionamiento físico.",
+  "steps": [
+   "Párate con los pies a la anchura de los hombros y la pesa rusa en el suelo por delante.",
+   "Bisagra en las caderas, agarra la pesa rusa y llévala hacia atrás entre las piernas.",
+   "Extiende las caderas de forma explosiva para balancear la pesa rusa hasta la altura del pecho.",
+   "Deja que la pesa rusa vuelva a balancearse entre las piernas.",
+   "Repite en un movimiento fluido."
+  ],
+  "tips": [
+   "La fuerza nace de la cadera, no de los brazos.",
+   "Aprieta glúteos y abdomen en la parte alta del swing."
+  ],
+  "images": [
+   "img/kettlebell-swing/start.webp",
+   "img/kettlebell-swing/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 8.0
+ },
+ {
+  "id": "kettlebell-deadlift",
+  "name": "Kettlebell Deadlift",
+  "measure": "reps",
+  "load": "kb",
+  "zone": "legs",
+  "equip": [
+   "kb"
+  ],
+  "knee": "ok",
+  "why": "Aprender a levantar con la cadera; base para el swing y el RDL.",
+  "cues": [
+   "KB entre los pies",
+   "Cadera atrás, espalda neutra",
+   "Empuja el suelo y aprieta glúteo arriba"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un peso muerto con pesa rusa que fortalece glúteos, isquiotibiales y zona lumbar con un patrón de bisagra de cadera.",
+  "steps": [
+   "Párate con los pies a la anchura de los hombros y la pesa rusa entre los pies.",
+   "Bisagra en las caderas y flexiona las rodillas para agarrar el asa.",
+   "Contrae el core y mantén la espalda plana.",
+   "Empuja a través de los talones para ponerte de pie con la pesa rusa.",
+   "Bloquea en la parte superior con los hombros hacia atrás.",
+   "Baja la pesa rusa de vuelta al suelo con control."
+  ],
+  "tips": [
+   "Mantén la pesa rusa cerca del cuerpo durante todo el recorrido.",
+   "Piensa en empujar el suelo con los talones, no en tirar con la espalda."
+  ],
+  "images": [
+   "img/kettlebell-deadlift/start.webp",
+   "img/kettlebell-deadlift/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "nordic-curl",
+  "name": "Band-Assisted Nordic Curl",
+  "measure": "reps",
+  "load": null,
+  "zone": "legs",
+  "equip": [
+   "band",
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "El mejor ejercicio conocido para prevenir lesiones de isquiotibiales.",
+  "cues": [
+   "Talones sujetos (bajo la torre o un mueble), cojín bajo las rodillas",
+   "Baja lo más lento posible con el cuerpo recto",
+   "Ayúdate con las manos o una goma al final"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "De rodillas con los talones sujetos, te dejas caer hacia delante frenando con los isquiotibiales.",
+  "steps": [
+   "Arrodíllate sobre un cojín con los talones bien sujetos.",
+   "Cuerpo recto de rodillas a cabeza, cadera extendida.",
+   "Inclínate hacia delante frenando con los isquios, lo más lento que puedas.",
+   "Cuando no puedas frenar, cae sobre las manos y empuja para volver."
+  ],
+  "tips": [],
+  "images": [
+   "img/nordic-curl/nordic-hamstring-curl-1.svg",
+   "img/nordic-curl/nordic-hamstring-curl-2.svg",
+   "img/nordic-curl/nordic-hamstring-curl-3.svg"
+  ],
+  "credit": "wg"
+ },
+ {
+  "id": "banded-lateral-walk",
+  "name": "Banded Lateral Walk",
+  "measure": "reps",
+  "load": null,
+  "zone": "legs",
+  "equip": [
+   "band"
+  ],
+  "knee": "ok",
+  "why": "Activa el glúteo medio, que evita que la rodilla se vaya hacia dentro al aterrizar.",
+  "cues": [
+   "Goma por encima de los tobillos o las rodillas",
+   "Semisentadilla, pies paralelos",
+   "Pasos cortos, sin juntar los pies"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Un desplazamiento lateral a pasos con una banda circular por encima de las rodillas o en los tobillos, que activa el glúteo medio.",
+  "steps": [
+   "Coloca una banda circular alrededor de las piernas por encima de las rodillas (o en los tobillos para una versión más difícil).",
+   "Ponte en cuarto de sentadilla: pies a la anchura de los hombros, caderas atrás, pecho alto y rodillas alineadas con los pies.",
+   "Da un paso lateral con un pie directamente hacia el lado contra la tensión de la banda.",
+   "Acerca el pie de atrás hacia el de delante manteniendo la tensión de la banda en todo momento; no dejes que los pies se junten de golpe.",
+   "Sigue dando pasos laterales en una dirección durante las repeticiones o la distancia indicada y luego invierte.",
+   "Permanece abajo todo el rato; no te incorpores entre paso y paso."
+  ],
+  "tips": [
+   "Mantén las puntas de los pies hacia el frente; no dejes que el pie de delante se abra.",
+   "Las caderas se quedan niveladas; no te balancees de lado a lado al caminar."
+  ],
+  "images": [
+   "img/banded-lateral-walk/start.webp",
+   "img/banded-lateral-walk/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "spanish-squat",
+  "name": "Spanish Squat",
+  "measure": "time",
+  "load": null,
+  "zone": "iso",
+  "equip": [
+   "band"
+  ],
+  "knee": "ok",
+  "why": "Isométrico de tendón rotuliano: suele calmar el dolor de rodilla y fortalece el tendón.",
+  "cues": [
+   "Goma gruesa detrás de las rodillas, anclada a la torre",
+   "Siéntate atrás con las tibias verticales",
+   "Mantén 45 s apretando el cuádriceps"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Sentadilla isométrica con una goma detrás de las rodillas que tira hacia delante; así las tibias quedan verticales y el cuádriceps trabaja sin cizalla en la rodilla.",
+  "steps": [
+   "Ancla una goma gruesa a la base de la torre a la altura de las rodillas.",
+   "Colócate dentro, con la goma detrás de las dos rodillas, y aléjate hasta que tire.",
+   "Siéntate hacia atrás hasta 60–90° de rodilla, con las tibias verticales y el peso en los talones.",
+   "Mantén la posición el tiempo marcado respirando con calma."
+  ],
+  "tips": [
+   "Dolor ≤3/10 es aceptable; si sube, haz menos profundidad.",
+   "Brazos al frente para equilibrarte."
+  ],
+  "images": [],
+  "credit": null
+ },
+ {
+  "id": "wall-sit",
+  "name": "Wall Sit",
+  "measure": "time",
+  "load": null,
+  "zone": "iso",
+  "equip": [
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "Resistencia isométrica de cuádriceps para aguantar bajadas largas.",
+  "cues": [
+   "Espalda plana contra la pared",
+   "Rodillas a 90° o menos si molesta",
+   "Rodillas sobre los tobillos"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un ejercicio isométrico estático que consiste en mantener la posición de sentadilla contra una pared para desarrollar la resistencia de los cuádriceps.",
+  "steps": [
+   "Párate con la espalda contra una pared.",
+   "Deslízate hacia abajo hasta que los muslos estén paralelos al suelo.",
+   "Mantén la posición.",
+   "Vuelve a ponerte de pie cuando termines."
+  ],
+  "tips": [
+   "Mantén las rodillas a 90 grados.",
+   "Presiona la espalda plana contra la pared."
+  ],
+  "images": [
+   "img/wall-sit/main.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "isometric-split-squat",
+  "name": "Isometric Split Squat",
+  "measure": "time",
+  "load": "db",
+  "zone": "iso",
+  "equip": [
+   "bw",
+   "db"
+  ],
+  "knee": "ok",
+  "why": "Fuerza de tendón a una pierna en la posición de zancada.",
+  "cues": [
+   "Baja a media altura y quédate quieto",
+   "Peso en el talón delantero",
+   "Tronco erguido"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Una versión mantenida de la sentadilla en tijera: te colocas en una postura de zancada larga y te quedas en la posición baja con el muslo delantero casi paralelo al suelo.",
+  "steps": [
+   "Ponte de pie con un pie bien adelantado y el otro atrás, separados aproximadamente una zancada larga, con las manos en las caderas.",
+   "Mantén el torso erguido y baja en línea recta flexionando ambas rodillas.",
+   "Baja hasta que el muslo delantero quede casi paralelo al suelo y la rodilla trasera flote justo por encima del suelo.",
+   "Mantén el talón delantero apoyado y la rodilla delantera en línea con las puntas de los pies.",
+   "Mantén esta posición durante el tiempo previsto, con el tronco erguido y el peso repartido por todo el pie delantero.",
+   "Sube hasta arriba y luego repite con la otra pierna."
+  ],
+  "tips": [
+   "Mantén la rodilla trasera justo por encima del suelo para que la pierna delantera trabaje todo el tiempo.",
+   "No dejes que la rodilla delantera se hunda hacia dentro; empújala suavemente hacia los dedos del medio."
+  ],
+  "images": [
+   "img/isometric-split-squat/main.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "glute-bridge-hold",
+  "name": "Banded Glute Bridge Hold",
+  "measure": "time",
+  "load": null,
+  "zone": "iso",
+  "equip": [
+   "band",
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "Isométrico del protocolo de cadera: glúteo mayor y medio a la vez.",
+  "cues": [
+   "Goma por encima de las rodillas, empuja hacia fuera",
+   "Cadera arriba sin arquear la lumbar",
+   "Respira, no contengas el aire"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "La parte alta del puente de glúteos mantenida en el tiempo: la cadera queda completamente extendida con hombros, caderas y rodillas en línea, de modo que los glúteos permanecen bajo tensión en lugar de encadenar repeticiones.",
+  "steps": [
+   "Túmbate boca arriba con las rodillas flexionadas y los pies apoyados, separados a la anchura de las caderas y lo bastante cerca como para rozar los talones con los dedos.",
+   "Empuja con los talones y eleva la cadera hasta que el cuerpo forme una línea recta desde las rodillas hasta los hombros.",
+   "Aprieta los glúteos y lleva las costillas hacia abajo para que la zona lumbar no tome el mando.",
+   "Mantén la posición alta durante el tiempo indicado, con el peso en los talones.",
+   "Baja la cadera de forma controlada para terminar la serie."
+  ],
+  "tips": [
+   "Empuja ligeramente las rodillas hacia fuera durante el mantenimiento para que los glúteos sigan activos.",
+   "Deja de subir en cuanto rodillas, caderas y hombros formen una línea recta; más arriba suele significar arquear la espalda."
+  ],
+  "images": [
+   "img/glute-bridge-hold/main.webp"
+  ],
+  "credit": "repdb",
+  "met": 3.5
+ },
+ {
+  "id": "single-leg-glute-bridge-hold",
+  "name": "Single-Leg Glute Bridge Hold",
+  "measure": "time",
+  "load": null,
+  "zone": "iso",
+  "equip": [
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "Tendón del glúteo a una pierna, sin compresión de cadera.",
+  "cues": [
+   "Pelvis nivelada",
+   "Rodilla de la pierna libre hacia el pecho",
+   "Empuja con el talón"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "La parte alta del puente de glúteo a una pierna mantenida en el tiempo: la cadera queda extendida y nivelada mientras una pierna permanece elevada, de modo que un solo glúteo sostiene toda la posición.",
+  "steps": [
+   "Túmbate boca arriba con una rodilla flexionada y ese pie apoyado, y eleva la otra pierna hasta que el muslo quede casi vertical.",
+   "Empuja con el talón del pie apoyado y eleva la cadera hasta que el cuerpo quede recto desde la rodilla hasta los hombros.",
+   "Nivela la pelvis para que el lado elevado no caiga y lleva las costillas hacia abajo.",
+   "Mantén la posición alta durante el tiempo indicado, con la rodilla elevada quieta.",
+   "Baja la cadera de forma controlada y repite del otro lado."
+  ],
+  "tips": [
+   "Fíjate en la pelvis más que en la altura: una cadera nivelada un poco más abajo vale más que una alta y girada.",
+   "Mantén el talón apoyado cerca del glúteo para que el isquiotibial no se acalambre."
+  ],
+  "images": [
+   "img/single-leg-glute-bridge-hold/main.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "side-plank-abduction",
+  "name": "Side Plank with Hip Abduction",
+  "measure": "time",
+  "load": null,
+  "zone": "iso",
+  "equip": [
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "Glúteo medio y core lateral: la pelvis no se hunde en cada apoyo.",
+  "cues": [
+   "Codo bajo el hombro, cuerpo en línea",
+   "Levanta la pierna de arriba un palmo, sin girar el pie hacia arriba",
+   "Cadera alta"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Una plancha lateral sostenida con la pierna superior elevada: la cadera se mantiene alta y cuadrada mientras la pierna se separa, lo que añade una demanda de glúteo medio al trabajo lateral del tronco.",
+  "steps": [
+   "Colócate en plancha lateral sobre el antebrazo, con el codo bajo el hombro y los pies apilados.",
+   "Eleva la cadera hasta que el cuerpo forme una línea recta desde los tobillos hasta la cabeza.",
+   "Sube la pierna superior aproximadamente a la altura de la cadera, con los dedos del pie al frente.",
+   "Mantén la posición durante el tiempo indicado, con la cadera alta y el hombro alineado sobre el codo.",
+   "Baja la pierna y la cadera de forma controlada y repite del otro lado."
+  ],
+  "tips": [
+   "Aleja del oído el hombro de apoyo para que el pecho no se venga abajo hacia el suelo.",
+   "Termina la serie cuando la cadera empiece a caer, no cuando se canse la pierna."
+  ],
+  "images": [
+   "img/side-plank-abduction/main.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "side-lying-abduction-hold",
+  "name": "Side-Lying Hip Abduction Hold",
+  "measure": "time",
+  "load": null,
+  "zone": "iso",
+  "equip": [
+   "band",
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "El isométrico más suave del protocolo de glúteo medio y menor.",
+  "cues": [
+   "Tumbado de lado, la pierna de arriba algo por detrás",
+   "Levanta un palmo y mantén",
+   "Puntera mirando al frente"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "La parte alta de la elevación lateral de pierna mantenida en el tiempo: tumbado de lado con la pierna superior elevada y ligeramente por detrás del cuerpo, cargando el glúteo medio de forma isométrica.",
+  "steps": [
+   "Túmbate de lado con las piernas estiradas y apiladas, apoyando la cabeza sobre el brazo inferior.",
+   "Aprieta el tronco para que el torso quede cuadrado y no ruede hacia atrás.",
+   "Eleva la pierna superior unos 30 o 45 grados, con los dedos del pie apuntando al frente.",
+   "Mantén la pierna ahí durante el tiempo indicado, respirando con normalidad.",
+   "Baja la pierna de forma controlada y repite del otro lado."
+  ],
+  "tips": [
+   "Girar los dedos hacia el techo pasa el trabajo al flexor de la cadera; mantenlos mirando al frente.",
+   "Lleva la pierna algo por detrás de la línea del cuerpo para enfatizar el glúteo medio."
+  ],
+  "images": [
+   "img/side-lying-abduction-hold/main.webp"
+  ],
+  "credit": "repdb",
+  "met": 3.5
+ },
+ {
+  "id": "standing-abduction-iso",
+  "name": "Standing Wall Hip Abduction (iso)",
+  "measure": "time",
+  "load": null,
+  "zone": "iso",
+  "equip": [
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "Activa el glúteo medio de la pierna de apoyo, como en la carrera.",
+  "cues": [
+   "De lado a la pared, empuja la rodilla de dentro contra la pared",
+   "La que trabaja es la cadera de apoyo",
+   "Pelvis nivelada, 70 % de esfuerzo"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Una elevación lateral de pierna con el peso del cuerpo, de pie sobre la otra pierna.",
+  "steps": [
+   "Ponte erguido con las manos en las caderas y los pies juntos.",
+   "Pasa el peso a una pierna y mantén esa rodilla ligeramente flexionada.",
+   "Eleva la otra pierna estirada hacia el lado, con las puntas de los pies hacia delante y el tronco erguido.",
+   "Sube la pierna solo hasta donde puedas sin inclinar la parte superior del cuerpo en sentido contrario.",
+   "Baja la pierna despacio hasta colocarla junto al pie de apoyo.",
+   "Completa el número de repeticiones previsto y repite con la otra pierna."
+  ],
+  "tips": [
+   "Mantén las caderas rectas y el tronco quieto; inclinarte en sentido contrario a la pierna elevada quita trabajo a la cadera.",
+   "Controla también el movimiento de bajada; no dejes que la pierna se balancee."
+  ],
+  "images": [
+   "img/standing-abduction-iso/start.webp",
+   "img/standing-abduction-iso/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 3.5
+ },
+ {
+  "id": "copenhagen-plank",
+  "name": "Copenhagen Plank (short lever)",
+  "measure": "time",
+  "load": null,
+  "zone": "iso",
+  "equip": [
+   "box",
+   "bw"
+  ],
+  "knee": "care",
+  "why": "Aductores fuertes: protegen la ingle y estabilizan la rodilla en terreno irregular.",
+  "cues": [
+   "Rodilla de arriba sobre el cajón (palanca corta)",
+   "Cuerpo en línea, cadera alta",
+   "Si molesta la cara interna de la rodilla, para"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Una plancha lateral exigente en la que la pierna de arriba descansa sobre un banco plano y la pierna de abajo se mantiene en el aire.",
+  "steps": [
+   "Túmbate de lado junto a un banco plano y coloca la pierna de arriba sobre él, con el borde interno del pie o la parte inferior de la pierna apoyado en el banco.",
+   "Apóyate sobre el codo del brazo de abajo, justo debajo del hombro.",
+   "Sube las caderas para que el cuerpo forme una línea recta desde la cabeza hasta el pie de arriba, y deja la pierna de abajo colgando o elévala hacia el banco.",
+   "Mantén las caderas altas y el tronco firme, y respira con regularidad.",
+   "Mantén la posición durante el tiempo previsto y luego baja las caderas de nuevo al suelo.",
+   "Descansa y cambia de lado."
+  ],
+  "tips": [
+   "Empieza con la rodilla de arriba sobre el banco y una palanca corta; apoya el pie de la pierna de arriba en el banco solo cuando la posición te resulte fácil.",
+   "Presiona el antebrazo contra el suelo y mantén el hombro alejado de la oreja."
+  ],
+  "images": [
+   "img/copenhagen-plank/main.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "calf-raise-hold",
+  "name": "Isometric Single-Leg Calf Raise",
+  "measure": "time",
+  "load": "db",
+  "zone": "iso",
+  "equip": [
+   "bw",
+   "db"
+  ],
+  "knee": "ok",
+  "why": "Tendón de Aquiles y sóleo robustos para cuestas y kilómetros.",
+  "cues": [
+   "A una pierna, a media altura",
+   "Rodilla estirada",
+   "Agárrate a algo solo para equilibrio"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Un ejercicio isométrico de pantorrillas: te elevas sobre las puntas de los pies con las rodillas estiradas y mantienes la posición alta.",
+  "steps": [
+   "Ponte de pie, erguido, con los pies separados aproximadamente al ancho de las caderas y los brazos relajados a los costados.",
+   "Empuja con la parte delantera de los pies y elévate sobre las puntas tan alto como puedas.",
+   "Mantén las rodillas estiradas y el peso sobre el centro de los pies, sin dejar que ruede hacia los dedos pequeños.",
+   "Detente arriba y mantén la posición, con los talones lo más altos posible.",
+   "Mantén las caderas niveladas, el pecho elevado y la respiración lenta mientras aguantas el tiempo previsto.",
+   "Baja los talones despacio hasta el suelo y descansa."
+  ],
+  "tips": [
+   "Si te tambaleas, apóyate con una mano en una pared o en un rack; el objetivo es la contracción de la pantorrilla, no el equilibrio.",
+   "No dejes que los talones se hundan durante el aguante; si bajan, termina la serie en lugar de volver a subir con rebote."
+  ],
+  "images": [
+   "img/calf-raise-hold/main.webp"
+  ],
+  "credit": "repdb",
+  "met": 3.5
+ },
+ {
+  "id": "single-leg-calf-raise",
+  "name": "Single-Leg Calf Raise",
+  "measure": "reps",
+  "load": "db",
+  "zone": "calf",
+  "equip": [
+   "db",
+   "box"
+  ],
+  "knee": "ok",
+  "why": "El gemelo absorbe y devuelve energía en cada zancada; es la base de la economía de carrera.",
+  "cues": [
+   "Antepié en el borde del cajón",
+   "Sube 2 s, pausa, baja 2 s hasta abajo del todo",
+   "Sin rebotar"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Una elevación de pantorrilla unilateral que carga una pantorrilla a la vez y expone desequilibrios laterales.",
+  "steps": [
+   "Ponte de pie sobre una pierna y levanta el otro pie del suelo con la rodilla flexionada.",
+   "Deja los brazos relajados a los lados y activa el core para mantener el equilibrio.",
+   "Empuja hacia arriba sobre la punta del pie tan alto como puedas.",
+   "Baja el talón de nuevo al suelo con control.",
+   "Completa todas las repeticiones de un lado y luego cambia."
+  ],
+  "tips": [
+   "Pausa arriba para maximizar la contracción.",
+   "Baja despacio en lugar de dejarte caer sobre el talón."
+  ],
+  "images": [
+   "img/single-leg-calf-raise/start.webp",
+   "img/single-leg-calf-raise/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 3.5
+ },
+ {
+  "id": "soleus-raise",
+  "name": "Bent-Knee Soleus Raise",
+  "measure": "reps",
+  "load": "db",
+  "zone": "calf",
+  "equip": [
+   "db",
+   "box"
+  ],
+  "knee": "ok",
+  "why": "El sóleo soporta hasta 6-8 veces tu peso al correr; se entrena con la rodilla flexionada.",
+  "cues": [
+   "Rodilla flexionada unos 30-45° todo el rato",
+   "Sube y baja lento",
+   "Mancuerna en la mano del mismo lado"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Elevación de talón a una pierna con la rodilla flexionada, para cargar el sóleo en lugar del gemelo.",
+  "steps": [
+   "Ponte de pie a una pierna, con el antepié en el borde del cajón y una mancuerna en la mano.",
+   "Flexiona la rodilla unos 30–45° y mantenla así.",
+   "Sube el talón todo lo que puedas sin estirar la rodilla.",
+   "Baja lento hasta notar estiramiento y repite."
+  ],
+  "tips": [
+   "Apóyate en la pared con la otra mano para equilibrio."
+  ],
+  "images": [],
+  "credit": null
+ },
+ {
+  "id": "tibialis-raise",
+  "name": "Kettlebell Tibialis Raise",
+  "measure": "reps",
+  "load": "kb",
+  "zone": "calf",
+  "equip": [
+   "kb",
+   "box"
+  ],
+  "knee": "ok",
+  "why": "La espinilla frena el pie en cada apoyo; previene periostitis.",
+  "cues": [
+   "Sentado en el cajón, KB colgando sobre los empeines",
+   "Sube las punteras lo máximo",
+   "Baja lento"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un ejercicio para las espinillas que se hace sentado en un banco con una pesa rusa colgada del frente de un pie.",
+  "steps": [
+   "Siéntate en el extremo de un banco plano con una pierna estirada y el talón apoyado en el suelo.",
+   "Cuelga una pesa rusa por el asa del frente del pie, sobre los dedos.",
+   "Sube los dedos hacia la espinilla todo lo que te resulte cómodo mientras el talón permanece en el suelo.",
+   "Mantén brevemente la posición superior.",
+   "Baja el pie despacio hasta que los dedos apunten al suelo.",
+   "Completa las repeticiones y luego cambia de pierna."
+  ],
+  "tips": [
+   "Haz el movimiento solo desde el tobillo; la rodilla y el muslo permanecen quietos.",
+   "Empieza con una pesa rusa ligera y aumenta poco a poco; los músculos de la espinilla se fatigan rápido."
+  ],
+  "images": [
+   "img/tibialis-raise/start.webp",
+   "img/tibialis-raise/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "single-leg-balance",
+  "name": "Single-Leg Balance",
+  "measure": "time",
+  "load": null,
+  "zone": "calf",
+  "equip": [
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "Propiocepción de tobillo: menos esguinces en trail.",
+  "cues": [
+   "Pie descalzo, rodilla algo flexionada",
+   "Ojos cerrados cuando sea fácil",
+   "Pelvis nivelada"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Un ejercicio básico de equilibrio en el que te sostienes sobre una pierna con una mano apoyada ligeramente en una silla o en la pared.",
+  "steps": [
+   "Ponte erguido junto a una silla firme, una pared o una barandilla y apoya una mano ligeramente en ella.",
+   "Pasa el peso a la pierna más cercana al apoyo y mantén esa rodilla relajada.",
+   "Levanta la otra rodilla delante de ti hasta que el muslo quede aproximadamente a la altura de la cadera.",
+   "Mantén el pecho erguido, las caderas niveladas y la mirada en un punto fijo al frente.",
+   "Mantén la posición durante el tiempo previsto, usando el apoyo solo lo necesario.",
+   "Baja el pie, descansa brevemente y repite con la otra pierna."
+  ],
+  "tips": [
+   "Presiona el pie de apoyo de forma uniforme contra el suelo y deja que los dedos se abran; el tobillo hace pequeños ajustes constantes.",
+   "Usa solo las yemas de los dedos en el apoyo y suéltalo un momento cuando te sientas estable."
+  ],
+  "images": [
+   "img/single-leg-balance/main.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "pogo-jumps",
+  "name": "Pogo Jumps",
+  "measure": "time",
+  "load": null,
+  "zone": "plyo",
+  "equip": [
+   "bw"
+  ],
+  "knee": "avoid",
+  "why": "Rigidez elástica de tobillo: más rebote y menos tiempo de contacto.",
+  "cues": [
+   "Saltos pequeños y rápidos, rodillas casi rectas",
+   "Contacto corto con el antepié",
+   "Talones sin tocar el suelo"
+  ],
+  "side": false,
+  "plyo": true,
+  "desc": "Saltos continuos y pequeños usando solo los tobillos, como un muelle.",
+  "steps": [
+   "De pie, pies a la anchura de las caderas.",
+   "Salta unos centímetros usando solo los tobillos.",
+   "Aterriza en el antepié y rebota de inmediato.",
+   "Mantén el ritmo el tiempo marcado."
+  ],
+  "tips": [],
+  "images": [],
+  "credit": null
+ },
+ {
+  "id": "box-jump",
+  "name": "Box Jump",
+  "measure": "reps",
+  "load": null,
+  "zone": "plyo",
+  "equip": [
+   "box"
+  ],
+  "knee": "avoid",
+  "why": "Potencia de pierna con poco impacto (aterrizas arriba).",
+  "cues": [
+   "Brazos atrás y salta",
+   "Aterriza suave en sentadilla",
+   "Baja del cajón andando, no saltando"
+  ],
+  "side": false,
+  "plyo": true,
+  "desc": "Un salto pliométrico desde media sentadilla a un cajón estable, que entrena la potencia del tren inferior.",
+  "steps": [
+   "Mantente a unos 30 cm frente a un cajón firme con los pies a la anchura de los hombros.",
+   "Baja a una media sentadilla y balancea los brazos atrás.",
+   "Lanza los brazos arriba y salta explosivamente al cajón.",
+   "Aterriza suave con los pies planos y rodillas flexionadas.",
+   "Baja caminando — no saltando — y reinicia."
+  ],
+  "tips": [
+   "Baja siempre caminando — los saltos hacia abajo repetidos sobrecargan el Aquiles.",
+   "Aterriza suave con todo el pie, rodillas alineadas con los dedos."
+  ],
+  "images": [
+   "img/box-jump/start.webp",
+   "img/box-jump/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 7.0
+ },
+ {
+  "id": "skater-hop",
+  "name": "Skater Hop",
+  "measure": "reps",
+  "load": null,
+  "zone": "plyo",
+  "equip": [
+   "bw"
+  ],
+  "knee": "avoid",
+  "why": "Estabilidad lateral y aterrizajes a una pierna: cambios de dirección en trail.",
+  "cues": [
+   "Salta de lado a una pierna",
+   "Aterriza y sujeta 1 s",
+   "Rodilla alineada con el pie"
+  ],
+  "side": true,
+  "plyo": true,
+  "desc": "Saltos laterales de una pierna a la otra, como un patinador.",
+  "steps": [
+   "Apoyado en una pierna, flexiona ligeramente.",
+   "Salta lateralmente y aterriza en la otra pierna.",
+   "Estabiliza 1 s antes de saltar de vuelta."
+  ],
+  "tips": [],
+  "images": [
+   "img/skater-hop/skater-hop-1.svg",
+   "img/skater-hop/skater-hop-2.svg",
+   "img/skater-hop/skater-hop-3.svg"
+  ],
+  "credit": "wg"
+ },
+ {
+  "id": "jump-rope",
+  "name": "Jump Rope",
+  "measure": "time",
+  "load": null,
+  "zone": "plyo",
+  "equip": [
+   "rope"
+  ],
+  "knee": "avoid",
+  "why": "Tobillos reactivos y cardio; perfecto en formato tabata.",
+  "cues": [
+   "Saltos bajos, muñecas giran la comba",
+   "Antepié",
+   "Codos pegados"
+  ],
+  "side": false,
+  "plyo": true,
+  "desc": "Un ejercicio cardio clásico que trabaja gemelos, tobillos y ritmo con una cuerda y saltos rítmicos.",
+  "steps": [
+   "Sujeta el mango de la cuerda en cada mano con la cuerda detrás de ti.",
+   "Balancea la cuerda sobre la cabeza y al frente en un arco fluido.",
+   "Salta justo lo suficiente para que la cuerda pase bajo los pies.",
+   "Aterriza suave sobre las puntas, rodillas ligeramente flexionadas.",
+   "Mantén un ritmo constante durante el intervalo indicado."
+  ],
+  "tips": [
+   "Gira la cuerda con las muñecas, no con los hombros.",
+   "Salta bajo — apenas dos o tres centímetros del suelo."
+  ],
+  "images": [
+   "img/jump-rope/main.webp"
+  ],
+  "credit": "repdb",
+  "met": 11.8
+ },
+ {
+  "id": "pull-up",
+  "name": "Pull-Up",
+  "measure": "reps",
+  "load": null,
+  "zone": "upper",
+  "equip": [
+   "bar"
+  ],
+  "knee": "ok",
+  "why": "Espalda fuerte = postura erguida en los últimos kilómetros.",
+  "cues": [
+   "Agarre algo más ancho que los hombros",
+   "Empieza bajando los hombros",
+   "Barbilla por encima de la barra, baja controlado"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un ejercicio compuesto con el peso corporal que trabaja el dorsal ancho y el bíceps.",
+  "steps": [
+   "Cuélgate de una barra con agarre prono, ligeramente más ancho que el ancho de los hombros.",
+   "Súbete hasta que la barbilla quede por encima de la barra.",
+   "Baja con control hasta el cuelgue completo.",
+   "Repite."
+  ],
+  "tips": [
+   "Evita balancearte o usar impulso.",
+   "Activa el dorsal ancho jalando los codos hacia abajo."
+  ],
+  "images": [
+   "img/pull-up/start.webp",
+   "img/pull-up/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "negative-pull-up",
+  "name": "Negative Pull-Up",
+  "measure": "reps",
+  "load": null,
+  "zone": "upper",
+  "equip": [
+   "bar",
+   "box"
+  ],
+  "knee": "ok",
+  "why": "Para sumar dominadas: la bajada lenta construye la fuerza.",
+  "cues": [
+   "Sube con ayuda del cajón",
+   "Baja en 5 s",
+   "Hasta brazos estirados"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Una progresión de dominada centrada en la fase excéntrica, en la que se desciende lentamente desde la barra con control.",
+  "steps": [
+   "Usa un cajón o salta para colocarte en la parte superior de una dominada.",
+   "Agarra la barra con las manos a la anchura de los hombros.",
+   "Mantén el mentón por encima de la barra un momento.",
+   "Bájate lentamente durante 3-5 segundos con control.",
+   "Extiende los brazos completamente en la parte inferior.",
+   "Vuelve a la posición inicial y repite el número de repeticiones deseado."
+  ],
+  "tips": [
+   "Resiste la bajada durante todo el recorrido, sin dejarte caer al final.",
+   "Mantén los hombros activos, lejos de las orejas."
+  ],
+  "images": [
+   "img/negative-pull-up/start.webp",
+   "img/negative-pull-up/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "band-assisted-pull-up",
+  "name": "Band-Assisted Pull-Up",
+  "measure": "reps",
+  "load": null,
+  "zone": "upper",
+  "equip": [
+   "bar",
+   "band"
+  ],
+  "knee": "ok",
+  "why": "Más repeticiones con buena técnica mientras llegas a dominadas completas.",
+  "cues": [
+   "Goma en la barra y bajo una rodilla o el pie",
+   "Recorrido completo",
+   "Sin balanceo"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Una dominada con banda elástica enganchada a la barra que reduce el peso corporal a vencer en cada repetición.",
+  "steps": [
+   "Engancha una banda elástica en la barra de dominadas e introduce un pie en ella.",
+   "Agarra la barra con las palmas mirando hacia afuera, a la anchura de los hombros.",
+   "Tira del pecho hacia la barra impulsando los codos hacia abajo.",
+   "Bájate de forma controlada hasta quedar colgado con los brazos extendidos.",
+   "Repite el número de repeticiones deseado."
+  ],
+  "tips": [
+   "Comprueba que la banda esté bien sujeta antes de colgarte.",
+   "No tomes impulso con las piernas, deja que trabaje la espalda."
+  ],
+  "images": [
+   "img/band-assisted-pull-up/start.webp",
+   "img/band-assisted-pull-up/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "chin-up",
+  "name": "Chin-Up",
+  "measure": "reps",
+  "load": null,
+  "zone": "upper",
+  "equip": [
+   "bar"
+  ],
+  "knee": "ok",
+  "why": "Variante de dominada con más bíceps; suele salir alguna más.",
+  "cues": [
+   "Palmas hacia ti, a la anchura de los hombros",
+   "Pecho hacia la barra",
+   "Baja controlado"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Una variante de dominadas con agarre supino que activa fuertemente los bíceps junto con el dorsal ancho.",
+  "steps": [
+   "Cuélgate de una barra con agarre supino a la anchura de los hombros.",
+   "Sube hasta que el mentón supere la barra.",
+   "Baja de forma controlada.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén el core contraído durante todo el ejercicio.",
+   "Evita el balanceo excesivo."
+  ],
+  "images": [
+   "img/chin-up/start.webp",
+   "img/chin-up/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "scapular-pull-up",
+  "name": "Scapular Pull-Up",
+  "measure": "reps",
+  "load": null,
+  "zone": "shoulder",
+  "equip": [
+   "bar"
+  ],
+  "knee": "ok",
+  "why": "Activa la escápula y prepara el hombro antes de colgarte.",
+  "cues": [
+   "Brazos estirados todo el rato",
+   "Baja los hombros lejos de las orejas",
+   "Sube 2-3 cm y pausa"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un ejercicio en barra de dominadas con brazos extendidos, que entrena la depresión y retracción de las escápulas.",
+  "steps": [
+   "Cuélgate de una barra de dominadas con los brazos completamente extendidos.",
+   "Mantén los brazos rectos durante todo el movimiento.",
+   "Deprime y retrae las escápulas para elevar el pecho.",
+   "Haz una breve pausa en la parte superior del movimiento.",
+   "Regresa a la posición de cuelgue completo.",
+   "Repite el número deseado de repeticiones."
+  ],
+  "tips": [
+   "Piensa en alejar los hombros de las orejas al subir el pecho.",
+   "No intentes convertirlo en una dominada; el recorrido es corto."
+  ],
+  "images": [
+   "img/scapular-pull-up/start.webp",
+   "img/scapular-pull-up/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "dead-hang",
+  "name": "Dead Hang",
+  "measure": "time",
+  "load": null,
+  "zone": "upper",
+  "equip": [
+   "bar"
+  ],
+  "knee": "ok",
+  "why": "Agarre y descompresión del hombro.",
+  "cues": [
+   "Agarre completo",
+   "Hombros ligeramente activos",
+   "Respira"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Una suspensión estática en barra de dominadas que fortalece el agarre y la musculatura de antebrazos y espalda.",
+  "steps": [
+   "Agarra la barra de dominadas con las palmas mirando hacia afuera, a la anchura de los hombros.",
+   "Cuélgate con los brazos completamente extendidos y los pies sin tocar el suelo.",
+   "Relaja los hombros y deja que el cuerpo cuelgue.",
+   "Mantén el core ligeramente activo.",
+   "Aguanta el tiempo deseado."
+  ],
+  "tips": [
+   "Empieza con tiempos cortos y auméntalos de forma gradual.",
+   "Respira tranquilo y evita tensar el cuello."
+  ],
+  "images": [
+   "img/dead-hang/main.webp"
+  ],
+  "credit": "repdb",
+  "met": 4.5
+ },
+ {
+  "id": "dips",
+  "name": "Dips",
+  "measure": "reps",
+  "load": null,
+  "zone": "upper",
+  "equip": [
+   "bar"
+  ],
+  "knee": "ok",
+  "why": "Empuje con el peso del cuerpo; tríceps y pecho.",
+  "cues": [
+   "Baja solo hasta que el hombro quede a la altura del codo",
+   "Torso algo inclinado hacia delante",
+   "Si notas el hombro por delante, menos recorrido"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Fondos en las paralelas de la torre: bajar y subir el cuerpo con los brazos.",
+  "steps": [
+   "Sujétate en las paralelas con los brazos estirados.",
+   "Baja doblando los codos hacia atrás hasta unos 90°.",
+   "Empuja hasta estirar de nuevo los brazos."
+  ],
+  "tips": [
+   "Empieza con negativas lentas o con los pies apoyados en el cajón si no salen 5 limpias."
+  ],
+  "images": [
+   "img/dips/dip-1.svg",
+   "img/dips/dip-2.svg",
+   "img/dips/dip-3.svg"
+  ],
+  "credit": "wg"
+ },
+ {
+  "id": "one-arm-db-row",
+  "name": "One-Arm Dumbbell Row",
+  "measure": "reps",
+  "load": "db",
+  "zone": "upper",
+  "equip": [
+   "db",
+   "box"
+  ],
+  "knee": "ok",
+  "why": "Espalda media y braceo; equilibra todo el empuje.",
+  "cues": [
+   "Mano y rodilla apoyadas en el cajón",
+   "Lleva el codo hacia la cadera",
+   "Espalda plana, sin girar el tronco"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Un ejercicio de espalda unilateral con mancuerna para un desarrollo equilibrado.",
+  "steps": [
+   "Coloca una rodilla y una mano en un banco como apoyo.",
+   "Sostén una mancuerna en la otra mano con el brazo extendido.",
+   "Tira de la mancuerna hacia la cadera apretando el omóplato.",
+   "Baja la mancuerna con control.",
+   "Repite de ambos lados."
+  ],
+  "tips": [
+   "No gires el torso al tirar; mantén la cadera estable.",
+   "Evita encoger el hombro hacia la oreja al iniciar el tirón."
+  ],
+  "images": [
+   "img/one-arm-db-row/start.webp",
+   "img/one-arm-db-row/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "push-up",
+  "name": "Push-Up",
+  "measure": "reps",
+  "load": null,
+  "zone": "upper",
+  "equip": [
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "Empuje y core a la vez, en cualquier sitio.",
+  "cues": [
+   "Manos bajo los hombros",
+   "Cuerpo en tabla, glúteo apretado",
+   "Codos a 45°, pecho casi al suelo"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un ejercicio fundamental con el peso corporal para el pecho, los hombros y los tríceps.",
+  "steps": [
+   "Comienza en posición de plancha alta con las manos a la anchura de los hombros.",
+   "Baja el cuerpo hasta que el pecho casi toque el suelo.",
+   "Empuja hacia arriba hasta la posición inicial.",
+   "Mantén el cuerpo en línea recta en todo momento.",
+   "Repite."
+  ],
+  "tips": [
+   "Aprieta el abdomen y los glúteos para evitar que la cadera caiga.",
+   "No abras los codos en exceso; mantenlos cerca del torso."
+  ],
+  "images": [
+   "img/push-up/start.webp",
+   "img/push-up/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "db-floor-press",
+  "name": "Dumbbell Floor Press",
+  "measure": "reps",
+  "load": "db",
+  "zone": "upper",
+  "equip": [
+   "db"
+  ],
+  "knee": "ok",
+  "why": "Press de pecho sin banco; el suelo limita el recorrido y protege el hombro.",
+  "cues": [
+   "Tumbado, rodillas flexionadas",
+   "Codos a 45° hasta tocar el suelo con los tríceps",
+   "Empuja hacia arriba y algo hacia dentro"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un press con mancuernas realizado tumbado en el suelo, que limita el rango de movimiento para un press más amigable con las articulaciones.",
+  "steps": [
+   "Túmbate en el suelo con una mancuerna en cada mano a la altura del pecho.",
+   "Empuja las mancuernas hacia arriba hasta que los brazos queden extendidos.",
+   "Baja de forma controlada hasta que los codos toquen el suelo.",
+   "Repite."
+  ],
+  "tips": [
+   "El suelo limita la tensión en el hombro en la posición inferior.",
+   "Mantén las muñecas alineadas sobre los codos."
+  ],
+  "images": [
+   "img/db-floor-press/start.webp",
+   "img/db-floor-press/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "half-kneeling-press",
+  "name": "Half-Kneeling Dumbbell Press",
+  "measure": "reps",
+  "load": "db",
+  "zone": "upper",
+  "equip": [
+   "db"
+  ],
+  "knee": "ok",
+  "why": "Hombro fuerte y estable, con el core trabajando contra la rotación.",
+  "cues": [
+   "Rodilla en el suelo del mismo lado que la mancuerna",
+   "Glúteo apretado, costillas abajo",
+   "Sube en línea recta, sin arquear"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Un press por encima de la cabeza de pie con una sola mancuerna.",
+  "steps": [
+   "Colócate de pie con los pies a la anchura de las caderas y sujeta una mancuerna a la altura de un hombro con la palma hacia delante.",
+   "Contrae el abdomen y deja el brazo libre relajado a un lado.",
+   "Empuja la mancuerna en vertical por encima de la cabeza hasta extender del todo el brazo.",
+   "Haz una breve pausa arriba con la parte superior del brazo junto a la oreja.",
+   "Baja la mancuerna de nuevo al hombro de forma controlada.",
+   "Completa las repeticiones con un brazo y luego cambia de lado."
+  ],
+  "tips": [
+   "Mantén las costillas abajo y los glúteos apretados; no te inclines hacia un lado para subir el peso.",
+   "Empuja en línea recta y cerca de la cabeza, no hacia delante."
+  ],
+  "images": [
+   "img/half-kneeling-press/start.webp",
+   "img/half-kneeling-press/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "biceps-curl",
+  "name": "Biceps Curl",
+  "measure": "reps",
+  "load": "db",
+  "zone": "upper",
+  "equip": [
+   "db"
+  ],
+  "knee": "ok",
+  "why": "Opcional: brazos y codo robustos.",
+  "cues": [
+   "Codos pegados al cuerpo",
+   "Sube 1 s, baja 3 s",
+   "Sin balancear"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un ejercicio de aislamiento que trabaja los bíceps.",
+  "steps": [
+   "Párate sosteniendo mancuernas a los lados, palmas hacia adelante.",
+   "Sube las mancuernas hacia los hombros.",
+   "Aprieta en la parte superior, luego baja de forma controlada.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén los codos pegados a los costados.",
+   "Evita balancear las mancuernas."
+  ],
+  "images": [
+   "img/biceps-curl/start.webp",
+   "img/biceps-curl/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "farmer-carry",
+  "name": "Farmer Carry",
+  "measure": "time",
+  "load": "kb",
+  "zone": "upper",
+  "equip": [
+   "kb"
+  ],
+  "knee": "ok",
+  "why": "Agarre, trapecio y core: postura para los últimos kilómetros.",
+  "cues": [
+   "Una KB en cada mano",
+   "Alto, hombros abajo",
+   "Pasos cortos y rápidos"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un acarreo cargado caminando con un peso pesado en cada mano, que reta el agarre, los trapecios y la estabilidad de todo el cuerpo.",
+  "steps": [
+   "Ponte de pie entre dos kettlebells pesadas.",
+   "Flexiona las caderas y agarra las asas con firmeza en agarre neutro.",
+   "Ponte erguido con los hombros atrás y el core activado.",
+   "Camina hacia delante con pasos cortos y controlados.",
+   "Mantén una postura erguida durante todo el recorrido.",
+   "Deja los pesos en el suelo al final de la distancia."
+  ],
+  "tips": [
+   "Aprieta las asas con fuerza para que el peso no te resbale de las manos.",
+   "Mantén el core firme y no te balancees de lado a lado al caminar."
+  ],
+  "images": [
+   "img/farmer-carry/main.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.5
+ },
+ {
+  "id": "suitcase-carry",
+  "name": "Suitcase Carry",
+  "measure": "time",
+  "load": "kb",
+  "zone": "core",
+  "equip": [
+   "kb"
+  ],
+  "knee": "ok",
+  "why": "Core lateral contra la inclinación: pelvis estable al correr.",
+  "cues": [
+   "KB en una sola mano",
+   "No te inclines hacia la pesa",
+   "Camina despacio"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Un paseo cargado con el peso en una sola mano, de modo que el tronco tiene que resistir la inclinación lateral durante todo el recorrido — la versión unilateral del paseo del granjero.",
+  "steps": [
+   "Colócate junto a una sola kettlebell o mancuerna, con los pies a la anchura de las caderas.",
+   "Flexiona por la cadera, agarra el asa con una mano e incorpórate con el peso colgando a un costado.",
+   "Lleva ese hombro abajo y atrás, y aprieta el tronco como si fueran a empujarte de lado.",
+   "Camina hacia delante con zancadas normales y regulares, manteniendo el torso erguido y cuadrado en lugar de inclinarte para escapar del peso.",
+   "Mantén el brazo libre relajado junto al cuerpo, sin separarlo como contrapeso.",
+   "Carga la distancia o el tiempo deseados, deja el peso en el suelo de forma controlada y repite por el otro lado."
+  ],
+  "tips": [
+   "Haz la misma distancia por los dos lados. Todo el valor está en la asimetría, y solo funciona si cargas ambas direcciones por igual.",
+   "Si te inclinas hacia el peso o levantas la cadera contraria, el peso es excesivo: esto es ante todo un ejercicio de postura."
+  ],
+  "images": [
+   "img/suitcase-carry/main.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.5
+ },
+ {
+  "id": "band-external-rotation",
+  "name": "Band External Rotation",
+  "measure": "reps",
+  "load": null,
+  "zone": "shoulder",
+  "equip": [
+   "band"
+  ],
+  "knee": "ok",
+  "why": "Manguito rotador fuerte: lo que previene que vuelva la tendinitis.",
+  "cues": [
+   "Codo pegado al costado a 90° (una toalla entre codo y cuerpo)",
+   "Gira hacia fuera 2 s, vuelve 3 s",
+   "Goma suave: 15 reps sin dolor"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Un ejercicio para el manguito rotador con banda elástica.",
+  "steps": [
+   "Ancla una banda elástica a la altura del codo y colócate de lado a ella, de modo que el brazo que vas a trabajar quede en el lado más alejado del anclaje.",
+   "Sujeta la banda con esa mano, flexiona el codo a 90 grados y pégalo al costado; una toalla pequeña doblada entre el codo y las costillas ayuda a mantenerlo ahí.",
+   "Empieza con el antebrazo apuntando a través del abdomen y la banda con una tensión ligera.",
+   "Rota el antebrazo hacia afuera, alejándolo del cuerpo y del anclaje, con el codo fijo al costado y la muñeca recta.",
+   "Haz una pausa cuando el antebrazo apunte ligeramente hacia afuera, sin inclinarte ni girar el tronco.",
+   "Vuelve despacio a la posición inicial contra la banda, repite el número de repeticiones previsto y luego cambia de brazo."
+  ],
+  "tips": [
+   "Usa una banda ligera y repeticiones lentas; estos músculos pequeños se cansan rápido.",
+   "Mantén el codo pegado al costado; si se separa, los músculos grandes del hombro sustituyen al manguito rotador."
+  ],
+  "images": [
+   "img/band-external-rotation/start.webp",
+   "img/band-external-rotation/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "band-face-pull",
+  "name": "Band Face Pull",
+  "measure": "reps",
+  "load": null,
+  "zone": "shoulder",
+  "equip": [
+   "band"
+  ],
+  "knee": "ok",
+  "why": "Parte posterior del hombro y rotadores externos; contrarresta las horas sentado.",
+  "cues": [
+   "Goma anclada a la altura de la cara",
+   "Tira hacia la frente separando las manos",
+   "Codos altos, pausa 1 s"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Tirón de goma hacia la cara con los codos altos, para el deltoides posterior y los rotadores externos.",
+  "steps": [
+   "Ancla la goma en la torre a la altura de la cara.",
+   "Agarra con las palmas hacia abajo y da un paso atrás.",
+   "Tira hacia la frente separando las manos y abriendo los codos.",
+   "Pausa 1 s y vuelve lento."
+  ],
+  "tips": [],
+  "images": [
+   "img/band-face-pull/banded-face-pull-1.svg",
+   "img/band-face-pull/banded-face-pull-2.svg",
+   "img/band-face-pull/banded-face-pull-3.svg"
+  ],
+  "credit": "wg"
+ },
+ {
+  "id": "band-pull-apart",
+  "name": "Band Pull-Apart",
+  "measure": "reps",
+  "load": null,
+  "zone": "shoulder",
+  "equip": [
+   "band"
+  ],
+  "knee": "ok",
+  "why": "Activa la espalda alta y abre el pecho.",
+  "cues": [
+   "Brazos estirados a la altura del pecho",
+   "Separa hasta tocar el pecho con la goma",
+   "Hombros abajo"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un ejercicio de alto volumen para el deltoides posterior y los retractores escapulares que se realiza separando una banda elástica a la altura de los hombros.",
+  "steps": [
+   "Párate sosteniendo una banda elástica ligera con ambas manos, brazos extendidos al frente a la altura de los hombros.",
+   "Las manos comienzan a la anchura de los hombros, palmas mirando hacia abajo.",
+   "Manteniendo los brazos extendidos, separa la banda llevando las manos hacia los lados.",
+   "Termina con la banda tocando el pecho y los omóplatos juntos.",
+   "Vuelve lentamente a la posición inicial y repite."
+  ],
+  "tips": [
+   "Lidera el movimiento con los meñiques: esto rota externamente los hombros.",
+   "Usa una banda lo suficientemente ligera para hacer 15-30 repeticiones limpias; es un ejercicio preventivo de alto número de repeticiones."
+  ],
+  "images": [
+   "img/band-pull-apart/start.webp",
+   "img/band-pull-apart/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "prone-ytw",
+  "name": "Prone Y-T-W Raise",
+  "measure": "reps",
+  "load": null,
+  "zone": "shoulder",
+  "equip": [
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "Trapecio inferior y escápula: hombro centrado y sin pinzamiento.",
+  "cues": [
+   "Boca abajo, frente en una toalla",
+   "Pulgares hacia arriba; sube los brazos en Y, luego en T, luego en W",
+   "Pequeño recorrido, pausa 2 s arriba"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Tumbado boca abajo, elevas los brazos formando las letras Y, T y W para trabajar los estabilizadores de la escápula.",
+  "steps": [
+   "Túmbate boca abajo con la frente apoyada.",
+   "Y: brazos estirados por delante en diagonal; elévalos con los pulgares hacia arriba.",
+   "T: brazos en cruz; elévalos juntando las escápulas.",
+   "W: codos flexionados junto al cuerpo; elévalos y aprieta. Una repetición = Y + T + W."
+  ],
+  "tips": [],
+  "images": [
+   "img/prone-ytw/prone-y-raise-1.svg",
+   "img/prone-ytw/prone-y-raise-2.svg",
+   "img/prone-ytw/prone-y-raise-3.svg",
+   "img/prone-ytw/prone-t-raise-1.svg",
+   "img/prone-ytw/prone-t-raise-2.svg",
+   "img/prone-ytw/prone-t-raise-3.svg"
+  ],
+  "credit": "wg"
+ },
+ {
+  "id": "bottoms-up-hold",
+  "name": "Kettlebell Bottoms-Up Hold",
+  "measure": "time",
+  "load": "kb",
+  "zone": "shoulder",
+  "equip": [
+   "kb"
+  ],
+  "knee": "ok",
+  "why": "Estabilidad refleja del manguito: la KB boca abajo obliga al hombro a centrarse.",
+  "cues": [
+   "KB de 12 kg boca abajo, codo a 90°",
+   "Aprieta el asa fuerte",
+   "Muñeca recta; si cae, empieza de nuevo"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Un aguante a un brazo en el que la pesa rusa se sostiene boca abajo por el asa a la altura del hombro, con la campana encima de la mano.",
+  "steps": [
+   "Haz una cargada con la pesa rusa hasta el hombro y dale la vuelta, de modo que la campana apunte hacia arriba y el asa quede en tu puño.",
+   "Colócate con los pies separados aproximadamente al ancho de los hombros y el brazo libre relajado a un costado.",
+   "Mantén el antebrazo vertical y el codo cerca de las costillas, con la campana justo encima de la mano.",
+   "Agarra el asa con firmeza y mantén la muñeca recta, como si estuvieras equilibrando una taza.",
+   "Mantén la campana estable durante el tiempo previsto, respirando despacio y con el hombro bajo.",
+   "Baja la pesa rusa con control, ponla de nuevo en su posición normal y cambia de brazo."
+  ],
+  "tips": [
+   "Empieza con una campana muy ligera; un peso que parece fácil sujetado de la forma normal puede ser difícil de mantener nivelado.",
+   "Mantén el hombro bajo y la muñeca alineada sobre el antebrazo; si la campana se inclina, corrige la posición antes de que caiga."
+  ],
+  "images": [
+   "img/bottoms-up-hold/main.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "plank",
+  "name": "Plank",
+  "measure": "time",
+  "load": null,
+  "zone": "core",
+  "equip": [
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "Core anti-extensión: transmite la fuerza de la cadera al suelo.",
+  "cues": [
+   "Codos bajo los hombros",
+   "Glúteo y abdomen apretados",
+   "No hundas la lumbar"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un ejercicio isométrico de core que fortalece toda la zona media.",
+  "steps": [
+   "Apoya los antebrazos en el suelo con los codos bajo los hombros.",
+   "Extiende las piernas hacia atrás y apóyate sobre los dedos de los pies.",
+   "Mantén el cuerpo en línea recta de la cabeza a los talones.",
+   "Contrae el core y aprieta los glúteos.",
+   "Mantén la posición durante el tiempo deseado.",
+   "Baja las rodillas para salir de la posición."
+  ],
+  "tips": [
+   "No dejes que las caderas caigan ni se eleven.",
+   "Aprieta los glúteos y los cuádriceps."
+  ],
+  "images": [
+   "img/plank/main.webp"
+  ],
+  "credit": "repdb",
+  "met": 3.5
+ },
+ {
+  "id": "side-plank",
+  "name": "Side Plank",
+  "measure": "time",
+  "load": null,
+  "zone": "core",
+  "equip": [
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "Oblicuos y cuadrado lumbar: pelvis estable.",
+  "cues": [
+   "Cuerpo en línea",
+   "Cadera alta",
+   "Respira"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Una variación de plancha lateral que trabaja los oblicuos y el core lateral.",
+  "steps": [
+   "Acuéstate de lado con el antebrazo en el suelo y el codo bajo el hombro.",
+   "Levanta las caderas del suelo formando una línea recta de la cabeza a los pies.",
+   "Mantén la posición con el core apretado.",
+   "Respira con regularidad.",
+   "Repite de ambos lados."
+  ],
+  "tips": [
+   "No dejes que la cadera se hunda hacia el suelo.",
+   "Alinea hombros y cadera en un mismo plano, sin rotar el torso."
+  ],
+  "images": [
+   "img/side-plank/main.webp"
+  ],
+  "credit": "repdb",
+  "met": 3.5
+ },
+ {
+  "id": "dead-bug",
+  "name": "Dead Bug",
+  "measure": "reps",
+  "load": null,
+  "zone": "core",
+  "equip": [
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "Control lumbopélvico mientras se mueven brazos y piernas: como al correr.",
+  "cues": [
+   "Lumbar pegada al suelo todo el tiempo",
+   "Brazo y pierna contrarios",
+   "Exhala al estirar"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Un ejercicio de core en decúbito supino que coordina la extensión de extremidades opuestas para entrenar la estabilidad del core profundo.",
+  "steps": [
+   "Túmbate boca arriba con los brazos extendidos hacia el techo y las rodillas a 90 grados.",
+   "Baja el brazo derecho y la pierna izquierda hacia el suelo manteniendo la zona lumbar presionada contra el suelo.",
+   "Regresa a la posición inicial.",
+   "Repite del otro lado.",
+   "Alterna."
+  ],
+  "tips": [
+   "Presiona la zona lumbar contra el suelo en todo momento.",
+   "Muévete despacio."
+  ],
+  "images": [
+   "img/dead-bug/start.webp",
+   "img/dead-bug/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "pallof-press",
+  "name": "Pallof Press",
+  "measure": "reps",
+  "load": null,
+  "zone": "core",
+  "equip": [
+   "band"
+  ],
+  "knee": "ok",
+  "why": "Core anti-rotación: el tronco no se tuerce con el braceo.",
+  "cues": [
+   "Goma anclada a un lado, a la altura del pecho",
+   "Estira los brazos al frente y aguanta 2 s",
+   "No dejes que te gire"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Un ejercicio anti-rotación para el core con una banda elástica anclada a tu lado a la altura del pecho.",
+  "steps": [
+   "Ancla una banda elástica a la altura del pecho y colócate de lado a ella con los pies separados al ancho de los hombros, sujetando la banda con ambas manos en el centro del pecho.",
+   "Aléjate del anclaje hasta que la banda quede en tensión, con las rodillas ligeramente flexionadas y las caderas y los hombros mirando al frente.",
+   "Empuja las manos en línea recta hacia adelante desde el pecho hasta que los brazos queden completamente extendidos, sin dejar que el tronco gire hacia el anclaje.",
+   "Mantén la posición un momento con el cuerpo completamente quieto.",
+   "Vuelve con las manos al pecho con control.",
+   "Completa el número de repeticiones previsto y luego date la vuelta y repite del otro lado."
+  ],
+  "tips": [
+   "El trabajo está en mantener el torso quieto, no en el empuje en sí; usa una banda más ligera si las caderas o los hombros giran.",
+   "Ponte erguido con las costillas bajas y los glúteos ligeramente apretados."
+  ],
+  "images": [
+   "img/pallof-press/start.webp",
+   "img/pallof-press/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "bird-dog",
+  "name": "Bird Dog",
+  "measure": "reps",
+  "load": null,
+  "zone": "core",
+  "equip": [
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "Estabilidad de espalda y glúteo en cuadrupedia; ideal para calentar.",
+  "cues": [
+   "Brazo y pierna contrarios",
+   "Espalda como una mesa (que no caiga un vaso)",
+   "Pausa 2 s estirado"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Un ejercicio de estabilidad del core que extiende el brazo y la pierna opuestos para trabajar los erectores espinales y el core profundo.",
+  "steps": [
+   "Comienza a cuatro patas con la columna en posición neutra.",
+   "Extiende el brazo derecho hacia adelante y la pierna izquierda hacia atrás simultáneamente.",
+   "Aguanta un momento, luego vuelve.",
+   "Repite en el otro lado.",
+   "Alterna."
+  ],
+  "tips": [
+   "Muévete lentamente y con control.",
+   "Mantén las caderas niveladas en todo momento."
+  ],
+  "images": [
+   "img/bird-dog/start.webp",
+   "img/bird-dog/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "hollow-hold",
+  "name": "Hollow Body Hold",
+  "measure": "time",
+  "load": null,
+  "zone": "core",
+  "equip": [
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "Core anterior intenso.",
+  "cues": [
+   "Lumbar pegada al suelo",
+   "Brazos y piernas estirados y despegados",
+   "Rodillas flexionadas para hacerlo más fácil"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un mantenimiento isométrico de core de la gimnasia, que entrena la tensión de cuerpo completo con la columna en ligera forma de C.",
+  "steps": [
+   "Acuéstate boca arriba con los brazos extendidos sobre la cabeza y las piernas rectas.",
+   "Presiona la zona lumbar firmemente contra el suelo.",
+   "Levanta ligeramente los hombros, la cabeza y las piernas del suelo.",
+   "Mantén la posición con brazos y piernas extendidos, cuerpo en forma de plátano poco profundo.",
+   "Sostén durante el tiempo indicado."
+  ],
+  "tips": [
+   "Mantén la zona lumbar pegada al suelo — si se levanta, sube más las piernas.",
+   "Mete ligeramente la barbilla para activar los abdominales superiores."
+  ],
+  "images": [
+   "img/hollow-hold/main.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "vertical-knee-raise",
+  "name": "Vertical Knee Raise",
+  "measure": "reps",
+  "load": null,
+  "zone": "core",
+  "equip": [
+   "bar"
+  ],
+  "knee": "ok",
+  "why": "Abdomen bajo y flexores de cadera: rodillas arriba en las subidas.",
+  "cues": [
+   "Codos apoyados en la torre, espalda pegada",
+   "Sube las rodillas al pecho enrollando la pelvis",
+   "Baja sin balanceo"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un ejercicio de peso corporal en silla romana que trabaja el abdomen bajo y los flexores de cadera.",
+  "steps": [
+   "Colócate en la silla romana con la espalda plana contra el respaldo y los antebrazos en los apoyos.",
+   "Deja las piernas colgando rectas hacia abajo.",
+   "Activa el core y sube las rodillas hacia el pecho.",
+   "Mantén brevemente arriba, luego baja despacio a la posición inicial.",
+   "Repite el número de repeticiones deseado."
+  ],
+  "tips": [
+   "Evita balancear las piernas para tomar impulso.",
+   "Exhala al subir las rodillas."
+  ],
+  "images": [
+   "img/vertical-knee-raise/start.webp",
+   "img/vertical-knee-raise/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "vertical-leg-raise",
+  "name": "Vertical Leg Raise",
+  "measure": "reps",
+  "load": null,
+  "zone": "core",
+  "equip": [
+   "bar"
+  ],
+  "knee": "ok",
+  "why": "Progresión del knee raise.",
+  "cues": [
+   "Piernas estiradas hasta 90°",
+   "Sin balanceo",
+   "Baja en 3 s"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un ejercicio de peso corporal en silla romana para el abdomen bajo con piernas rectas, de mayor dificultad.",
+  "steps": [
+   "Colócate en la silla romana con la espalda plana contra el respaldo y los antebrazos en los apoyos.",
+   "Deja las piernas colgando rectas hacia abajo.",
+   "Con las piernas rectas, súbelas hasta la horizontal o más arriba.",
+   "Mantén brevemente arriba, luego baja despacio.",
+   "Repite el número de repeticiones deseado."
+  ],
+  "tips": [
+   "Mantén las piernas lo más rectas posible.",
+   "Evita el balanceo — controla el movimiento con el core."
+  ],
+  "images": [
+   "img/vertical-leg-raise/start.webp",
+   "img/vertical-leg-raise/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ }
+]

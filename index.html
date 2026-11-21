@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fuerza</title>
+<meta name="description" content="Sesiones de fuerza para corredores: qué toca hoy, registro rápido y progreso.">
+<meta name="theme-color" content="#2E6E4E" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16181B" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<main id="app" aria-live="polite"><p class="loading">Cargando…</p></main>
+<nav id="tabs" aria-label="Secciones">
+  <a href="#/hoy" data-tab="hoy"><span class="ti">●</span>Hoy</a>
+  <a href="#/historial" data-tab="historial"><span class="ti">▤</span>Historial</a>
+  <a href="#/catalogo" data-tab="catalogo"><span class="ti">◇</span>Ejercicios</a>
+  <a href="#/ajustes" data-tab="ajustes"><span class="ti">⚙</span>Ajustes</a>
+</nav>
+<div id="sheet" hidden></div>
+<script src="app.js"></script>
+</body>
+</html>
