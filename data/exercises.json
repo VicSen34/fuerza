@@ -2409,5 +2409,452 @@
   ],
   "credit": "repdb",
   "met": 5.0
+ },
+ {
+  "id": "jumping-jacks",
+  "name": "Jumping Jacks",
+  "measure": "time",
+  "load": null,
+  "zone": "plyo",
+  "equip": [
+   "bw"
+  ],
+  "knee": "avoid",
+  "why": "Calentamiento y cardio en cualquier sitio; sube pulsaciones rápido.",
+  "cues": [
+   "Aterriza suave con el antepié",
+   "Brazos arriba y abajo con ritmo",
+   "Si la rodilla molesta: paso lateral sin salto"
+  ],
+  "side": false,
+  "plyo": true,
+  "desc": "Este clásico ejercicio dinámico de cuerpo completo eleva la frecuencia cardíaca y trabaja pantorrillas, hombros, cuádriceps y glúteos, siendo excelente para calentar o acondicionar.",
+  "steps": [
+   "Ponte de pie con los pies juntos y los brazos a los lados.",
+   "Simultáneamente, salta abriendo las piernas y levantando los brazos por encima de la cabeza.",
+   "Asegúrate de que tus brazos se junten o casi se junten por encima de tu cabeza.",
+   "Salta juntando los pies de nuevo mientras bajas los brazos a los lados.",
+   "Mantén un movimiento continuo y rítmico."
+  ],
+  "tips": [
+   "Aterriza suavemente sobre las puntas de los pies para absorber el impacto.",
+   "Mantén tu core activado durante todo el movimiento."
+  ],
+  "images": [
+   "img/jumping-jacks/start.webp",
+   "img/jumping-jacks/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 8.0
+ },
+ {
+  "id": "high-knees",
+  "name": "High Knees",
+  "measure": "time",
+  "load": null,
+  "zone": "plyo",
+  "equip": [
+   "bw"
+  ],
+  "knee": "avoid",
+  "why": "Técnica de carrera y frecuencia: rodillas arriba, apoyo bajo la cadera.",
+  "cues": [
+   "Tronco alto, sin echarte atrás",
+   "Contacto corto con el antepié",
+   "Brazos como al correr"
+  ],
+  "side": false,
+  "plyo": true,
+  "desc": "Un ejercicio cardio con peso corporal en el que las rodillas suben a la altura de la cadera en alternancia rápida.",
+  "steps": [
+   "Mantente erguido con los pies a la anchura de las caderas.",
+   "Lleva una rodilla arriba hacia el pecho bombeando el brazo opuesto.",
+   "Cambia de pierna rápidamente, espejando la acción del brazo.",
+   "Continúa alternando a ritmo rápido.",
+   "Continúa durante el intervalo de trabajo indicado."
+  ],
+  "tips": [
+   "Sube las rodillas al menos a la altura de la cadera.",
+   "Mantente ligero sobre las puntas de los pies."
+  ],
+  "images": [
+   "img/high-knees/main.webp"
+  ],
+  "credit": "repdb",
+  "met": 8.0
+ },
+ {
+  "id": "jump-squat",
+  "name": "Jump Squat",
+  "measure": "reps",
+  "load": null,
+  "zone": "plyo",
+  "equip": [
+   "bw"
+  ],
+  "knee": "avoid",
+  "why": "Potencia de pierna; aterrizar bien es la mitad del ejercicio.",
+  "cues": [
+   "Baja a media sentadilla y salta",
+   "Aterriza suave y vuelve a bajar",
+   "Rodillas alineadas con los pies"
+  ],
+  "side": false,
+  "plyo": true,
+  "desc": "Una sentadilla pliométrica con peso corporal donde explotas hacia arriba en un salto vertical.",
+  "steps": [
+   "Mantente con los pies a la anchura de los hombros.",
+   "Baja a una media sentadilla con los brazos atrás.",
+   "Explota hacia arriba, balanceando los brazos y saltando lo más alto posible.",
+   "Aterriza suave en media sentadilla para absorber el impacto.",
+   "Repite sin pausa el número de repeticiones indicado."
+  ],
+  "tips": [
+   "Aterriza suave con las rodillas flexionadas.",
+   "Lanza los brazos arriba para ganar altura en el salto."
+  ],
+  "images": [
+   "img/jump-squat/start.webp",
+   "img/jump-squat/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 7.0
+ },
+ {
+  "id": "mountain-climbers",
+  "name": "Mountain Climbers",
+  "measure": "time",
+  "load": null,
+  "zone": "core",
+  "equip": [
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "Core y cardio en plancha; clásico de tabata.",
+  "cues": [
+   "Plancha alta, manos bajo hombros",
+   "Rodillas al pecho alternando, rápido",
+   "Cadera baja y quieta"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un ejercicio dinámico de peso corporal que combina trabajo de core con cardio.",
+  "steps": [
+   "Comienza en posición de plancha alta.",
+   "Lleva una rodilla hacia el pecho.",
+   "Cambia rápidamente de pierna llevando la otra rodilla hacia adelante.",
+   "Continúa alternando a un ritmo brioso.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén los hombros encima de las muñecas todo el tiempo.",
+   "No dejes que la cadera se eleve hacia el techo."
+  ],
+  "images": [
+   "img/mountain-climbers/start.webp",
+   "img/mountain-climbers/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 8.0
+ },
+ {
+  "id": "v-ups",
+  "name": "Bent-Knee V-Up",
+  "measure": "reps",
+  "load": null,
+  "zone": "core",
+  "equip": [
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "Abdomen completo en formato HIIT.",
+  "cues": [
+   "Sentado, rodillas flexionadas, tronco inclinado",
+   "Acerca rodillas y pecho a la vez",
+   "Controla la bajada; si molesta la lumbar, hollow hold"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un ejercicio dinámico de core que eleva las piernas y el torso juntos formando una V, trabajando los abdominales y los flexores de la cadera.",
+  "steps": [
+   "Túmbate boca arriba con los brazos extendidos por encima de la cabeza y las piernas rectas.",
+   "Levanta simultáneamente las piernas y la parte superior del cuerpo hacia el centro.",
+   "Alcanza las manos hacia los pies en la parte superior, formando una V.",
+   "Mantén las piernas rectas durante todo el movimiento.",
+   "Baja ambos extremos de forma controlada hasta el suelo.",
+   "Repite el número de repeticiones deseado."
+  ],
+  "tips": [
+   "Mantén las piernas estiradas mientras las elevas.",
+   "Lleva las manos hacia los pies en la parte alta."
+  ],
+  "images": [
+   "img/v-ups/start.webp",
+   "img/v-ups/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "side-lunge",
+  "name": "Lateral Lunge",
+  "measure": "reps",
+  "load": "kb",
+  "zone": "legs",
+  "equip": [
+   "kb",
+   "bw"
+  ],
+  "knee": "care",
+  "why": "Fuerza lateral y aductores: cambios de dirección en trail y esquí.",
+  "cues": [
+   "Paso amplio al lado, cadera atrás",
+   "La otra pierna estirada, pies apuntando al frente",
+   "KB en el pecho (goblet) para cargar"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Una zancada lateral que da un paso amplio hacia un lado, trabajando los cuádriceps, glúteos y la cara interna de los muslos en un patrón lateral.",
+  "steps": [
+   "De pie con los pies al ancho de las caderas y las manos en el pecho.",
+   "Da un paso amplio hacia un lado con una pierna, manteniendo la otra recta.",
+   "Flexiona la rodilla de la pierna que dio el paso y empuja las caderas hacia atrás en una sentadilla lateral.",
+   "Mantén el pecho erguido y el talón de trabajo apoyado.",
+   "Empuja con la pierna flexionada para volver a la posición de pie.",
+   "Completa las repeticiones de un lado y luego cambia."
+  ],
+  "tips": [
+   "Empuja las caderas hacia atrás mientras flexionas la rodilla del paso.",
+   "Mantén la pierna contraria estirada y ambos talones apoyados."
+  ],
+  "images": [
+   "img/side-lunge/start.webp",
+   "img/side-lunge/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "curtsy-lunge",
+  "name": "Curtsy Lunge",
+  "measure": "reps",
+  "load": "kb",
+  "zone": "legs",
+  "equip": [
+   "kb",
+   "bw"
+  ],
+  "knee": "care",
+  "why": "Glúteo medio y estabilidad de rodilla en zancada cruzada.",
+  "cues": [
+   "Cruza una pierna por detrás, en diagonal",
+   "Cadera cuadrada al frente",
+   "Rodilla delantera sobre el pie"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Zancada en la que la pierna de atrás se cruza en diagonal por detrás de la de delante, como una reverencia.",
+  "steps": [
+   "De pie con la KB en el pecho.",
+   "Lleva una pierna atrás cruzándola por detrás de la otra.",
+   "Baja hasta que la rodilla de atrás casi toque el suelo.",
+   "Vuelve empujando con la pierna de delante."
+  ],
+  "tips": [],
+  "images": [
+   "img/curtsy-lunge/curtsy-lunge-1.svg",
+   "img/curtsy-lunge/curtsy-lunge-2.svg",
+   "img/curtsy-lunge/curtsy-lunge-3.svg"
+  ],
+  "credit": "wg"
+ },
+ {
+  "id": "sumo-squat",
+  "name": "Kettlebell Sumo Squat",
+  "measure": "reps",
+  "load": "kb",
+  "zone": "legs",
+  "equip": [
+   "kb"
+  ],
+  "knee": "care",
+  "why": "Sentadilla abierta: aductores y glúteo.",
+  "cues": [
+   "Pies muy abiertos, puntas hacia fuera",
+   "KB colgando entre las piernas",
+   "Rodillas siguen la dirección de los pies"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Una sentadilla de pies anchos sujetando una mancuerna en vertical entre las piernas, que enfatiza la cara interna de los muslos y los glúteos.",
+  "steps": [
+   "Ponte de pie con los pies más anchos que los hombros y las puntas giradas hacia afuera unos 30 grados.",
+   "Sujeta una mancuerna en vertical por el extremo superior con ambas manos, dejándola colgar entre las piernas.",
+   "Activa el core y mantén el pecho alto.",
+   "Flexiona caderas y rodillas para bajar recto en una sentadilla profunda.",
+   "Empuja con los talones para volver a ponerte de pie.",
+   "Repite el número de repeticiones deseado."
+  ],
+  "tips": [
+   "Alinea las rodillas con las puntas de los pies; no dejes que se vayan hacia dentro.",
+   "Mantén el torso tan erguido como te permita la movilidad de cadera."
+  ],
+  "images": [
+   "img/sumo-squat/start.webp",
+   "img/sumo-squat/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "kb-overhead-press",
+  "name": "Kettlebell Overhead Press",
+  "measure": "reps",
+  "load": "kb",
+  "zone": "upper",
+  "equip": [
+   "kb"
+  ],
+  "knee": "ok",
+  "why": "Hombro fuerte y estable por encima de la cabeza.",
+  "cues": [
+   "KB en rack, codo bajo la muñeca",
+   "Glúteo y abdomen apretados, sin arquear",
+   "Sube hasta bloquear el codo junto a la oreja"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Un press de hombro estricto a un brazo con pesa rusa, que exige estabilidad del core para evitar la inclinación lateral.",
+  "steps": [
+   "Sostén una pesa rusa en posición de rack en un hombro.",
+   "De pie con los pies a la anchura de las caderas.",
+   "Empuja la pesa rusa recto hacia arriba hasta bloquear el codo.",
+   "Mantén el core apretado durante todo el ejercicio.",
+   "Baja la pesa rusa a la posición de rack con control.",
+   "Completa las repeticiones de un lado y luego cambia."
+  ],
+  "tips": [
+   "No te inclines hacia el lado contrario al empujar.",
+   "Mantén el antebrazo vertical bajo la pesa durante el recorrido."
+  ],
+  "images": [
+   "img/kb-overhead-press/start.webp",
+   "img/kb-overhead-press/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "upright-row",
+  "name": "Kettlebell Upright Row",
+  "measure": "reps",
+  "load": "kb",
+  "zone": "upper",
+  "equip": [
+   "kb"
+  ],
+  "knee": "ok",
+  "why": "Trapecio y deltoides; el de los vídeos de Caroline Girvan.",
+  "cues": [
+   "Codos por encima de las manos, solo hasta el pecho",
+   "Agarre ancho",
+   "Si pinza el hombro, cámbialo por face pull"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un movimiento de tirón compuesto con mancuernas que trabaja los deltoides laterales y el trapecio superior.",
+  "steps": [
+   "Párate sosteniendo dos mancuernas frente a los muslos, palmas hacia el cuerpo.",
+   "Tira de las mancuernas recto hacia arriba a lo largo del cuerpo, liderando con los codos.",
+   "Sube hasta la altura del mentón con los codos por encima de las muñecas.",
+   "Pausa brevemente, luego baja con control.",
+   "Repite el número de repeticiones deseado."
+  ],
+  "tips": [
+   "Mantén las mancuernas cerca del cuerpo durante todo el movimiento.",
+   "Lidera con los codos, no con las manos."
+  ],
+  "images": [
+   "img/upright-row/start.webp",
+   "img/upright-row/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "kb-close-grip-press",
+  "name": "Kettlebell Close-Grip Floor Press",
+  "measure": "reps",
+  "load": "kb",
+  "zone": "upper",
+  "equip": [
+   "kb"
+  ],
+  "knee": "ok",
+  "why": "Tríceps y pecho tumbado en el suelo («tricep diamond press»).",
+  "cues": [
+   "KB sujeta por los lados de la bola",
+   "Codos pegados al cuerpo",
+   "Baja hasta tocar el suelo con los tríceps"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un press de suelo con una sola pesa rusa agarrada con ambas manos juntas, que desplaza el énfasis del pecho a los tríceps.",
+  "steps": [
+   "Túmbate boca arriba en el suelo con las rodillas flexionadas y los pies apoyados.",
+   "Sujeta una única pesa rusa por el asa con ambas manos juntas, con la pesa apoyada en el pecho y los codos bien pegados a las costillas.",
+   "Activa el core y empuja la pesa rusa recto hacia arriba hasta estirar del todo los brazos.",
+   "Baja de forma controlada hasta que la parte alta de los brazos toque el suelo y haz una breve pausa.",
+   "Vuelve a empujar hacia arriba hasta la extensión completa.",
+   "Repite el número de repeticiones recomendado."
+  ],
+  "tips": [
+   "Mantén los codos pegados a unos 30–45 grados del torso; abrirlos lo convierte en press de pecho.",
+   "La breve pausa al tocar el suelo con los codos elimina el rebote y fuerza un empuje limpio."
+  ],
+  "images": [
+   "img/kb-close-grip-press/start.webp",
+   "img/kb-close-grip-press/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 6.0
+ },
+ {
+  "id": "kb-overhead-triceps",
+  "name": "Kettlebell Overhead Triceps Extension",
+  "measure": "reps",
+  "load": "kb",
+  "zone": "upper",
+  "equip": [
+   "kb"
+  ],
+  "knee": "ok",
+  "why": "Tríceps con la KB detrás de la cabeza («tricep press»).",
+  "cues": [
+   "KB con las dos manos detrás de la cabeza",
+   "Codos apuntando al techo y cerrados",
+   "Costillas abajo, sin arquear"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Una extensión de tríceps por encima de la cabeza sosteniendo una pesa rusa por las asas con ambas manos.",
+  "steps": [
+   "Párate o siéntate sosteniendo una pesa rusa por las asas (boca abajo) con ambas manos por encima de la cabeza.",
+   "Brazos completamente extendidos, campana sobre la cabeza.",
+   "Flexiona solo los codos para bajar la campana detrás de la cabeza en un arco controlado.",
+   "Mantén los brazos verticales y pegados a la cabeza; solo los antebrazos se mueven.",
+   "Extiende los codos para devolver la campana por encima de la cabeza.",
+   "Repite el número recomendado de repeticiones."
+  ],
+  "tips": [
+   "Agarra las asas firmemente — la campana tiende a rotar en la parte inferior.",
+   "Los codos se mantienen pegados; si se abren, reduce la carga."
+  ],
+  "images": [
+   "img/kb-overhead-triceps/start.webp",
+   "img/kb-overhead-triceps/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
  }
 ]

@@ -4,7 +4,7 @@
  */
 'use strict';
 
-const VERSION = '0.4.1';
+const VERSION = '0.5.0';
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pad = n => String(n).padStart(2, '0');
@@ -306,6 +306,8 @@ function mkStep(b, bi, it, ii, exId, set, sets, rest, circuit) {
     rest, note: swapped ? null : it.note || null, alt: swapped ? null : it.alt || null, origEx: it.ex};
 }
 function estMinutes(routine) {
+  if (routine.video) return routine.video.minutes || 15;
+  if (routine.timer) return Math.max(1, Math.round(timerSegments(routine).reduce((a, x) => a + x.dur, 0) / 60));
   let s = 0, prev = null;
   for (const st of buildSteps(routine)) {
     const sides = st.side ? 2 : 1;
@@ -314,17 +316,19 @@ function estMinutes(routine) {
   }
   return Math.round(s / 60 / 5) * 5 || 5;
 }
+/** A set counts for progress only if it has the exercise's own measure (timed video/tabata sets of a reps exercise don't). */
+function validSet(exId, x) { const e = S.ex[exId] || {}; return !x.skipped && (e.measure === 'time' ? x.time != null : x.reps != null); }
 function lastSetsFor(exId, beforeId) {
   for (let i = S.logs.length - 1; i >= 0; i--) {
     const l = S.logs[i]; if (l.id === beforeId) continue;
-    const sets = l.sets.filter(x => x.ex === exId && !x.skipped);
+    const sets = l.sets.filter(x => x.ex === exId && validSet(exId, x));
     if (sets.length) return {date: l.date, sets};
   }
   return null;
 }
 function lastLogFor(exId) {
   for (let i = S.logs.length - 1; i >= 0; i--) {
-    const l = S.logs[i]; const sets = l.sets.filter(x => x.ex === exId && !x.skipped);
+    const l = S.logs[i]; const sets = l.sets.filter(x => x.ex === exId && validSet(exId, x));
     if (sets.length) return {date: l.date, feel: l.feel, sets};
   }
   return null;
@@ -376,10 +380,12 @@ async function startRoutine(id) {
   audio.unlock();
   S.cur = {id: `${today()}-${Date.now().toString(36)}`, routineId: id, name: r.name, date: today(),
     start: new Date().toISOString(), swaps: {}, idx: 0, res: {}, note: (plannedFor(today()) || {}).note || ''};
-  S.cur.steps = buildSteps(r);
+  S.cur.steps = r.timer || r.video ? [] : buildSteps(r);
   S.cur.vals = {};
+  if (r.timer) Object.assign(S.cur, {kind: 'timer', t0: null, pausedMs: 0, pauseAt: null, amrapRounds: 0});
+  if (r.video) Object.assign(S.cur, {kind: 'video', items: r.blocks.flatMap(b => b.items).map((it, i) => ({i, ex: it.ex, at: it.at || 0, time: it.time || 30, sets: it.sets || 1, label: it.label || '', done: true, reps: ''}))});
   await saveCur();
-  go('#/sesion');
+  go(r.timer ? '#/timer' : r.video ? '#/video' : '#/sesion');
 }
 function curStep() { return S.cur && S.cur.steps[S.cur.idx]; }
 function stepVals(st) { return S.cur.vals[st.key] || (S.cur.vals[st.key] = prefill(st)); }
@@ -498,9 +504,10 @@ function routineCard(r, note, hero) {
   const items = r.blocks.flatMap(b => b.items.map(it => ({it, b})));
   return `<div class="card ${hero ? 'hero' : ''}"><div class="mut small">Toca hoy · ~${estMinutes(r)} min</div><h1 style="font-size:1.35rem">${esc(r.name)}</h1>
     <p class="mut small">${esc(r.goal || '')}</p>${r.kit ? `<p><span class="chip acc">🏋 ${esc(r.kit)}</span></p>` : ''}
+    ${r.timer ? `<p><span class="chip warn">⏱ ${esc(timerLabel(r))}</span></p>` : ''}${r.video ? `<p><span class="chip warn">▶ Vídeo de YouTube · se registra al terminar</span></p>` : ''}
     ${note ? `<div class="note">${esc(note)}</div>` : ''}
     <ul class="list" style="margin:8px 0 12px">${items.map(({it, b}) => { const e = S.ex[it.ex] || {name: it.ex};
-      return `<li><div class="thumb ${isSvg(e) ? 'svg' : ''}" style="${isSvg(e) ? 'background:#3E5C76' : ''}">${imgHTML(e)}</div><div class="grow"><b>${esc(e.name)}</b><div class="mut small">${esc(itemSummary(it))}${b.circuit ? ` · circuito ×${b.rounds}` : ''}${suggestFor(it.ex, it) ? ' · <span class="up-txt">⬆ toca subir</span>' : ''}</div></div></li>`; }).join('')}</ul>
+      return `<li><div class="thumb ${isSvg(e) ? 'svg' : ''}" style="${isSvg(e) ? 'background:#3E5C76' : ''}">${imgHTML(e)}</div><div class="grow"><b>${esc(e.name)}</b><div class="mut small">${esc(r.video ? `${r.video.timestamps === false ? '' : mmss(it.at || 0) + ' · '}${it.sets > 1 ? it.sets + ' × ' : ''}${it.time || 30} s${it.label ? ' · ' + it.label : ''}` : r.timer ? (it.reps ? `${it.reps} reps` : r.timer.mode === 'intervals' ? `${r.timer.work} s` : '') : itemSummary(it))}${b.circuit ? ` · circuito ×${b.rounds}` : ''}${!r.timer && !r.video && suggestFor(it.ex, it) ? ' · <span class="up-txt">⬆ toca subir</span>' : ''}</div></div></li>`; }).join('')}</ul>
     <button class="btn primary big" data-act="start" data-id="${r.id}">Empezar</button></div>`;
 }
 
@@ -567,6 +574,9 @@ views.rutina = (id) => {
 /* ------------------------------------------------------------------ the player */
 views.sesion = () => {
   if (!S.cur) return go('#/hoy');
+  if (S.cur.kind === 'timer') return go('#/timer');
+  if (S.cur.kind === 'video') return go('#/video');
+  if (/done$/.test(S.cur.kind || '')) return go('#/fin');
   document.body.classList.add('in-session'); wake(true);
   const st = curStep();
   if (!st) return go('#/fin');
@@ -747,12 +757,172 @@ function holdTimer(st, v) {
   });
 }
 
+/* ------------------------------------------------------------------ timer sessions: intervals (tabata), EMOM, AMRAP */
+function timerLabel(r) {
+  const t = r.timer;
+  if (t.mode === 'emom') return `EMOM ${t.minutes}' · un ejercicio al empezar cada minuto`;
+  if (t.mode === 'amrap') return `AMRAP ${t.minutes}' · todas las rondas que puedas`;
+  return `${t.work}" trabajo / ${t.rest}" descanso × ${t.rounds}${r.blocks.length > 1 ? ` · ${r.blocks.length} ciclos` : ''}`;
+}
+function timerSegments(r) {
+  const t = r.timer, segs = [];
+  if (t.prep !== 0) segs.push({kind: 'prep', dur: t.prep || 10});
+  if (t.mode === 'emom') {
+    const items = r.blocks.flatMap(b => b.items);
+    for (let m = 1; m <= t.minutes; m++) { const it = items[(m - 1) % items.length]; segs.push({kind: 'work', dur: 60, ex: it.ex, target: it.reps ? `${it.reps} reps y descansa el resto del minuto` : '', reps: it.reps, kg: it.kg, round: m, of: t.minutes}); }
+  } else if (t.mode === 'amrap') {
+    segs.push({kind: 'amrap', dur: t.minutes * 60, items: r.blocks.flatMap(b => b.items)});
+  } else {
+    r.blocks.forEach((b, bi) => {
+      for (let k = 1; k <= t.rounds; k++) {
+        const it = b.items[(k - 1) % b.items.length];
+        segs.push({kind: 'work', dur: t.work, ex: it.ex, target: it.reps ? `${it.reps} reps` : 'a tope, con buena técnica', kg: it.kg, round: k, of: t.rounds, block: bi + 1, blocks: r.blocks.length, title: b.title});
+        const lastRound = k === t.rounds, lastBlock = bi === r.blocks.length - 1;
+        if (!lastRound) segs.push({kind: 'rest', dur: t.rest});
+        else if (!lastBlock) segs.push({kind: 'blockRest', dur: t.blockRest || 60});
+      }
+    });
+  }
+  let acc = 0; segs.forEach(x => { x.t = acc; acc += x.dur; });
+  return segs;
+}
+function say(text) {
+  if (S.settings.voice === false || !('speechSynthesis' in window)) return;
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = 'es-ES'; u.rate = 1.05; speechSynthesis.speak(u); } catch (e) {}
+}
+const timerElapsed = c => !c.t0 ? 0 : ((c.pauseAt || Date.now()) - c.t0 - (c.pausedMs || 0)) / 1000;
+views.timer = () => {
+  if (!S.cur || S.cur.kind !== 'timer') return go('#/hoy');
+  document.body.classList.add('in-session'); wake(true);
+  const r = S.routines[S.cur.routineId]; const segs = timerSegments(r); const total = segs[segs.length - 1].t + segs[segs.length - 1].dur;
+  if (!S.cur.t0) {
+    app().innerHTML = `<div class="ptop"><button class="btn ghost" data-act="exit" aria-label="Salir">✕</button><div class="grow small mut" style="text-align:center">${esc(r.name)}</div></div>
+      <div class="card hero"><h1 style="font-size:1.4rem">${esc(r.name)}</h1><p><span class="chip warn">⏱ ${esc(timerLabel(r))}</span> <span class="chip">${Math.round(total / 60)} min</span></p>
+      <p class="small mut">Pon tu música: los pitidos y la voz suenan por encima. La pantalla no se apagará.</p>
+      ${r.blocks.map(b => `<h3 style="margin-top:12px">${esc(b.title || '')}</h3><ul class="list">${b.items.map(it => { const e = S.ex[it.ex] || {name: it.ex};
+        return `<li><div class="thumb" style="${isSvg(e) ? 'background:#3E5C76' : ''}">${imgHTML(e)}</div><div class="grow"><b>${esc(e.name)}</b><div class="mut small">${it.reps ? it.reps + ' reps' : ''}${it.kg ? ' · ' + it.kg + ' kg' : ''}</div></div></li>`; }).join('')}</ul>`).join('')}
+      <button class="btn primary big" data-act="go" style="margin-top:12px">▶ Empezar</button></div>`;
+    app().onclick = async ev => { const a = ev.target.closest('[data-act]'); if (!a) return;
+      if (a.dataset.act === 'go') { audio.unlock(); say('Prepárate'); S.cur.t0 = Date.now(); await saveCur(); views.timer(); }
+      if (a.dataset.act === 'exit') { openSheet(`<h2 style="margin-top:0">Sesión</h2><button class="btn ghost big" data-act2="pause">Salir (seguir luego)</button><button class="btn ghost big" style="margin-top:10px;color:var(--clay)" data-act2="discard">Descartar sesión</button>`); } };
+    return;
+  }
+  let shown = -1;
+  const draw = (i) => {
+    const sg = segs[i]; const e = sg.ex ? S.ex[sg.ex] || {name: sg.ex} : null;
+    const nextWork = segs.slice(i + 1).find(x => x.kind === 'work');
+    const ne = nextWork ? S.ex[nextWork.ex] || {name: nextWork.ex} : null;
+    const label = {prep: 'Prepárate', work: '¡Trabajo!', rest: 'Descanso', blockRest: 'Descanso largo', amrap: 'AMRAP'}[sg.kind];
+    const info = sg.kind === 'work' ? (r.timer.mode === 'emom' ? `Minuto ${sg.round} de ${sg.of}` : `Ronda ${sg.round}/${sg.of}${sg.blocks > 1 ? ` · ciclo ${sg.block}/${sg.blocks}` : ''}`) : '';
+    app().innerHTML = `<div class="overlay ${sg.kind === 'work' || sg.kind === 'amrap' ? 'work' : ''}" style="justify-content:flex-start;padding-top:calc(18px + env(safe-area-inset-top));overflow:auto">
+      <div class="row" style="width:100%;max-width:480px"><span class="small mut grow" style="text-align:left">${esc(r.name)}</span><span class="small mut" id="tot"></span></div>
+      <div class="phase" style="margin-top:8px">${label}${info ? ' · ' + info : ''}</div>
+      <div class="ring">${ring(1)}<div class="count" id="cnt">0</div></div>
+      ${sg.kind === 'amrap' ? `<div class="card" style="width:100%;max-width:480px;text-align:left"><div class="row between"><b>Rondas completas</b><span class="big-num" id="amr">${S.cur.amrapRounds}</span></div>
+          <ul class="list">${sg.items.map(it => `<li><b class="grow">${esc((S.ex[it.ex] || {name: it.ex}).name)}</b><span>${it.reps || ''}${(S.ex[it.ex] || {}).side ? '/lado' : ''}${it.kg ? ' · ' + it.kg + ' kg' : ''}</span></li>`).join('')}</ul>
+          <button class="btn primary big" data-act="round">+1 ronda</button></div>`
+        : e ? `<div style="width:100%;max-width:420px">${flipHTML(e)}</div><div class="exname">${esc(e.name)}</div><div class="mut">${esc(sg.target || '')}${sg.kg ? ' · ' + sg.kg + ' kg' : ''}</div>`
+        : ne ? `<div class="next card" style="margin-top:8px"><div class="mut small">Siguiente</div><div class="row"><div class="thumb" style="${isSvg(ne) ? 'background:#3E5C76' : ''}">${imgHTML(ne)}</div><div class="grow" style="text-align:left"><b>${esc(ne.name)}</b><div class="small mut">${esc(nextWork.target || '')}</div></div></div></div>` : ''}
+      <div class="row"><button class="btn" data-act="pause">${S.cur.pauseAt ? '▶ Seguir' : '❚❚ Pausa'}</button><button class="btn" data-act="next">⏭ Saltar</button><button class="btn ghost" data-act="end">Terminar</button></div></div>`;
+    startFlip();
+  };
+  const tick = (once) => {
+    const el = timerElapsed(S.cur);
+    if (el >= total) return finishTimer(r, segs, total);
+    const i = segs.findIndex(x => el >= x.t && el < x.t + x.dur);
+    const sg = segs[i]; const left = sg.t + sg.dur - el;
+    if (i !== shown) {
+      shown = i; draw(i);
+      if (S.cur.pauseAt == null && once('seg' + i)) {
+        const e = sg.ex ? (S.ex[sg.ex] || {name: sg.ex}).name : '';
+        const nw = segs.slice(i + 1).find(x => x.kind === 'work'); const nn = nw ? (S.ex[nw.ex] || {name: nw.ex}).name : '';
+        if (sg.kind === 'work') { audio.beep(990, 0.35); buzz([200]); say(r.timer.mode === 'emom' ? `Minuto ${sg.round}. ${sg.reps ? sg.reps + ' ' : ''}${e}` : e); }
+        if (sg.kind === 'rest') { audio.beep(520, 0.3); say(`Descanso. Siguiente: ${nn}`); }
+        if (sg.kind === 'blockRest') { audio.beep(520, 0.3); say(`Descanso largo. Luego, ${nn}`); }
+        if (sg.kind === 'amrap') { audio.beep(990, 0.35); say(`Vamos. ${r.timer.minutes} minutos, todas las rondas que puedas`); }
+      }
+    }
+    const c = $('#cnt'); if (!c) return;
+    c.textContent = sg.dur >= 60 ? mmss(Math.ceil(left)) : Math.ceil(left); setRing(left / sg.dur);
+    const tt = $('#tot'); if (tt) tt.textContent = `quedan ${mmss(total - el)}`;
+    const s2 = Math.ceil(left);
+    if (S.cur.pauseAt == null && s2 <= 3 && s2 > 0 && once(`${i}-${s2}`)) audio.beep(660, 0.1);
+    if (sg.kind === 'amrap' && S.cur.pauseAt == null) {
+      if (Math.abs(left - sg.dur / 2) < 0.3 && once('half')) say('Mitad');
+      if (left <= 60 && left > 59 && once('lastmin')) say('Último minuto');
+    }
+  };
+  app().onclick = async ev => {
+    const a = ev.target.closest('[data-act]'); if (!a) return;
+    const act = a.dataset.act;
+    if (act === 'pause') { if (S.cur.pauseAt) { S.cur.pausedMs += Date.now() - S.cur.pauseAt; S.cur.pauseAt = null; } else S.cur.pauseAt = Date.now(); shown = -1; await saveCur(); }
+    if (act === 'next') { const el = timerElapsed(S.cur); const sg = segs.find(x => el >= x.t && el < x.t + x.dur); if (sg) { S.cur.t0 -= (sg.t + sg.dur - el) * 1000; await saveCur(); } }
+    if (act === 'round') { S.cur.amrapRounds++; $('#amr').textContent = S.cur.amrapRounds; buzz(40); await saveCur(); }
+    if (act === 'end' && confirm('¿Terminar ya y guardar lo hecho?')) { stopTicker(); finishTimer(r, segs, Math.min(total, timerElapsed(S.cur))); }
+  };
+  runTicker(tick);
+};
+async function finishTimer(r, segs, upTo) {
+  stopTicker(); audio.beep(990, 0.5); say('¡Terminado! Buen trabajo');
+  const steps = [], res = {};
+  if (r.timer.mode === 'amrap') {
+    const n = S.cur.amrapRounds || 0;
+    segs.find(x => x.kind === 'amrap').items.forEach((it, ii) => { for (let k = 1; k <= Math.max(1, n); k++) {
+      const key = `a.${ii}.${k}`; steps.push({key, ex: it.ex, set: k});
+      if (n) res[key] = {ex: it.ex, set: k, reps: it.reps || null, kg: it.kg || null, time: null, side: !!(S.ex[it.ex] || {}).side, timer: true}; } });
+    S.cur.notes = S.cur.notes || `AMRAP ${r.timer.minutes}': ${n} rondas`;
+  } else {
+    segs.forEach((sg, i) => { if (sg.kind !== 'work') return;
+      const key = `t.${i}`; steps.push({key, ex: sg.ex, set: sg.round});
+      const done = Math.max(0, Math.min(sg.dur, upTo - sg.t));
+      if (done >= sg.dur * 0.5) { const e = S.ex[sg.ex] || {};
+        res[key] = {ex: sg.ex, set: sg.round, time: r.timer.mode === 'emom' ? null : Math.round(done), reps: r.timer.mode === 'emom' ? sg.reps || null : null, kg: sg.kg || null, side: !!e.side, timer: true}; } });
+  }
+  S.cur.steps = steps; S.cur.res = res; S.cur.kind = 'timer-done'; await saveCur(); go('#/fin');
+}
+
+/* ------------------------------------------------------------------ video sessions: follow a YouTube video, log its exercises */
+views.video = () => {
+  if (!S.cur || S.cur.kind !== 'video') return go('#/hoy');
+  document.body.classList.add('in-session'); wake(true);
+  const r = S.routines[S.cur.routineId]; const v = r.video;
+  const src = (at, play = true) => `https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.id)}?start=${Math.floor(at)}&playsinline=1&rel=0${play ? '&autoplay=1' : ''}`;
+  app().innerHTML = `<div class="ptop"><button class="btn ghost" data-act="exit" aria-label="Salir">✕</button><div class="grow small mut" style="text-align:center">${esc(r.name)}</div></div>
+    <div style="position:relative;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:#000"><iframe id="yt" src="${src(v.start || 0, false)}" title="${esc(r.name)}" style="position:absolute;inset:0;width:100%;height:100%;border:0" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>
+    <p class="tiny mut" style="margin:6px 0">¿No se ve? <a href="https://www.youtube.com/watch?v=${encodeURIComponent(v.id)}" target="_blank" rel="noopener">Ábrelo en YouTube</a> y vuelve aquí al terminar.</p>
+    <h2>Ejercicios del vídeo</h2><p class="small mut">Toca el minuto para ir a ese ejercicio. Al terminar, desmarca lo que no hiciste; las reps son opcionales.</p>
+    <div class="card"><ul class="list">${S.cur.items.map(it => { const e = S.ex[it.ex] || {name: it.ex};
+      return `<li><input type="checkbox" data-done="${it.i}" ${it.done ? 'checked' : ''} style="width:22px;height:22px;accent-color:var(--acc)">
+        ${v.timestamps === false ? '' : `<button class="btn small ghost" data-at="${it.at}">${mmss(it.at)}</button>`}
+        <div class="grow"><b>${esc(e.name)}</b><div class="tiny mut">${esc(it.label || '')}${it.label ? ' · ' : ''}${it.sets > 1 ? it.sets + ' × ' : ''}${it.time} s</div></div>
+        ${e.measure === 'reps' ? `<input data-reps="${it.i}" value="${esc(it.reps)}" inputmode="numeric" placeholder="reps" style="width:58px;padding:8px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink)">` : ''}</li>`; }).join('')}</ul></div>
+    <button class="btn primary big" data-act="finish">Terminar y guardar</button>`;
+  app().onclick = async ev => {
+    const t = ev.target.closest('[data-at]'); if (t) { $('#yt').src = src(+t.dataset.at); return; }
+    const a = ev.target.closest('[data-act]'); if (!a) return;
+    if (a.dataset.act === 'exit') return openSheet(`<h2 style="margin-top:0">Sesión</h2><button class="btn ghost big" data-act2="pause">Salir (seguir luego)</button><button class="btn ghost big" style="margin-top:10px;color:var(--clay)" data-act2="discard">Descartar sesión</button>`);
+    if (a.dataset.act === 'finish') {
+      const cnt = {}; S.cur.steps = []; S.cur.res = {};
+      S.cur.items.forEach(it => { for (let k = 0; k < (it.sets || 1); k++) { cnt[it.ex] = (cnt[it.ex] || 0) + 1; const key = `v.${it.i}.${k}`; S.cur.steps.push({key, ex: it.ex, set: cnt[it.ex]});
+        if (it.done) { const e = S.ex[it.ex] || {}; const reps = parseInt(it.reps, 10);
+          S.cur.res[key] = {ex: it.ex, set: cnt[it.ex], time: it.time, reps: isNaN(reps) ? null : reps, kg: null, side: !!e.side, video: true}; } } });
+      S.cur.kind = 'video-done'; await saveCur(); go('#/fin');
+    }
+  };
+  app().onchange = app().oninput = async ev => {
+    const d = ev.target.dataset;
+    if (d.done) S.cur.items[+d.done].done = ev.target.checked;
+    if (d.reps) S.cur.items[+d.reps].reps = ev.target.value;
+    await saveCur();
+  };
+};
+
 /* ------------------------------------------------------------------ finish */
 function bestOf(exId, sets) {
   const e = S.ex[exId] || {};
   let b = null;
   for (const x of sets) {
-    if (x.skipped) continue;
+    if (!validSet(exId, x)) continue;
     const score = e.measure === 'time' ? (x.time || 0) * (1 + (x.kg || 0) / 40) : x.kg ? x.kg * (1 + (x.reps || 0) / 30) : (x.reps || 0);
     if (!b || score > b.score) b = {score, x};
   }
@@ -795,7 +965,7 @@ views.fin = () => {
     ${kneeOn() ? `<h2>${cap(painArea())} (0 = nada, 10 = mucho): <span id="kv">${S.cur.knee ?? 0}</span></h2><input type="range" min="0" max="10" step="1" value="${S.cur.knee ?? 0}" id="knee">` : ''}
     <h2>Notas (opcional)</h2><textarea id="notes" rows="2" placeholder="p. ej. la búlgara izquierda cuesta más">${esc(S.cur.notes || '')}</textarea>
     <button class="btn primary big" style="margin-top:16px" id="save">Guardar sesión</button>
-    ${n < N ? `<button class="btn ghost big" style="margin-top:8px" id="back">Volver a la sesión</button>` : ''}`;
+    ${n < N && !/done$/.test(S.cur.kind || '') ? `<button class="btn ghost big" style="margin-top:8px" id="back">Volver a la sesión</button>` : ''}`;
   app().onclick = async ev => {
     const f = ev.target.closest('[data-feel]');
     if (f) { S.cur.feel = +f.dataset.feel; await saveCur(); document.querySelectorAll('[data-feel]').forEach(b => b.classList.toggle('on', b === f)); }
@@ -846,8 +1016,9 @@ function weekBars(weeks, goal) {
   </svg>`;
 }
 /** Value tracked per exercise: kg of the best set when loaded, else best reps or seconds. */
-function exPoint(exId, sets, date) {
-  const e = S.ex[exId] || {}; const ok = sets.filter(x => !x.skipped); if (!ok.length) return null;
+function exPoint(exId, sets, date, useKg) {
+  const e = S.ex[exId] || {}; const ok = sets.filter(x => validSet(exId, x)); if (!ok.length) return null;
+  if (useKg && !ok.some(x => x.kg)) return null;   // don't mix kg and bare reps (e.g. a video session) on one chart
   if (e.measure === 'time') { const b = ok.reduce((a, x) => (x.time || 0) > (a.time || 0) ? x : a); return {x: date, y: b.time || 0, label: `${b.time}s${b.kg ? ' ' + b.kg + 'kg' : ''}`}; }
   if (e.load && ok.some(x => x.kg)) { const b = ok.reduce((a, x) => (x.kg || 0) > (a.kg || 0) || ((x.kg || 0) === (a.kg || 0) && (x.reps || 0) > (a.reps || 0)) ? x : a); return {x: date, y: b.kg, label: `${b.kg}×${b.reps}`}; }
   const b = ok.reduce((a, x) => (x.reps || 0) > (a.reps || 0) ? x : a); return {x: date, y: b.reps || 0, label: `${b.reps}`};
@@ -888,7 +1059,7 @@ views.historial = (sub) => {
     S.logs.filter(l => l.date >= since).forEach(l => new Set(l.sets.filter(x => !x.skipped).map(x => x.ex)).forEach(id => cnt[id] = (cnt[id] || 0) + 1));
     const key = Object.keys(cnt).sort((a, b) => cnt[b] - cnt[a]).slice(0, 6);
     if (key.length) html += `<h2>Tus ejercicios clave</h2><div class="card"><ul class="list">${key.map(id => {
-      const e = S.ex[id] || {name: id}; const pts = S.logs.map(l => exPoint(id, l.sets.filter(x => x.ex === id), l.date)).filter(Boolean);
+      const e = S.ex[id] || {name: id}; const uk = S.logs.some(l => l.sets.some(x => x.ex === id && x.kg)); const pts = S.logs.map(l => exPoint(id, l.sets.filter(x => x.ex === id), l.date, uk)).filter(Boolean);
       const first = pts[0], lastp = pts[pts.length - 1]; const d = lastp.y - first.y;
       const trend = pts.length < 2 ? '<span class="mut">primera vez</span>' : d > 0 ? `<span class="pr">⬆ ${esc(first.label)} → ${esc(lastp.label)}</span>` : d < 0 ? `<span class="mut">⬇ ${esc(first.label)} → ${esc(lastp.label)}</span>` : `<span class="mut">= ${esc(lastp.label)}</span>`;
       return `<li><a class="li" href="#/ex/${esc(id)}"><div class="thumb" style="${isSvg(e) ? 'background:#3E5C76' : ''}">${imgHTML(e)}</div><div class="grow"><b>${esc(e.name)}</b><div class="small">${trend}</div><div class="tiny mut">${cnt[id]} sesiones en 90 días</div></div>›</a></li>`; }).join('')}</ul></div>`;
@@ -941,7 +1112,7 @@ views.log = (id) => {
 views.ex = (id) => {
   const e = S.ex[id]; if (!e) return go('#/catalogo');
   const sess = S.logs.map(l => ({l, sets: l.sets.filter(x => x.ex === id && !x.skipped)})).filter(x => x.sets.length);
-  const pts = sess.map(x => exPoint(id, x.sets, x.l.date)).filter(Boolean);
+  const uk = sess.some(x => x.sets.some(y => y.kg)); const pts = sess.map(x => exPoint(id, x.sets, x.l.date, uk)).filter(Boolean);
   const b = bestOf(id, sess.flatMap(x => x.sets));
   app().innerHTML = `<a href="javascript:history.back()" class="small">‹ Volver</a><h1>${esc(e.name)}</h1>
     ${sess.length ? `<div class="card"><div class="row between"><div class="mut small">${esc(exUnit(id))}</div>${b ? `<span class="chip acc">🏆 ${esc(bestText(id, b.x))}</span>` : ''}</div>
@@ -1163,7 +1334,7 @@ views.ajustes = () => {
   const pending = S.ui.pending ?? '…';
   app().innerHTML = `<h1>Ajustes</h1>
     <div class="card"><div class="row between"><div><div class="mut small">Usuario</div><b style="font-size:1.2rem">${esc(S.me.name)}</b></div>${S.users.length > 1 ? '<button class="btn small" id="who">Cambiar</button>' : ''}</div></div>
-    <div class="card"><ul class="list">${tog('sound', 'Pitidos en descansos y sostenes', s.sound)}${navigator.vibrate ? tog('vibrate', 'Vibración', s.vibrate) : ''}${tog('knee_' + S.user, `Preguntar por la ${painArea()} al terminar`, kneeOn())}</ul></div>
+    <div class="card"><ul class="list">${tog('sound', 'Pitidos en descansos y sostenes', s.sound)}${tog('voice', 'Voz en el temporizador (Tabata, EMOM…)', s.voice !== false)}${navigator.vibrate ? tog('vibrate', 'Vibración', s.vibrate) : ''}${tog('knee_' + S.user, `Preguntar por la ${painArea()} al terminar`, kneeOn())}</ul></div>
     <h2>Sincronización</h2><div class="card">${synced()
       ? `<p class="small">Repo <b>${esc(S.cfg.repo)}</b> · <span id="syncline">${syncLine()}</span></p><p class="small mut">Cambios pendientes de subir: <span id="pend">${pending}</span></p>
          <div class="row wrap" style="margin-top:8px"><button class="btn" id="sync-now">⟳ Sincronizar ahora</button><button class="btn ghost" id="invite">📱 Añadir otro móvil</button></div>
@@ -1213,7 +1384,8 @@ function render() {
   stopTicker(); closeSheet();
   let [, name = 'hoy', arg] = (location.hash || '#/hoy').split('/');
   if (!S.cfg && name !== 'inicio') { location.hash = '#/inicio'; return; }
-  if (name !== 'sesion' && name !== 'fin' && name !== 'inicio') document.body.classList.remove('in-session');
+  if (!['sesion', 'fin', 'inicio', 'timer', 'video'].includes(name)) document.body.classList.remove('in-session');
+  if (name !== 'video' && name !== 'timer' && 'speechSynthesis' in window) try { speechSynthesis.cancel(); } catch (e) {}
   const tab = {hoy: 'hoy', rutina: 'hoy', semana: 'semana', rutinas: 'semana', editar: 'semana', historial: 'historial', log: 'historial', ex: 'historial', catalogo: 'catalogo', cat: 'catalogo', ajustes: 'ajustes'}[name];
   document.querySelectorAll('#tabs a').forEach(a => a.classList.toggle('on', a.dataset.tab === tab));
   app().onclick = null; app().onchange = null; app().oninput = null; $('#sheet').onclick = null;

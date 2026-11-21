@@ -290,5 +290,178 @@
    }
   ],
   "short": "Pie"
+ },
+ {
+  "id": "tabata-kb",
+  "short": "Tab",
+  "name": "Tabata KB 15'",
+  "goal": "3 ciclos de tabata (20\" a tope / 10\" de descanso × 8) con 1' entre ciclos. Corto, intenso y con tu música.",
+  "kit": "KB 16 y 20",
+  "timer": {
+   "mode": "intervals",
+   "work": 20,
+   "rest": 10,
+   "rounds": 8,
+   "blockRest": 60,
+   "prep": 10
+  },
+  "blocks": [
+   {
+    "title": "Ciclo 1 · swing + flexiones",
+    "items": [
+     {
+      "ex": "kettlebell-swing",
+      "kg": 20
+     },
+     {
+      "ex": "push-up"
+     }
+    ]
+   },
+   {
+    "title": "Ciclo 2 · goblet + mountain climbers",
+    "items": [
+     {
+      "ex": "goblet-squat",
+      "kg": 16
+     },
+     {
+      "ex": "mountain-climbers"
+     }
+    ]
+   },
+   {
+    "title": "Ciclo 3 · peso muerto + dead bug",
+    "items": [
+     {
+      "ex": "kettlebell-deadlift",
+      "kg": 20
+     },
+     {
+      "ex": "dead-bug"
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "emom-12",
+  "short": "EM",
+  "name": "EMOM 12'",
+  "goal": "Cada minuto empiezas un ejercicio, haces las reps y descansas lo que sobre del minuto. 4 vueltas.",
+  "kit": "KB 16 y 20",
+  "timer": {
+   "mode": "emom",
+   "minutes": 12,
+   "prep": 10
+  },
+  "blocks": [
+   {
+    "title": "Cada minuto",
+    "items": [
+     {
+      "ex": "kettlebell-swing",
+      "reps": 15,
+      "kg": 20
+     },
+     {
+      "ex": "goblet-squat",
+      "reps": 10,
+      "kg": 16
+     },
+     {
+      "ex": "push-up",
+      "reps": 10
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "amrap-15",
+  "short": "AM",
+  "name": "AMRAP 15'",
+  "goal": "Tantas rondas como puedas en 15 minutos, con buena técnica. Apunta cada ronda con «+1 ronda».",
+  "kit": "KB 16 y 20",
+  "timer": {
+   "mode": "amrap",
+   "minutes": 15,
+   "prep": 10
+  },
+  "blocks": [
+   {
+    "title": "Una ronda",
+    "items": [
+     {
+      "ex": "goblet-squat",
+      "reps": 10,
+      "kg": 16
+     },
+     {
+      "ex": "push-up",
+      "reps": 8
+     },
+     {
+      "ex": "kettlebell-swing",
+      "reps": 15,
+      "kg": 20
+     },
+     {
+      "ex": "dead-bug",
+      "reps": 6
+     }
+    ]
+   }
+  ]
+ },
+ {
+  "id": "tabata-comba",
+  "short": "TC",
+  "name": "Tabata comba + core 14'",
+  "goal": "Comba y core en tabata: tobillos reactivos y cardio. Con impacto: solo cuando la rodilla esté bien.",
+  "kit": "Comba",
+  "timer": {
+   "mode": "intervals",
+   "work": 20,
+   "rest": 10,
+   "rounds": 8,
+   "blockRest": 60,
+   "prep": 10
+  },
+  "blocks": [
+   {
+    "title": "Ciclo 1 · comba + plancha",
+    "items": [
+     {
+      "ex": "jump-rope"
+     },
+     {
+      "ex": "plank"
+     }
+    ]
+   },
+   {
+    "title": "Ciclo 2 · comba + hollow",
+    "items": [
+     {
+      "ex": "jump-rope"
+     },
+     {
+      "ex": "hollow-hold"
+     }
+    ]
+   },
+   {
+    "title": "Ciclo 3 · high knees + mountain climbers",
+    "items": [
+     {
+      "ex": "high-knees"
+     },
+     {
+      "ex": "mountain-climbers"
+     }
+    ]
+   }
+  ]
  }
 ]
