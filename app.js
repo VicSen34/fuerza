@@ -4,7 +4,7 @@
  */
 'use strict';
 
-const VERSION = '0.3.0';
+const VERSION = '0.4.0';
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pad = n => String(n).padStart(2, '0');
@@ -96,6 +96,14 @@ function derive() {
 const painArea = () => (S.me && (S.me.painCheck || (S.me.kneeCheck ? 'rodilla' : null))) || 'rodilla';
 const kneeOn = () => S.settings['knee_' + S.user] ?? !!(S.me && (S.me.painCheck || S.me.kneeCheck || S.me.id === 'yo'));
 const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
+const watchTxt = l => l.garmin && l.garmin.avgHR ? ` · ⌚ ${Math.round(l.garmin.avgHR)} ppm` : '';
+function watchCard(g) {
+  if (!g) return '';
+  const te = g.aerobicTE != null ? ` · efecto aeróbico ${Math.round(g.aerobicTE * 10) / 10}` : '';
+  const named = (g.sets || []).filter(x => x.garmin);
+  return `<div class="card"><h3>⌚ Reloj</h3><p class="small">${g.durationMin} min · FC media ${Math.round(g.avgHR || 0)} / máx ${Math.round(g.maxHR || 0)} ppm · ${Math.round(g.calories || 0)} kcal · carga ${Math.round(g.load || 0)}${te}</p>
+    ${named.length ? `<p class="tiny mut">El reloj contó ${named.length} series con ejercicio.</p>` : (g.sets || []).length <= 1 ? '<p class="tiny mut">El reloj no separó series: si cargas el entreno en el fénix, contará cada serie.</p>' : ''}</div>`;
+}
 const painTxt = l => { const v = l.pain ?? l.knee; return v != null ? ` · ${l.painArea || 'rodilla'} ${v}/10` : ''; };
 
 /* ------------------------------------------------------------------ sync with the private GitHub data repo
@@ -837,7 +845,7 @@ function monthStats(key) {
   const ls = S.logs.filter(l => l.date.slice(0, 7) === key);
   const sets = ls.flatMap(l => l.sets.filter(x => !x.skipped));
   return {n: ls.filter(isMain).length, min: ls.reduce((a, l) => a + (l.durationMin || 0), 0), sets: sets.length,
-    tut: Math.round(ls.reduce((a, l) => a + (l.tutSec || 0), 0) / 60), kg: Math.round(sets.reduce((a, x) => a + (x.kg || 0) * (x.reps || 0) * (x.side ? 2 : 1), 0))};
+    tut: Math.round(ls.reduce((a, l) => a + (l.tutSec || 0), 0) / 60), kcal: Math.round(ls.reduce((a, l) => a + ((l.garmin || {}).calories || 0), 0)), kg: Math.round(sets.reduce((a, x) => a + (x.kg || 0) * (x.reps || 0) * (x.side ? 2 : 1), 0))};
 }
 
 views.historial = (sub) => {
@@ -861,7 +869,7 @@ views.historial = (sub) => {
     const cols = [[keyAgo(3), 'hace 3 meses'], [keyAgo(1), 'mes pasado'], [cur, 'este mes']].map(([k, lab]) => ({k, lab: `${MONTHS[+k.slice(5) - 1]} · ${lab}`, st: monthStats(k)}));
     const row = (lab, f) => `<tr><td>${lab}</td>${cols.map((c, i) => `<td style="text-align:right;${i === 2 ? 'font-weight:700' : ''}">${f(c.st)}</td>`).join('')}</tr>`;
     html += `<h2>Mes a mes</h2><div class="card"><table><tr><th></th>${cols.map(c => `<th style="text-align:right">${esc(c.lab)}</th>`).join('')}</tr>
-      ${row('Sesiones', x => x.n)}${row('Minutos', x => x.min)}${row('Series', x => x.sets)}${row('Min. en tensión', x => x.tut)}${row('Kg movidos', x => x.kg ? x.kg.toLocaleString('es') : '—')}</table>
+      ${row('Sesiones', x => x.n)}${row('Minutos', x => x.min)}${row('Series', x => x.sets)}${row('Min. en tensión', x => x.tut)}${row('Kg movidos', x => x.kg ? x.kg.toLocaleString('es') : '—')}${cols.some(c => c.st.kcal) ? row('Kcal (reloj)', x => x.kcal || '—') : ''}</table>
       <p class="tiny mut">El mes en curso va sumando hasta fin de mes.</p></div>`;
     // key exercises: most frequent in the last 90 days, first vs last
     const since = addDays(t, -90), cnt = {};
@@ -891,7 +899,7 @@ views.historial = (sub) => {
     for (const [m, ls] of Object.entries(byWeek)) {
       const n = ls.filter(isMain).length;
       html += `<h2>Semana del ${esc(short(m))} <span class="chip ${n >= goal ? 'acc' : ''}">${n}/${goal}</span></h2><div class="card"><ul class="list">${ls.map(l =>
-        `<li><a class="li" href="#/log/${encodeURIComponent(l.id)}"><div class="grow"><b>${esc(l.name)}</b><div class="mut small">${esc(short(l.date))} · ${l.durationMin} min · ${l.sets.filter(x => !x.skipped).length} series${painTxt(l)}${l.prs && l.prs.length ? ' · <span class="pr">🏆</span>' : ''}</div></div><span style="font-size:1.4rem">${l.feel != null ? FEELS[l.feel][0] : ''}</span></a></li>`).join('')}</ul></div>`;
+        `<li><a class="li" href="#/log/${encodeURIComponent(l.id)}"><div class="grow"><b>${esc(l.name)}</b><div class="mut small">${esc(short(l.date))} · ${l.durationMin} min · ${l.sets.filter(x => !x.skipped).length} series${painTxt(l)}${watchTxt(l)}${l.prs && l.prs.length ? ' · <span class="pr">🏆</span>' : ''}</div></div><span style="font-size:1.4rem">${l.feel != null ? FEELS[l.feel][0] : ''}</span></a></li>`).join('')}</ul></div>`;
     }
   } else {
     const cnt = {}; S.logs.forEach(l => new Set(l.sets.filter(x => !x.skipped).map(x => x.ex)).forEach(ex => cnt[ex] = (cnt[ex] || 0) + 1));
@@ -911,7 +919,9 @@ views.log = (id) => {
     <p class="mut">${esc(nice(l.date))} · ${l.durationMin} min · ${Math.round((l.tutSec || 0) / 60)} min en tensión ${l.feel != null ? '· ' + FEELS[l.feel][0] : ''}${painTxt(l)}</p>
     ${l.notes ? `<div class="note">${esc(l.notes)}</div>` : ''}
     ${l.prs && l.prs.length ? `<p class="pr">🏆 ${l.prs.map(p => esc((S.ex[p.ex] || {name: p.ex}).name) + ': ' + esc(p.now)).join(' · ')}</p>` : ''}
+    ${l.source === 'garmin' ? '<p class="small mut">Importada del reloj: revisa los ejercicios si el fénix se confundió.</p>' : ''}
     <div class="card"><table><tr><th>Ejercicio</th><th>Serie</th><th>Hecho</th><th>Carga</th></tr>${rows}</table></div>
+    ${watchCard(l.garmin)}
     <button class="btn ghost" id="del" style="color:var(--clay)">Borrar esta sesión</button>`;
   $('#del').onclick = async () => { if (!confirm('¿Borrar esta sesión del historial?')) return; const l = S.allLogs.find(x => x.id === id); await DB.delLog(id); S.allLogs = S.allLogs.filter(x => x.id !== id); derive(); if (synced() && l) { await enqueue({t: 'dellog', path: logPath(Object.assign({}, l, {user: l.user || S.user}))}); sync(); } go('#/historial'); };
 };
