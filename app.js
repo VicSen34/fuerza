@@ -4,7 +4,7 @@
  */
 'use strict';
 
-const VERSION = '0.2.3';
+const VERSION = '0.3.0';
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pad = n => String(n).padStart(2, '0');
@@ -314,6 +314,37 @@ function lastSetsFor(exId, beforeId) {
   }
   return null;
 }
+function lastLogFor(exId) {
+  for (let i = S.logs.length - 1; i >= 0; i--) {
+    const l = S.logs[i]; const sets = l.sets.filter(x => x.ex === exId && !x.skipped);
+    if (sets.length) return {date: l.date, feel: l.feel, sets};
+  }
+  return null;
+}
+const KBS = [12, 16, 20];
+/** Double progression: if last time every set reached the top of the target and it felt fine, suggest the next step. */
+function suggestFor(exId, it) {
+  const e = S.ex[exId]; if (!e || !it) return null;
+  const last = lastLogFor(exId); if (!last || last.date === today()) return null;
+  if (last.feel != null && last.feel > 1) return null;
+  const done = last.sets;
+  if (it.sets && done.length < it.sets) return null;
+  if (e.measure === 'time') {
+    const tgt = it.time || 30; if (!done.every(x => (x.time || 0) >= tgt)) return null;
+    const t = Math.max(...done.map(x => x.time || 0));
+    if (t < 60) { const nt = Math.min(60, t + 5); return {txt: `La última vez aguantaste todo: prueba ${nt} s`, apply: {time: nt}}; }
+    const kg = Math.max(...done.map(x => x.kg || 0)); const nx = e.load === 'kb' && KBS.find(k => k > kg);
+    return nx ? {txt: `Ya llegas a 60 s: prueba con ${nx} kg`, apply: {kg: nx, time: tgt}} : {txt: 'Ya llegas a 60 s: busca una variante más difícil'};
+  }
+  const top = Array.isArray(it.reps) ? it.reps[1] : it.reps, bottom = Array.isArray(it.reps) ? it.reps[0] : it.reps;
+  if (!top || !done.every(x => (x.reps || 0) >= top)) return null;
+  const kg = Math.max(...done.map(x => x.kg || 0));
+  if (e.load === 'kb') { const nx = KBS.find(k => k > kg);
+    return nx ? {txt: `Completaste todas las series: prueba ${nx} kg (vuelve a ${bottom} reps)`, apply: {kg: nx, reps: bottom}} : {txt: 'Ya usas la KB más pesada: tempo más lento (4-1-1) o pausa abajo'}; }
+  if (e.load === 'db') return {txt: 'Completaste todas las series: hoy tempo más lento (4-1-1) o una pausa abajo. Las mancuernas siguen a un solo peso.'};
+  return {txt: `Completaste todas las series: prueba ${top + 1} reps o una variante más difícil`, apply: {reps: top + 1}};
+}
+const stepItem = st => ({reps: st.repsMax ? [st.reps, st.repsMax] : st.reps, time: st.time, sets: st.circuit ? null : st.sets});
 function prefill(st) {
   const last = lastSetsFor(st.ex);
   const p = last ? (last.sets.find(x => x.set === st.set) || last.sets[last.sets.length - 1]) : null;
@@ -461,7 +492,7 @@ function routineCard(r, note, hero) {
     <p class="mut small">${esc(r.goal || '')}</p>${r.kit ? `<p><span class="chip acc">🏋 ${esc(r.kit)}</span></p>` : ''}
     ${note ? `<div class="note">${esc(note)}</div>` : ''}
     <ul class="list" style="margin:8px 0 12px">${items.map(({it, b}) => { const e = S.ex[it.ex] || {name: it.ex};
-      return `<li><div class="thumb ${isSvg(e) ? 'svg' : ''}" style="${isSvg(e) ? 'background:#3E5C76' : ''}">${imgHTML(e)}</div><div class="grow"><b>${esc(e.name)}</b><div class="mut small">${esc(itemSummary(it))}${b.circuit ? ` · circuito ×${b.rounds}` : ''}</div></div></li>`; }).join('')}</ul>
+      return `<li><div class="thumb ${isSvg(e) ? 'svg' : ''}" style="${isSvg(e) ? 'background:#3E5C76' : ''}">${imgHTML(e)}</div><div class="grow"><b>${esc(e.name)}</b><div class="mut small">${esc(itemSummary(it))}${b.circuit ? ` · circuito ×${b.rounds}` : ''}${suggestFor(it.ex, it) ? ' · <span class="up-txt">⬆ toca subir</span>' : ''}</div></div></li>`; }).join('')}</ul>
     <button class="btn primary big" data-act="start" data-id="${r.id}">Empezar</button></div>`;
 }
 
@@ -548,6 +579,8 @@ views.sesion = () => {
     <div class="row wrap"><span class="chip acc">${st.circuit ? 'Ronda' : 'Serie'} ${st.set} de ${st.sets}</span>
       <span class="chip">Objetivo ${esc(targetText(st))}</span>${st.tempo ? `<span class="chip">Tempo ${esc(st.tempo)}</span>` : ''}${st.side ? '<span class="chip">por lado</span>' : ''}</div>
     ${st.note && st.set === 1 ? `<div class="note">${esc(st.note)}</div>` : ''}
+    ${(() => { if (st.set !== 1 || (S.cur.applied || {})[st.item]) return ''; const sg = suggestFor(st.ex, stepItem(st)); if (!sg) return '';
+      return `<div class="note up">⬆ ${esc(sg.txt)}${sg.apply ? ' <button class="btn small" data-act="apply">Aplicar</button>' : ''}</div>`; })()}
     <ul class="cues">${(e.cues || []).map(c => `<li>${esc(c)}</li>`).join('')}</ul>
     <div class="steppers">
       ${st.measure === 'time' ? stepper('time', 'segundos', v.time, '') : stepper('reps', st.side ? 'reps / lado' : 'reps', v.reps, '')}
@@ -586,6 +619,11 @@ async function onPlayer(ev) {
   const a = ev.target.closest('[data-act]'); if (!a) return;
   const act = a.dataset.act;
   if (act === 'done') return completeStep(st, {reps: v.reps, time: v.time, kg: v.kg});
+  if (act === 'apply') {
+    const sg = suggestFor(st.ex, stepItem(st)); if (!sg || !sg.apply) return;
+    S.cur.steps.filter(x => x.item === st.item && x.ex === st.ex && !S.cur.res[x.key]).forEach(x => { S.cur.vals[x.key] = Object.assign(prefill(x), sg.apply); });
+    S.cur.applied = Object.assign(S.cur.applied || {}, {[st.item]: true}); await saveCur(); toast('Hecho: a por ello 💪'); return views.sesion();
+  }
   if (act === 'timer') return holdTimer(st, v);
   if (act === 'skip') { S.cur.res[st.key] = {ex: st.ex, set: st.set, skipped: true}; return advance(false); }
   if (act === 'prev') { S.cur.idx = Math.max(0, S.cur.idx - 1); await saveCur(); return views.sesion(); }
@@ -756,22 +794,109 @@ views.fin = () => {
 };
 
 /* ------------------------------------------------------------------ history & progress */
+/** Chart of one value per session: points [{x: date, y, label}], readable axes, works in light/dark. */
+function lineSVG(points, opts = {}) {
+  if (!points.length) return '';
+  const W = 360, H = opts.h || 190, L = 34, R = 12, T = 22, B = 26;
+  const ys = points.map(p => p.y); let lo = Math.min(...ys), hi = Math.max(...ys);
+  if (opts.zero) lo = Math.min(0, lo);
+  if (hi === lo) { hi += 1; lo = Math.max(0, lo - 1); }
+  const pad = (hi - lo) * 0.15; hi += pad; lo = opts.zero ? lo : Math.max(0, lo - pad);
+  const X = i => points.length === 1 ? (L + W - R) / 2 : L + i * (W - L - R) / (points.length - 1);
+  const Y = v => T + (hi - v) / (hi - lo) * (H - T - B);
+  const ticks = [...new Set([Math.min(...ys), Math.max(...ys)].concat(opts.zero ? [0] : []))];
+  const fmt = opts.fmt || (v => String(Math.round(v * 10) / 10));
+  const xi = points.length > 2 ? [0, Math.floor((points.length - 1) / 2), points.length - 1] : points.map((_, i) => i);
+  return `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="${esc(opts.aria || 'Evolución')}">
+    ${ticks.map(v => `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" style="stroke:var(--line)"/><text x="${L - 6}" y="${Y(v) + 4}" text-anchor="end" style="fill:var(--mut);font-size:12px">${esc(fmt(v))}</text>`).join('')}
+    ${xi.map(i => `<text x="${X(i)}" y="${H - 8}" text-anchor="${i === 0 && points.length > 1 ? 'start' : i === points.length - 1 && points.length > 1 ? 'end' : 'middle'}" style="fill:var(--mut);font-size:12px">${esc(short(points[i].x).replace(/^\S+ /, ''))}</text>`).join('')}
+    ${points.length > 1 ? `<polyline fill="none" style="stroke:var(--acc);stroke-width:3" points="${points.map((p, i) => `${X(i)},${Y(p.y)}`).join(' ')}"/>` : ''}
+    ${points.map((p, i) => `<circle cx="${X(i)}" cy="${Y(p.y)}" r="5" style="fill:var(--acc)"><title>${esc(short(p.x))}: ${esc(p.label || fmt(p.y))}</title></circle>${(points.length <= 6 || i === 0 || i === points.length - 1) && p.label ? `<text x="${X(i)}" y="${Y(p.y) - 10}" text-anchor="${points.length > 1 && i === points.length - 1 ? 'end' : points.length > 1 && i === 0 ? 'start' : 'middle'}" style="fill:var(--ink);font-size:12px;font-weight:600">${esc(p.label)}</text>` : ''}`).join('')}
+  </svg>`;
+}
+function weekBars(weeks, goal) {
+  const W = 360, H = 140, L = 8, R = 8, T = 18, B = 22, n = weeks.length, bw = (W - L - R) / n;
+  const hi = Math.max(goal + 1, ...weeks.map(w => w.n));
+  const Y = v => T + (hi - v) / hi * (H - T - B);
+  return `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="Sesiones por semana">
+    <line x1="${L}" x2="${W - R}" y1="${Y(goal)}" y2="${Y(goal)}" style="stroke:var(--clay);stroke-dasharray:5 5"/><text x="${L + 2}" y="${Y(goal) - 4}" style="fill:var(--clay);font-size:11px">objetivo ${goal}</text>
+    ${weeks.map((w, i) => `<rect x="${L + i * bw + 3}" y="${Y(w.n)}" width="${bw - 6}" height="${Math.max(0, H - B - Y(w.n))}" rx="4" style="fill:${w.n >= goal ? 'var(--acc)' : 'var(--mut)'};opacity:${w.n >= goal ? 1 : .45}"><title>Semana del ${esc(short(w.m))}: ${w.n}</title></rect>
+      ${w.n ? `<text x="${L + i * bw + bw / 2}" y="${Y(w.n) - 3}" text-anchor="middle" style="fill:var(--ink);font-size:11px">${w.n}</text>` : ''}
+      ${(n - 1 - i) % 3 === 0 ? `<text x="${L + i * bw + bw / 2}" y="${H - 8}" text-anchor="middle" style="fill:var(--mut);font-size:11px">${parseD(w.m).getDate()}/${parseD(w.m).getMonth() + 1}</text>` : ''}`).join('')}
+  </svg>`;
+}
+/** Value tracked per exercise: kg of the best set when loaded, else best reps or seconds. */
+function exPoint(exId, sets, date) {
+  const e = S.ex[exId] || {}; const ok = sets.filter(x => !x.skipped); if (!ok.length) return null;
+  if (e.measure === 'time') { const b = ok.reduce((a, x) => (x.time || 0) > (a.time || 0) ? x : a); return {x: date, y: b.time || 0, label: `${b.time}s${b.kg ? ' ' + b.kg + 'kg' : ''}`}; }
+  if (e.load && ok.some(x => x.kg)) { const b = ok.reduce((a, x) => (x.kg || 0) > (a.kg || 0) || ((x.kg || 0) === (a.kg || 0) && (x.reps || 0) > (a.reps || 0)) ? x : a); return {x: date, y: b.kg, label: `${b.kg}×${b.reps}`}; }
+  const b = ok.reduce((a, x) => (x.reps || 0) > (a.reps || 0) ? x : a); return {x: date, y: b.reps || 0, label: `${b.reps}`};
+}
+const exUnit = id => { const e = S.ex[id] || {}; return e.measure === 'time' ? 'segundos (mejor serie)' : e.load ? 'kg de la mejor serie (× reps)' : 'reps de la mejor serie'; };
+function monthStats(key) {
+  const ls = S.logs.filter(l => l.date.slice(0, 7) === key);
+  const sets = ls.flatMap(l => l.sets.filter(x => !x.skipped));
+  return {n: ls.filter(isMain).length, min: ls.reduce((a, l) => a + (l.durationMin || 0), 0), sets: sets.length,
+    tut: Math.round(ls.reduce((a, l) => a + (l.tutSec || 0), 0) / 60), kg: Math.round(sets.reduce((a, x) => a + (x.kg || 0) * (x.reps || 0) * (x.side ? 2 : 1), 0))};
+}
+
 views.historial = (sub) => {
-  const tab = sub === 'ejercicios' ? 'ex' : 'ses';
-  let html = `<h1>Historial</h1><div class="filters"><button class="${tab === 'ses' ? 'on' : ''}" data-go="#/historial">Sesiones</button><button class="${tab === 'ex' ? 'on' : ''}" data-go="#/historial/ejercicios">Por ejercicio</button></div>`;
-  if (!S.logs.length) html += `<div class="card"><p>Aún no hay sesiones. La primera, desde <a href="#/hoy">Hoy</a>.</p></div>`;
-  else if (tab === 'ses') {
+  const tab = sub === 'ejercicios' ? 'ex' : sub === 'sesiones' ? 'ses' : 'pro';
+  const goal = S.plan.goalPerWeek || 2;
+  let html = `<h1>Historial</h1><div class="filters">${[['pro', 'Progreso', '#/historial'], ['ses', 'Sesiones', '#/historial/sesiones'], ['ex', 'Por ejercicio', '#/historial/ejercicios']].map(([k, t, h]) => `<button class="${tab === k ? 'on' : ''}" data-go="${h}">${t}</button>`).join('')}</div>`;
+  if (!S.logs.length) html += `<div class="card"><p>Aún no hay sesiones. La primera, desde <a href="#/hoy">Hoy</a>. Aquí verás tus semanas, tus récords y cómo suben tus ejercicios.</p></div>`;
+  else if (tab === 'pro') {
+    const t = today(), mon = monday(t);
+    const weeks = []; for (let i = 11; i >= 0; i--) { const m = addDays(mon, -7 * i); weeks.push({m, n: weekCount(m)}); }
+    const avg4 = weeks.slice(-5, -1).reduce((a, w) => a + w.n, 0) / 4;
+    let streak = 0; for (let i = weeks.length - 2; i >= 0 && weeks[i].n >= goal; i--) streak++; if (weeks[weeks.length - 1].n >= goal) streak++;
+    html += `<div class="card"><div class="row between" style="text-align:center">
+        <div class="grow"><div class="big-num">${weeks[weeks.length - 1].n}<span class="mut" style="font-size:1rem">/${goal}</span></div><div class="mut small">esta semana</div></div>
+        <div class="grow"><div class="big-num">${Math.round(avg4 * 10) / 10}</div><div class="mut small">media 4 semanas</div></div>
+        <div class="grow"><div class="big-num">${streak}</div><div class="mut small">semanas seguidas ≥${goal}</div></div></div>
+      <h3 style="margin-top:14px">Sesiones por semana</h3>${weekBars(weeks, goal)}</div>`;
+    // month vs month
+    const mk = d => d.slice(0, 7), cur = mk(t);
+    const keyAgo = n => { const d = parseD(t); d.setDate(1); d.setMonth(d.getMonth() - n); return fmtD(d).slice(0, 7); };
+    const cols = [[keyAgo(3), 'hace 3 meses'], [keyAgo(1), 'mes pasado'], [cur, 'este mes']].map(([k, lab]) => ({k, lab: `${MONTHS[+k.slice(5) - 1]} · ${lab}`, st: monthStats(k)}));
+    const row = (lab, f) => `<tr><td>${lab}</td>${cols.map((c, i) => `<td style="text-align:right;${i === 2 ? 'font-weight:700' : ''}">${f(c.st)}</td>`).join('')}</tr>`;
+    html += `<h2>Mes a mes</h2><div class="card"><table><tr><th></th>${cols.map(c => `<th style="text-align:right">${esc(c.lab)}</th>`).join('')}</tr>
+      ${row('Sesiones', x => x.n)}${row('Minutos', x => x.min)}${row('Series', x => x.sets)}${row('Min. en tensión', x => x.tut)}${row('Kg movidos', x => x.kg ? x.kg.toLocaleString('es') : '—')}</table>
+      <p class="tiny mut">El mes en curso va sumando hasta fin de mes.</p></div>`;
+    // key exercises: most frequent in the last 90 days, first vs last
+    const since = addDays(t, -90), cnt = {};
+    S.logs.filter(l => l.date >= since).forEach(l => new Set(l.sets.filter(x => !x.skipped).map(x => x.ex)).forEach(id => cnt[id] = (cnt[id] || 0) + 1));
+    const key = Object.keys(cnt).sort((a, b) => cnt[b] - cnt[a]).slice(0, 6);
+    if (key.length) html += `<h2>Tus ejercicios clave</h2><div class="card"><ul class="list">${key.map(id => {
+      const e = S.ex[id] || {name: id}; const pts = S.logs.map(l => exPoint(id, l.sets.filter(x => x.ex === id), l.date)).filter(Boolean);
+      const first = pts[0], lastp = pts[pts.length - 1]; const d = lastp.y - first.y;
+      const trend = pts.length < 2 ? '<span class="mut">primera vez</span>' : d > 0 ? `<span class="pr">⬆ ${esc(first.label)} → ${esc(lastp.label)}</span>` : d < 0 ? `<span class="mut">⬇ ${esc(first.label)} → ${esc(lastp.label)}</span>` : `<span class="mut">= ${esc(lastp.label)}</span>`;
+      return `<li><a class="li" href="#/ex/${esc(id)}"><div class="thumb" style="${isSvg(e) ? 'background:#3E5C76' : ''}">${imgHTML(e)}</div><div class="grow"><b>${esc(e.name)}</b><div class="small">${trend}</div><div class="tiny mut">${cnt[id]} sesiones en 90 días</div></div>›</a></li>`; }).join('')}</ul></div>`;
+    // next session: ready to go up
+    let nxt = null; for (let i = 0; i <= 7 && !nxt; i++) { const d = addDays(t, i); const p = plannedFor(d); if (p && S.routines[p.routine] && !logsOn(d).some(l => l.routineId === p.routine)) nxt = {d, r: S.routines[p.routine]}; }
+    if (nxt) {
+      const ups = nxt.r.blocks.flatMap(b => b.items).map(it => ({it, sg: suggestFor(it.ex, it)})).filter(x => x.sg);
+      html += `<h2>Próxima sesión: ${esc(nxt.r.name)}</h2><div class="card">${ups.length ? `<ul class="list">${ups.map(x => `<li><div class="grow"><b>⬆ ${esc((S.ex[x.it.ex] || {name: x.it.ex}).name)}</b><div class="small mut">${esc(x.sg.txt)}</div></div></li>`).join('')}</ul>`
+        : '<p class="mut small">Nada que subir todavía: completa todas las series en lo alto del rango y con sensación 😌 o 🙂, y aquí te diré qué subir.</p>'}<p class="tiny mut">${esc(nice(nxt.d))}</p></div>`;
+    }
+    // recent records
+    const prs = S.logs.flatMap(l => (l.prs || []).map(p => Object.assign({date: l.date}, p))).reverse().slice(0, 6);
+    if (prs.length) html += `<h2>Récords recientes</h2><div class="card"><ul class="list">${prs.map(p => `<li><div class="grow"><b class="pr">🏆 ${esc((S.ex[p.ex] || {name: p.ex}).name)}</b><div class="small">${esc(p.now)} <span class="tiny mut">(antes ${esc(p.prev)})</span></div></div><span class="tiny mut">${esc(short(p.date))}</span></li>`).join('')}</ul></div>`;
+    // pain trend
+    const pain = S.logs.filter(l => (l.pain ?? l.knee) != null).slice(-12);
+    if (pain.length >= 2) html += `<h2>${esc(cap(pain[pain.length - 1].painArea || 'rodilla'))} después de entrenar</h2><div class="card">${lineSVG(pain.map(l => ({x: l.date, y: l.pain ?? l.knee, label: String(l.pain ?? l.knee)})), {zero: true, aria: 'Dolor 0-10', h: 150})}<p class="tiny mut">0 = nada, 10 = mucho. Hasta 3 es aceptable si no va a más.</p></div>`;
+  } else if (tab === 'ses') {
     const byWeek = {};
     [...S.logs].reverse().forEach(l => (byWeek[monday(l.date)] = byWeek[monday(l.date)] || []).push(l));
     for (const [m, ls] of Object.entries(byWeek)) {
       const n = ls.filter(isMain).length;
-      html += `<h2>Semana del ${esc(short(m))} <span class="chip ${n >= (S.plan.goalPerWeek || 2) ? 'acc' : ''}">${n}/${S.plan.goalPerWeek || 2}</span></h2><div class="card"><ul class="list">${ls.map(l =>
+      html += `<h2>Semana del ${esc(short(m))} <span class="chip ${n >= goal ? 'acc' : ''}">${n}/${goal}</span></h2><div class="card"><ul class="list">${ls.map(l =>
         `<li><a class="li" href="#/log/${encodeURIComponent(l.id)}"><div class="grow"><b>${esc(l.name)}</b><div class="mut small">${esc(short(l.date))} · ${l.durationMin} min · ${l.sets.filter(x => !x.skipped).length} series${painTxt(l)}${l.prs && l.prs.length ? ' · <span class="pr">🏆</span>' : ''}</div></div><span style="font-size:1.4rem">${l.feel != null ? FEELS[l.feel][0] : ''}</span></a></li>`).join('')}</ul></div>`;
     }
   } else {
-    const cnt = {}; S.logs.forEach(l => new Set(l.sets.filter(s => !s.skipped).map(s => s.ex)).forEach(ex => cnt[ex] = (cnt[ex] || 0) + 1));
+    const cnt = {}; S.logs.forEach(l => new Set(l.sets.filter(x => !x.skipped).map(x => x.ex)).forEach(ex => cnt[ex] = (cnt[ex] || 0) + 1));
     const ids = Object.keys(cnt).sort((a, b) => cnt[b] - cnt[a]);
-    html += `<div class="card"><ul class="list">${ids.map(id => { const e = S.ex[id] || {name: id}; const b = bestOf(id, S.logs.flatMap(l => l.sets.filter(s => s.ex === id)));
+    html += `<div class="card"><ul class="list">${ids.map(id => { const e = S.ex[id] || {name: id}; const b = bestOf(id, S.logs.flatMap(l => l.sets.filter(x => x.ex === id)));
       return `<li><a class="li" href="#/ex/${id}"><div class="thumb" style="${isSvg(e) ? 'background:#3E5C76' : ''}">${imgHTML(e)}</div><div class="grow"><b>${esc(e.name)}</b><div class="mut small">${cnt[id]} sesión${cnt[id] > 1 ? 'es' : ''}${b ? ` · mejor: ${esc(bestText(id, b.x))}` : ''}</div></div>›</a></li>`; }).join('')}</ul></div>`;
   }
   app().innerHTML = html;
@@ -791,19 +916,15 @@ views.log = (id) => {
   $('#del').onclick = async () => { if (!confirm('¿Borrar esta sesión del historial?')) return; const l = S.allLogs.find(x => x.id === id); await DB.delLog(id); S.allLogs = S.allLogs.filter(x => x.id !== id); derive(); if (synced() && l) { await enqueue({t: 'dellog', path: logPath(Object.assign({}, l, {user: l.user || S.user}))}); sync(); } go('#/historial'); };
 };
 
-function sparkline(points) {
-  if (points.length < 2) return '';
-  const W = 600, H = 90, P = 8; const ys = points.map(p => p.y); const lo = Math.min(...ys), hi = Math.max(...ys); const span = hi - lo || 1;
-  const xy = points.map((p, i) => [P + i * (W - 2 * P) / (points.length - 1), H - P - (p.y - lo) / span * (H - 2 * P)]);
-  return `<svg class="spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Evolución"><polyline fill="none" stroke="var(--acc)" stroke-width="3" points="${xy.map(p => p.join(',')).join(' ')}"/>${xy.map(p => `<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="var(--acc)"/>`).join('')}</svg>`;
-}
 views.ex = (id) => {
   const e = S.ex[id]; if (!e) return go('#/catalogo');
-  const sess = S.logs.map(l => ({l, sets: l.sets.filter(s => s.ex === id && !s.skipped)})).filter(x => x.sets.length);
-  const pts = sess.map(x => ({y: bestOf(id, x.sets).score}));
+  const sess = S.logs.map(l => ({l, sets: l.sets.filter(x => x.ex === id && !x.skipped)})).filter(x => x.sets.length);
+  const pts = sess.map(x => exPoint(id, x.sets, x.l.date)).filter(Boolean);
+  const b = bestOf(id, sess.flatMap(x => x.sets));
   app().innerHTML = `<a href="javascript:history.back()" class="small">‹ Volver</a><h1>${esc(e.name)}</h1>
-    ${sess.length ? `<div class="card"><div class="mut small">Mejor serie por sesión${e.measure === 'time' ? ' (segundos)' : e.load ? ' (kg × reps, en fuerza estimada)' : ' (reps)'}</div>${sparkline(pts) || '<p class="mut small">Con dos sesiones aparecerá la gráfica.</p>'}
-      <table><tr><th>Fecha</th><th>Series</th></tr>${[...sess].reverse().map(x => `<tr><td>${esc(short(x.l.date))}</td><td>${x.sets.map(s => esc(e.measure === 'time' ? s.time + 's' : String(s.reps))).join(' · ')}${x.sets.find(s => s.kg) ? ` × ${x.sets.find(s => s.kg).kg} kg` : ''}</td></tr>`).join('')}</table></div>`
+    ${sess.length ? `<div class="card"><div class="row between"><div class="mut small">${esc(exUnit(id))}</div>${b ? `<span class="chip acc">🏆 ${esc(bestText(id, b.x))}</span>` : ''}</div>
+      ${pts.length > 1 ? lineSVG(pts, {aria: exUnit(id)}) : '<p class="mut small">Con dos sesiones aparecerá la gráfica.</p>'}
+      <table><tr><th>Fecha</th><th>Series</th></tr>${[...sess].reverse().map(x => `<tr><td>${esc(short(x.l.date))}</td><td>${x.sets.map(s2 => esc(e.measure === 'time' ? s2.time + 's' : String(s2.reps))).join(' · ')}${x.sets.find(s2 => s2.kg) ? ` × ${x.sets.find(s2 => s2.kg).kg} kg` : ''}</td></tr>`).join('')}</table></div>`
       : '<div class="card"><p class="mut">Todavía no lo has hecho.</p></div>'}
     ${exDetailHTML(e, false)}`;
   startFlip();
