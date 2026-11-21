@@ -4,7 +4,7 @@
  */
 'use strict';
 
-const VERSION = '0.2.0';
+const VERSION = '0.2.1';
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pad = n => String(n).padStart(2, '0');
@@ -84,6 +84,9 @@ function derive() {
   S.allRoutines = byId;
   S.routineList = Object.values(byId).filter(r => !r.for || !r.for.length || r.for.includes(S.user));
   S.routines = {}; Object.values(byId).forEach(r => S.routines[r.id] = r); // keep all resolvable (old logs/plans)
+  // personal adjustments: a routine with "overrides": <id> and "for": [me] replaces <id> for me, under the same id
+  Object.values(byId).forEach(r => { if (r.overrides && byId[r.overrides] && (r.for || []).includes(S.user)) S.routines[r.overrides] = Object.assign({}, r, {id: r.overrides, _ovr: r.id}); });
+  S.routineList = S.routineList.filter(r => !r.overrides).map(r => S.routines[r.id]);
   const up = (R.plans || {})[S.user];
   S.plan = Object.assign({}, S.bundled.plan, up ? {weekly: up.weekly || {}, dates: up.dates || {}} : {},
     {goalPerWeek: me.goalPerWeek || S.bundled.plan.goalPerWeek || 2, extras: me.extras || S.bundled.plan.extras || []});
@@ -460,8 +463,62 @@ function routineCard(r, note, hero) {
 
 views.rutina = (id) => {
   const r = S.routines[id]; if (!r) return go('#/hoy');
-  app().innerHTML = `<a href="#/hoy" class="small">‹ Hoy</a>${routineCard(r, null, false)}`;
-  app().onclick = e => { const a = e.target.closest('[data-act=start]'); if (a) { if (S.cur && !confirm('Hay una sesión a medias. ¿Empezar otra y descartarla?')) return; startRoutine(a.dataset.id); } };
+  const Q = S.ui.quick && S.ui.quick.id === id ? S.ui.quick : null;
+  if (!Q) {
+    app().innerHTML = `<a href="javascript:history.back()" class="small">‹ Volver</a>${routineCard(r, null, false)}
+      <button class="btn ghost big" data-act="quick">✎ Ajustar esta rutina</button>
+      ${r._ovr ? `<p class="small mut" style="margin-top:8px">Es tu versión ajustada. <button class="btn small ghost" data-act="restore">Volver a la original</button></p>` : ''}`;
+    app().onclick = async e => {
+      const a = e.target.closest('[data-act]'); if (!a) return;
+      if (a.dataset.act === 'start') { if (S.cur && !confirm('Hay una sesión a medias. ¿Empezar otra y descartarla?')) return; startRoutine(a.dataset.id); }
+      if (a.dataset.act === 'quick') { S.ui.quick = JSON.parse(JSON.stringify(r)); views.rutina(id); }
+      if (a.dataset.act === 'restore' && confirm('¿Descartar tus ajustes y volver a la rutina original?')) { await change({t: 'routine', id: r._ovr, routine: null}); toast('Rutina original'); views.rutina(id); }
+    };
+    return;
+  }
+  const own = r._src === 'data' && !r._ovr && r.for && r.for.length === 1 && r.for[0] === S.user;
+  const ctl = (k, bi, ii, label) => `<span class="qc"><button data-q="${k}.${bi}.${ii}.-1" aria-label="menos">−</button><b>${label}</b><button data-q="${k}.${bi}.${ii}.1" aria-label="más">+</button></span>`;
+  app().innerHTML = `<h1 style="font-size:1.35rem">Ajustar: ${esc(r.name)}</h1>
+    <p class="small mut">${own ? 'Cambias tu rutina.' : `Los cambios serán solo para ${esc(S.me.name)}; la original queda intacta.`}</p>
+    ${Q.blocks.map((b, bi) => `<h2>${esc(b.title || '')}${b.circuit ? ` <span class="chip">circuito ×${b.rounds}</span>` : ''}</h2><div class="card"><ul class="list">${b.items.map((it, ii) => {
+      const e = S.ex[it.ex] || {name: it.ex, measure: 'reps'}; const t = e.measure === 'time' || it.time;
+      const reps = Array.isArray(it.reps) ? it.reps.join('–') : it.reps;
+      return `<li style="flex-wrap:wrap"><div class="row" style="width:100%"><div class="thumb" style="width:40px;height:40px;${isSvg(e) ? 'background:#3E5C76' : ''}">${imgHTML(e)}</div><b class="grow">${esc(e.name)}</b>
+          <button class="btn small ghost" data-qm="${bi}.${ii}.-1" aria-label="Subir">↑</button><button class="btn small ghost" data-qm="${bi}.${ii}.1" aria-label="Bajar">↓</button><button class="btn small ghost" data-qd="${bi}.${ii}" aria-label="Quitar">✕</button></div>
+        <div class="row wrap" style="gap:6px;margin-top:6px">${b.circuit ? '' : ctl('sets', bi, ii, `${it.sets || 1} series`)}${t ? ctl('time', bi, ii, `${it.time} s`) : ctl('reps', bi, ii, `${reps} reps`)}${e.load ? ctl('kg', bi, ii, it.kg ? `${it.kg} kg` : 'sin peso') : ''}${ctl('rest', bi, ii, `${it.rest ?? 60}s desc.`)}</div></li>`; }).join('')}</ul></div>`).join('')}
+    <div class="row" style="margin-top:14px"><button class="btn ghost" data-act="cancel">Cancelar</button><button class="btn primary grow big" data-act="save">Guardar cambios</button></div>`;
+  app().onclick = async e => {
+    const q = sel => e.target.closest(sel);
+    const c = q('[data-q]');
+    if (c) {
+      const [k, bi, ii, d] = c.dataset.q.split('.'); const it = Q.blocks[bi].items[ii]; const dd = +d; const ex = S.ex[it.ex] || {};
+      if (k === 'sets') it.sets = Math.max(1, (it.sets || 1) + dd);
+      if (k === 'time') it.time = Math.max(5, (it.time || 30) + 5 * dd);
+      if (k === 'rest') it.rest = Math.max(0, (it.rest ?? 60) + 15 * dd);
+      if (k === 'reps') it.reps = Array.isArray(it.reps) ? [Math.max(1, it.reps[0] + dd), Math.max(1, it.reps[1] + dd)] : Math.max(1, (it.reps || 10) + dd);
+      if (k === 'kg') { const o = kgOptions({load: ex.load}); let i = o.indexOf(it.kg || 0); if (i < 0) i = o.findIndex(x => x >= (it.kg || 0)); it.kg = o[Math.min(o.length - 1, Math.max(0, i + dd))] || undefined; }
+      return views.rutina(id);
+    }
+    const m = q('[data-qm]');
+    if (m) { const [bi, ii, d] = m.dataset.qm.split('.').map(Number); const L = Q.blocks[bi].items; const j = ii + d;
+      if (j >= 0 && j < L.length) [L[ii], L[j]] = [L[j], L[ii]];
+      else if (j < 0 && bi > 0) Q.blocks[bi - 1].items.push(L.splice(ii, 1)[0]);            // into the previous block
+      else if (j >= L.length && bi < Q.blocks.length - 1) Q.blocks[bi + 1].items.unshift(L.splice(ii, 1)[0]);
+      return views.rutina(id); }
+    const dl = q('[data-qd]');
+    if (dl) { const [bi, ii] = dl.dataset.qd.split('.').map(Number); Q.blocks[bi].items.splice(ii, 1); return views.rutina(id); }
+    const a = q('[data-act]'); if (!a) return;
+    if (a.dataset.act === 'cancel') { S.ui.quick = null; return views.rutina(id); }
+    if (a.dataset.act === 'save') {
+      Q.blocks = Q.blocks.filter(b => b.items.length);
+      if (!Q.blocks.length) return toast('La rutina se quedaría vacía');
+      const tgt = JSON.parse(JSON.stringify(Q)); delete tgt._src; delete tgt._ovr;
+      if (r._ovr) Object.assign(tgt, {id: r._ovr, overrides: id, for: [S.user]});
+      else if (!own) Object.assign(tgt, {id: `${id}--${S.user}`, overrides: id, for: [S.user]});
+      S.ui.quick = null;
+      await change({t: 'routine', id: tgt.id, routine: tgt}); toast('Rutina ajustada'); views.rutina(id);
+    }
+  };
 };
 
 /* ------------------------------------------------------------------ the player */
@@ -878,7 +935,7 @@ views.rutinas = () => {
   app().onclick = ev => {
     if (ev.target.closest('[data-new]')) { S.ui.draft = {id: '', name: '', goal: '', kit: '', for: [S.user], blocks: [{title: 'Fuerza', items: []}]}; go('#/editar/nueva'); }
     const d = ev.target.closest('[data-dup]');
-    if (d) { const r = JSON.parse(JSON.stringify(S.routines[d.dataset.dup])); delete r._src; r.id = ''; r.name = r.name + ' (copia)'; r.for = [S.user]; S.ui.draft = r; go('#/editar/nueva'); }
+    if (d) { const r = JSON.parse(JSON.stringify(S.routines[d.dataset.dup])); delete r._src; delete r._ovr; delete r.overrides; r.id = ''; r.name = r.name + ' (copia)'; r.for = [S.user]; S.ui.draft = r; go('#/editar/nueva'); }
   };
 };
 const slug = s => (s || 'rutina').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 30);
@@ -938,9 +995,10 @@ views.editar = (id) => {
     if (!D.id) { D.id = slug(D.name); if (S.allRoutines[D.id]) D.id += '-' + Date.now().toString(36).slice(-4); }
     D.short = D.short || D.name.replace(/^Fuerza\s*/i, '').slice(0, 3);
     const r = JSON.parse(JSON.stringify(D)); S.ui.draft = null;
+    if (r._ovr) { r.overrides = r.id; r.id = r._ovr; r.for = [S.user]; delete r._ovr; }
     await change({t: 'routine', id: r.id, routine: r}); toast('Rutina guardada'); go('#/rutinas');
   };
-  const del = $('#r-del'); if (del) del.onclick = async () => { if (!confirm('¿Borrar esta rutina? Los días del plan que la usen quedarán vacíos.')) return; const rid = D.id; S.ui.draft = null; await change({t: 'routine', id: rid, routine: null}); go('#/rutinas'); };
+  const del = $('#r-del'); if (del) del.onclick = async () => { if (!confirm(D._ovr ? '¿Borrar tus ajustes y volver a la original?' : '¿Borrar esta rutina? Los días del plan que la usen quedarán vacíos.')) return; const rid = D._ovr || D.id; S.ui.draft = null; await change({t: 'routine', id: rid, routine: null}); go('#/rutinas'); };
 };
 function pickExercise(cb) {
   const list = q => S.exList.filter(e => !q || (e.name + ' ' + (ZONES[e.zone] || '')).toLowerCase().includes(q.toLowerCase()));
