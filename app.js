@@ -4,7 +4,7 @@
  */
 'use strict';
 
-const VERSION = '0.4.0';
+const VERSION = '0.4.1';
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pad = n => String(n).padStart(2, '0');
@@ -606,7 +606,8 @@ views.sesion = () => {
       ${st.alt && S.ex[st.alt] ? `<button class="btn ghost small grow" data-act="swap">⇄ Cambiar por ${esc(S.ex[st.alt].name)}</button>` : '<span class="grow"></span>'}
       <button class="btn ghost small" data-act="info">ⓘ Cómo</button>
       <button class="btn ghost small" data-act="skip">Saltar</button>
-    </div>`;
+    </div>
+    ${st.circuit && st.set >= 2 ? `<button class="btn ghost small" style="width:100%;margin-top:8px" data-act="endcircuit">⏭ Acabar este circuito aquí (ronda ${st.set - 1} de ${st.sets} hecha)</button>` : ''}`;
   startFlip();
   app().onclick = onPlayer;
 };
@@ -633,6 +634,7 @@ async function onPlayer(ev) {
     S.cur.applied = Object.assign(S.cur.applied || {}, {[st.item]: true}); await saveCur(); toast('Hecho: a por ello 💪'); return views.sesion();
   }
   if (act === 'timer') return holdTimer(st, v);
+  if (act === 'endcircuit') { if (confirm('¿Dar el circuito por terminado y pasar al siguiente bloque?')) return endCircuit(st); return; }
   if (act === 'skip') { S.cur.res[st.key] = {ex: st.ex, set: st.set, skipped: true}; return advance(false); }
   if (act === 'prev') { S.cur.idx = Math.max(0, S.cur.idx - 1); await saveCur(); return views.sesion(); }
   if (act === 'swap') {
@@ -661,6 +663,14 @@ document.addEventListener('click', async ev => {
   if (act === 'discard' && confirm('¿Descartar esta sesión? No se guardará nada.')) { S.cur = null; await saveCur(); wake(false); go('#/hoy'); }
 });
 
+async function endCircuit(st) {
+  const bi = st.key.split('.')[0];
+  S.cur.steps.forEach(x => { if (x.key.split('.')[0] === bi && !S.cur.res[x.key]) S.cur.res[x.key] = {ex: x.ex, set: x.set, skipped: true}; });
+  toast('Circuito terminado: ¡siguiente bloque!');
+  S.cur.idx = Math.max(0, S.cur.steps.findIndex(x => !S.cur.res[x.key]));
+  if (S.cur.steps.every(x => S.cur.res[x.key])) { await saveCur(); return go('#/fin'); }
+  await saveCur(); return views.sesion();
+}
 async function completeStep(st, vals) {
   S.cur.res[st.key] = {ex: st.ex, set: st.set, reps: st.measure === 'reps' ? vals.reps : null, time: st.measure === 'time' ? vals.time : null,
     kg: st.load ? vals.kg || null : null, side: st.side, tempo: st.tempo};
@@ -688,9 +698,11 @@ function restTimer(sec, next) {
   let end = Date.now() + sec * 1000, total = sec;
   overlay(`<div class="phase">Descanso</div><div class="ring">${ring(1)}<div class="count" id="cnt">${mmss(sec)}</div></div>
     <div class="row"><button class="btn" id="m15">−15 s</button><button class="btn" id="p15">+15 s</button><button class="btn primary" id="skip">Seguir ›</button></div>
+    ${next.circuit && next.set >= 2 && S.cur.steps.find(x => x.key.split('.')[0] === next.key.split('.')[0]).item === next.item ? `<button class="btn ghost" id="endc" style="margin-top:12px">⏭ Ya está: acabar el circuito (${next.set - 1} ronda${next.set - 1 > 1 ? "s" : ""})</button>` : ''}
     <div class="next card"><div class="mut small">Siguiente</div><div class="row"><div class="thumb" style="${isSvg(e) ? 'background:#3E5C76' : ''}">${imgHTML(e)}</div><div class="grow" style="text-align:left"><b>${esc(e.name)}</b><div class="mut small">${next.circuit ? 'Ronda' : 'Serie'} ${next.set}/${next.sets} · ${esc(targetText(next))}</div></div></div></div>`);
   const done = () => { stopTicker(); views.sesion(); };
   $('#skip').onclick = done;
+  const ec = $('#endc'); if (ec) ec.onclick = () => { stopTicker(); endCircuit(next); };
   $('#p15').onclick = () => { end += 15000; total += 15; };
   $('#m15').onclick = () => { end -= 15000; };
   runTicker(once => {
