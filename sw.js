@@ -1,6 +1,6 @@
 // Fuerza service worker: works offline. Data JSON = network first; images = cache first.
-const CACHE = 'fuerza-v1';
-const SHELL = ['./', 'index.html', 'app.css', 'app.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png',
+const CACHE = 'fuerza-v2';
+const SHELL = ['./', 'index.html', 'app.css', 'app.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png',
   'data/exercises.json', 'data/routines.json', 'data/plan.json'];
 
 self.addEventListener('install', e => {

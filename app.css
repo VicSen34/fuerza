@@ -28,7 +28,11 @@ body{margin:0;background:var(--bg);color:var(--ink);
   font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   padding-bottom:calc(72px + env(safe-area-inset-bottom));}
 body.in-session{padding-bottom:0}
-main{max-width:640px;margin:0 auto;padding:16px 16px 24px}
+main{max-width:640px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top)) 16px 24px}
+input,select,textarea{font-size:16px}  /* iOS zooms into smaller fields */
+select.sel{font:inherit;font-size:16px;padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);min-width:0}
+details summary{cursor:pointer;padding:4px 0}
+*{-webkit-tap-highlight-color:transparent}
 a{color:var(--acc)}
 h1{font-size:1.6rem;line-height:1.15;margin:4px 0 4px}
 h2{font-size:1.1rem;margin:22px 0 8px}
@@ -103,7 +107,7 @@ body.in-session #tabs{display:none}
 .stp .val{font-size:1.9rem;font-weight:800;min-width:2.5ch}
 .stp button{width:44px;height:44px;border-radius:12px;border:0;background:var(--chip);color:var(--ink);font-size:1.4rem;font-weight:700}
 .last{font-size:.85rem;color:var(--mut);margin-top:2px}
-.overlay{position:fixed;inset:0;background:var(--bg);z-index:20;display:flex;flex-direction:column;
+.overlay{position:fixed;inset:0;padding-top:env(safe-area-inset-top);background:var(--bg);z-index:20;display:flex;flex-direction:column;
   align-items:center;justify-content:center;padding:24px;text-align:center}
 .overlay .count{font-size:5.5rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
 .overlay .phase{font-size:1.1rem;color:var(--mut);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em}

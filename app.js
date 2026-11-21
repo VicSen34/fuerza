@@ -4,7 +4,7 @@
  */
 'use strict';
 
-const VERSION = '0.1.0';
+const VERSION = '0.2.0';
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pad = n => String(n).padStart(2, '0');
@@ -48,25 +48,210 @@ const DB = (() => {
   };
 })();
 
-/* ------------------------------------------------------------------ state */
-const S = {ex: {}, exList: [], routines: {}, routineList: [], plan: {}, logs: [], settings: {sound: true, vibrate: true, knee: true}, cur: null, ui: {}};
+/* ------------------------------------------------------------------ state
+ * Bundled with the app (public): exercise catalogue, library routines, a default plan.
+ * Private data repo (synced, cached in kv "remote"): users.json, routines.json, users/<id>/plan.json, users/<id>/logs/.
+ * cfg (kv "cfg"): {repo, token, user} when synced, or {local: true, user: 'yo'} for offline-only use.
+ */
+const S = {ex: {}, exList: [], routines: {}, routineList: [], plan: {}, logs: [], allLogs: [],
+  settings: {sound: true, vibrate: true}, cur: null, ui: {},
+  bundled: {routines: [], plan: {}}, cfg: null, remote: null, user: null, users: [], sync: {state: 'idle'}};
 
 async function load() {
   const j = u => fetch(u, {cache: 'no-cache'}).then(r => { if (!r.ok) throw new Error(u); return r.json(); });
   const [ex, rt, plan] = await Promise.all([j('data/exercises.json'), j('data/routines.json'), j('data/plan.json')]);
   S.exList = ex; ex.forEach(e => S.ex[e.id] = e);
-  S.routineList = rt; rt.forEach(r => S.routines[r.id] = r);
-  S.plan = plan;
-  S.logs = (await DB.allLogs()).sort((a, b) => (a.start || '').localeCompare(b.start || ''));
+  S.bundled = {routines: rt, plan};
+  S.cfg = await DB.get('cfg') || null;
+  S.remote = await DB.get('remote') || null;
+  S.allLogs = await DB.allLogs();
   S.settings = Object.assign(S.settings, await DB.get('settings') || {});
   S.cur = await DB.get('current') || null;
+  derive();
   try { navigator.storage && navigator.storage.persist && navigator.storage.persist(); } catch (e) {}
 }
 
+/** Recompute everything that depends on the current user and the synced data. */
+function derive() {
+  const R = S.remote || {};
+  S.users = (R.users && R.users.users) || [{id: 'yo', name: 'Yo', goalPerWeek: 2, extras: S.bundled.plan.extras || []}];
+  S.user = (S.cfg && S.cfg.user) || S.users[0].id;
+  const me = S.users.find(u => u.id === S.user) || S.users[0];
+  S.me = me;
+  const all = [...S.bundled.routines.map(r => Object.assign({}, r, {_src: 'lib'})),
+    ...((R.routines && R.routines.routines) || []).map(r => Object.assign({}, r, {_src: 'data'}))];
+  const byId = {}; all.forEach(r => byId[r.id] = r);           // synced routines override library ones with the same id
+  S.allRoutines = byId;
+  S.routineList = Object.values(byId).filter(r => !r.for || !r.for.length || r.for.includes(S.user));
+  S.routines = {}; Object.values(byId).forEach(r => S.routines[r.id] = r); // keep all resolvable (old logs/plans)
+  const up = (R.plans || {})[S.user];
+  S.plan = Object.assign({}, S.bundled.plan, up ? {weekly: up.weekly || {}, dates: up.dates || {}} : {},
+    {goalPerWeek: me.goalPerWeek || S.bundled.plan.goalPerWeek || 2, extras: me.extras || S.bundled.plan.extras || []});
+  S.logs = S.allLogs.filter(l => (l.user || S.user) === S.user).sort((a, b) => (a.start || '').localeCompare(b.start || ''));
+}
+const kneeOn = () => S.settings['knee_' + S.user] ?? (S.me && S.me.kneeCheck != null ? !!S.me.kneeCheck : true);
+
+/* ------------------------------------------------------------------ sync with the private GitHub data repo
+ * Offline first: every change is applied locally and queued in kv "outbox"; sync() = flush outbox, then pull.
+ * Plan / routine changes are queued as small patches and re-applied on the latest remote file, so edits made
+ * by Claude on the PC are not overwritten.
+ */
+const GH = {
+  api(path, opt = {}) {
+    const c = S.cfg;
+    return fetch(`${c.api || 'https://api.github.com'}/repos/${c.repo}/${path}`, Object.assign({cache: 'no-store'}, opt, {
+      headers: Object.assign({Authorization: `Bearer ${c.token}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28'}, opt.headers || {})}));
+  },
+  enc(path) { return path.split('/').map(encodeURIComponent).join('/'); },
+  b64(str) { const b = new TextEncoder().encode(str); let s = ''; for (let i = 0; i < b.length; i += 0x8000) s += String.fromCharCode(...b.subarray(i, i + 0x8000)); return btoa(s); },
+  unb64(b64) { const bin = atob(b64.replace(/\s/g, '')); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new TextDecoder().decode(u); },
+  async check(r) { if (!r.ok) { const e = new Error(`GitHub ${r.status}`); e.status = r.status; throw e; } return r; },
+  async tree() { const r = await GH.check(await GH.api(`git/trees/${S.cfg.branch || 'main'}?recursive=1`)); const t = await r.json(); const m = {}; t.tree.forEach(x => { if (x.type === 'blob') m[x.path] = x.sha; }); return m; },
+  async getJSON(path) {
+    const r = await GH.api(`contents/${GH.enc(path)}?ref=${S.cfg.branch || 'main'}`);
+    if (r.status === 404) return {data: null, sha: null};
+    await GH.check(r); const j = await r.json(); return {data: JSON.parse(GH.unb64(j.content)), sha: j.sha};
+  },
+  async put(path, data, sha, message) {
+    const body = {message, content: GH.b64(JSON.stringify(data, null, 1) + '\n'), branch: S.cfg.branch || 'main'};
+    if (sha) body.sha = sha;
+    const r = await GH.check(await GH.api(`contents/${GH.enc(path)}`, {method: 'PUT', body: JSON.stringify(body)}));
+    return (await r.json()).content.sha;
+  },
+  async del(path, sha, message) {
+    await GH.check(await GH.api(`contents/${GH.enc(path)}`, {method: 'DELETE', body: JSON.stringify({message, sha, branch: S.cfg.branch || 'main'})}));
+  },
+};
+const synced = () => S.cfg && S.cfg.repo && S.cfg.token;
+const logPath = l => `users/${l.user}/logs/${l.id}.json`;
+const stripLog = l => { const o = Object.assign({}, l); delete o._sha; return o; };
+
+async function enqueue(op) { const ob = await DB.get('outbox') || []; ob.push(op); await DB.set('outbox', ob); }
+function applyPatch(op, R) {          // apply a plan/routine patch to the cached remote copy (optimistic UI)
+  R.plans = R.plans || {};
+  if (op.t === 'plan') {
+    const p = R.plans[op.user] = R.plans[op.user] || {weekly: {}, dates: {}};
+    if (op.kind === 'date') { if (op.value === undefined) delete p.dates[op.date]; else p.dates[op.date] = op.value; }
+    if (op.kind === 'weekly') { if (!op.value) delete p.weekly[op.wd]; else p.weekly[op.wd] = op.value; }
+  }
+  if (op.t === 'routine') {
+    R.routines = R.routines || {routines: []};
+    const list = R.routines.routines.filter(r => r.id !== op.id);
+    if (op.routine) list.push(op.routine);
+    R.routines.routines = list;
+  }
+}
+/** Change the plan/routines: apply locally now, push later. */
+async function change(op) {
+  S.remote = S.remote || {users: null, routines: {routines: []}, plans: {}};
+  applyPatch(op, S.remote);
+  await DB.set('remote', S.remote);
+  derive();
+  if (synced()) { await enqueue(op); sync(); }
+}
+
+let syncing = null;
+function sync() { if (!synced() || !navigator.onLine && navigator.onLine !== undefined) { setSync(synced() ? 'offline' : 'local'); return Promise.resolve(); }
+  return syncing || (syncing = doSync().finally(() => { syncing = null; })); }
+function setSync(state, msg) { S.sync = {state, msg, at: Date.now()}; const el = $('#syncline'); if (el) el.innerHTML = syncLine(); }
+function syncLine() {
+  const s = S.sync;
+  if (!synced()) return '';
+  const ago = s.at ? Math.round((Date.now() - s.at) / 60000) : null;
+  if (s.state === 'busy') return '⟳ Sincronizando…';
+  if (s.state === 'error') return `⚠ ${esc(s.msg || 'Error al sincronizar')}`;
+  if (s.state === 'offline') return '☁ Sin conexión: se guarda en el móvil y se sube luego';
+  if (s.state === 'ok') return `☁ Sincronizado${ago ? ` hace ${ago} min` : ''}`;
+  return '';
+}
+async function doSync() {
+  setSync('busy');
+  try {
+    await flush();
+    await pull();
+    setSync('ok');
+    softRender();
+  } catch (e) {
+    const msg = e.status === 401 ? 'Token no válido o caducado (Ajustes)' : e.status === 404 ? 'No encuentro el repo (Ajustes)' : e.status ? `GitHub respondió ${e.status}` : 'Sin conexión';
+    setSync(e.status ? 'error' : 'offline', msg);
+  }
+}
+async function flush() {
+  let ob = await DB.get('outbox') || [];
+  while (ob.length) {
+    const op = ob[0];
+    if (op.t === 'log') {
+      const l = S.allLogs.find(x => x.id === op.id);
+      if (l) {
+        let sha = l._sha;
+        try { sha = await GH.put(logPath(l), stripLog(l), sha, `app(${l.user}): ${l.date} ${l.name}`); }
+        catch (e) { if (e.status !== 422 && e.status !== 409) throw e; const cur = await GH.getJSON(logPath(l)); sha = await GH.put(logPath(l), stripLog(l), cur.sha, `app(${l.user}): ${l.date} ${l.name}`); }
+        l._sha = sha; await DB.putLog(l);
+      }
+    } else if (op.t === 'dellog') {
+      const cur = await GH.getJSON(op.path); if (cur.sha) await GH.del(op.path, cur.sha, `app: borrar ${op.path}`);
+    } else if (op.t === 'plan' || op.t === 'routine') {
+      const path = op.t === 'plan' ? `users/${op.user}/plan.json` : 'routines.json';
+      for (let tries = 0; ; tries++) {
+        const cur = await GH.getJSON(path);
+        const R = {plans: {}, routines: {routines: []}};
+        if (op.t === 'plan') R.plans[op.user] = Object.assign({weekly: {}, dates: {}}, cur.data || {});
+        else R.routines = cur.data || {routines: []};
+        applyPatch(op, R);
+        const data = op.t === 'plan' ? R.plans[op.user] : R.routines;
+        try { await GH.put(path, data, cur.sha, op.t === 'plan' ? `app(${op.user}): plan ${op.date || 'semana ' + op.wd}` : `app: rutina ${op.id}`); break; }
+        catch (e) { if ((e.status === 409 || e.status === 422) && tries < 2) continue; throw e; }
+      }
+    }
+    ob = (await DB.get('outbox') || []).slice(1); await DB.set('outbox', ob);
+  }
+}
+async function pull() {
+  const tree = await GH.tree();
+  const R = S.remote || {};
+  const shas = R.shas || {};
+  const want = ['users.json', 'routines.json', ...Object.keys(tree).filter(p => /^users\/[^/]+\/plan\.json$/.test(p))];
+  const next = {users: R.users || null, routines: R.routines || {routines: []}, plans: Object.assign({}, R.plans || {}), shas: {}};
+  for (const p of want) {
+    if (!tree[p]) continue;
+    next.shas[p] = tree[p];
+    if (shas[p] === tree[p] && (p !== 'users.json' || next.users)) continue;
+    const {data} = await GH.getJSON(p);
+    if (p === 'users.json') next.users = data; else if (p === 'routines.json') next.routines = data || {routines: []};
+    else next.plans[p.split('/')[1]] = data || {weekly: {}, dates: {}};
+  }
+  S.remote = next; await DB.set('remote', next);
+  // logs of the current user
+  const prefix = `users/${S.cfg.user}/logs/`;
+  const remoteLogs = Object.keys(tree).filter(p => p.startsWith(prefix) && p.endsWith('.json'));
+  const pending = new Set((await DB.get('outbox') || []).filter(o => o.t === 'log').map(o => o.id));
+  for (const p of remoteLogs) {
+    const id = p.slice(prefix.length, -5); const loc = S.allLogs.find(x => x.id === id);
+    if (loc && loc._sha === tree[p]) continue;
+    if (loc && pending.has(id)) continue;
+    const {data} = await GH.getJSON(p); if (!data) continue;
+    data.user = S.cfg.user; data._sha = tree[p]; await DB.putLog(data);
+  }
+  for (const l of S.allLogs.filter(x => (x.user || S.cfg.user) === S.cfg.user)) {
+    if (tree[logPath(Object.assign({}, l, {user: S.cfg.user}))]) continue;
+    if (l._sha && !pending.has(l.id)) await DB.delLog(l.id);              // deleted on the other side
+    else if (!l._sha && !pending.has(l.id)) { l.user = S.cfg.user; await DB.putLog(l); await enqueue({t: 'log', id: l.id}); }
+  }
+  S.allLogs = await DB.allLogs();
+  derive();
+  if ((await DB.get('outbox') || []).length) await flush();
+}
+window.addEventListener('online', () => sync());
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && synced() && Date.now() - (S.sync.at || 0) > 60000) sync(); });
+
+/** Device code: lets a second phone join without typing the repo and token by hand. */
+const makeCode = (user) => 'FZ1.' + GH.b64(JSON.stringify({r: (S.cfg.api ? S.cfg.api + '/' : '') + S.cfg.repo, t: S.cfg.token, u: user})).replace(/=+$/, '');
+function readCode(code) { try { const s = code.trim(); if (!s.startsWith('FZ1.')) return null; const o = JSON.parse(GH.unb64(s.slice(4))); return o.r && o.t ? {repo: o.r, token: o.t, user: o.u} : null; } catch (e) { return null; } }
+
 /* ------------------------------------------------------------------ plan helpers */
 function plannedFor(date) {
-  const o = (S.plan.dates || {})[date];
-  if (o) return typeof o === 'string' ? {routine: o} : o;
+  const dates = S.plan.dates || {};
+  if (date in dates) { const o = dates[date]; if (!o) return null; return typeof o === 'string' ? {routine: o} : o; }
   const wd = String(parseD(date).getDay());
   const r = (S.plan.weekly || {})[wd];
   return r ? {routine: r} : null;
@@ -228,7 +413,7 @@ views.hoy = () => {
   const days = [...Array(7)].map((_, i) => { const d = addDays(mon, i); const p = plannedFor(d); const dn = logsOn(d).length > 0;
     return `<div class="d ${dn ? 'done' : p ? 'plan' : ''} ${d === t ? 'today' : ''}"><b>${dn ? '✓' : p ? (S.routines[p.routine] ? esc(S.routines[p.routine].short || '•') : '·') : ''}</b>${DAYS[parseD(d).getDay()]}</div>`; }).join('');
 
-  let html = `<p class="mut small">${esc(nice(t))}</p><h1>Hoy</h1>`;
+  let html = `<p class="mut small">${esc(nice(t))}</p><h1>Hoy${S.users.length > 1 ? ` · ${esc(S.me.name)}` : ''}</h1><div id="syncline" class="tiny mut">${syncLine()}</div>`;
   if (S.cur) {
     const n = Object.keys(S.cur.res).length;
     html += `<div class="card hero"><h3>Sesión a medias: ${esc(S.cur.name)}</h3><p class="mut small">${n} de ${S.cur.steps.length} series hechas</p>
@@ -487,7 +672,7 @@ views.fin = () => {
       <div class="grow"><div class="big-num">${Math.round(log.tutSec / 60)}</div><div class="mut small">min en tensión</div></div></div></div>
     ${prs.length ? `<div class="card"><h3 class="pr">🏆 ${prs.length === 1 ? 'Nuevo récord' : prs.length + ' récords'}</h3><ul class="list">${prs.map(p => `<li><div class="grow"><b>${esc(S.ex[p.ex].name)}</b><div class="small mut">${esc(p.now)} <span class="tiny">(antes ${esc(p.prev)})</span></div></div></li>`).join('')}</ul></div>` : ''}
     <h2>¿Cómo fue?</h2><div class="feel">${FEELS.map((f, i) => `<button data-feel="${i}" class="${S.cur.feel === i ? 'on' : ''}">${f[0]}<small>${f[1]}</small></button>`).join('')}</div>
-    ${S.settings.knee ? `<h2>Rodilla (0 = nada, 10 = mucho): <span id="kv">${S.cur.knee ?? 0}</span></h2><input type="range" min="0" max="10" step="1" value="${S.cur.knee ?? 0}" id="knee">` : ''}
+    ${kneeOn() ? `<h2>Rodilla (0 = nada, 10 = mucho): <span id="kv">${S.cur.knee ?? 0}</span></h2><input type="range" min="0" max="10" step="1" value="${S.cur.knee ?? 0}" id="knee">` : ''}
     <h2>Notas (opcional)</h2><textarea id="notes" rows="2" placeholder="p. ej. la búlgara izquierda cuesta más">${esc(S.cur.notes || '')}</textarea>
     <button class="btn primary big" style="margin-top:16px" id="save">Guardar sesión</button>
     ${n < N ? `<button class="btn ghost big" style="margin-top:8px" id="back">Volver a la sesión</button>` : ''}`;
@@ -499,8 +684,9 @@ views.fin = () => {
   $('#notes').oninput = e => { S.cur.notes = e.target.value; saveCur(); };
   const b = $('#back'); if (b) b.onclick = () => go('#/sesion');
   $('#save').onclick = async () => {
-    const lg = curToLog(); lg.prs = findPRs(lg);
-    await DB.putLog(lg); S.logs.push(lg); S.cur = null; await saveCur(); wake(false);
+    const lg = curToLog(); lg.prs = findPRs(lg); lg.user = S.user;
+    await DB.putLog(lg); S.allLogs.push(lg); derive(); S.cur = null; await saveCur(); wake(false);
+    if (synced()) { await enqueue({t: 'log', id: lg.id}); sync(); }
     const mon = monday(today()); const wc = weekCount(mon), goal = S.plan.goalPerWeek || 2;
     toast(wc >= goal ? `Semana completada: ${wc}/${goal} ✓` : `Guardada · semana ${wc}/${goal}`);
     go('#/hoy');
@@ -540,7 +726,7 @@ views.log = (id) => {
     ${l.prs && l.prs.length ? `<p class="pr">🏆 ${l.prs.map(p => esc((S.ex[p.ex] || {name: p.ex}).name) + ': ' + esc(p.now)).join(' · ')}</p>` : ''}
     <div class="card"><table><tr><th>Ejercicio</th><th>Serie</th><th>Hecho</th><th>Carga</th></tr>${rows}</table></div>
     <button class="btn ghost" id="del" style="color:var(--clay)">Borrar esta sesión</button>`;
-  $('#del').onclick = async () => { if (!confirm('¿Borrar esta sesión del historial?')) return; await DB.delLog(id); S.logs = S.logs.filter(x => x.id !== id); go('#/historial'); };
+  $('#del').onclick = async () => { if (!confirm('¿Borrar esta sesión del historial?')) return; const l = S.allLogs.find(x => x.id === id); await DB.delLog(id); S.allLogs = S.allLogs.filter(x => x.id !== id); derive(); if (synced() && l) { await enqueue({t: 'dellog', path: logPath(Object.assign({}, l, {user: l.user || S.user}))}); sync(); } go('#/historial'); };
 };
 
 function sparkline(points) {
@@ -593,55 +779,251 @@ views.cat = (id) => {
   startFlip();
 };
 
+/* ------------------------------------------------------------------ first run: who are you + connect */
+views.inicio = () => {
+  document.body.classList.add('in-session');
+  const step = S.ui.setup || 'connect';
+  if (step === 'who') {
+    app().innerHTML = `<h1>¿Quién eres?</h1><p class="mut">Cada persona tiene su plan y su historial.</p>
+      <div class="card"><ul class="list">${S.users.map(u => `<li><button class="btn big ${u.id === S.user ? 'primary' : ''}" data-u="${esc(u.id)}">${esc(u.name)}</button></li>`).join('')}</ul></div>`;
+    app().onclick = async ev => { const b = ev.target.closest('[data-u]'); if (!b) return;
+      S.cfg.user = b.dataset.u; await DB.set('cfg', S.cfg); S.ui.setup = null; derive(); go('#/hoy'); sync(); };
+    return;
+  }
+  app().innerHTML = `<h1>Fuerza</h1><p class="mut">Conecta la app con vuestros datos para tener tu plan y que el historial se guarde también en el PC.</p>
+    <div class="card"><h3>Con código de dispositivo</h3><p class="small mut">Si alguien ya tiene la app conectada: Ajustes → <i>Añadir otro móvil</i> te da un código que empieza por FZ1.</p>
+      <textarea id="code" rows="3" placeholder="FZ1.…" autocapitalize="off" autocomplete="off" spellcheck="false"></textarea>
+      <button class="btn primary big" style="margin-top:10px" id="go-code">Conectar</button></div>
+    <details class="card"><summary><b>Con repo y token de GitHub</b></summary>
+      <p class="small mut">Repo privado de datos y un token <i>fine-grained</i> con permiso <b>Contents: read and write</b> solo para ese repo.</p>
+      <input type="search" id="repo" placeholder="usuario/fuerza-data" autocapitalize="off" spellcheck="false" style="margin:6px 0">
+      <input type="search" id="tok" placeholder="github_pat_…" autocapitalize="off" autocomplete="off" spellcheck="false">
+      <button class="btn primary big" style="margin-top:10px" id="go-tok">Conectar</button></details>
+    <button class="btn ghost big" id="local" style="margin-top:6px">Usar sin sincronizar</button>
+    <p class="tiny mut" style="margin-top:10px">El token se guarda solo en este dispositivo y solo se envía a api.github.com.</p>`;
+  const connect = async (cfg) => {
+    if (!cfg || !cfg.repo || !cfg.token) return toast('Falta el repo o el token');
+    const prev = S.cfg; S.cfg = {repo: cfg.repo.trim(), token: cfg.token.trim(), user: cfg.user || null};
+    const m = S.cfg.repo.match(/^(https?:\/\/[^/]+)\/(.+)$/); if (m) { S.cfg.api = m[1]; S.cfg.repo = m[2]; }  // test server: http://host:port/owner/repo
+    try {
+      setSync('busy'); toast('Conectando…');
+      const {data} = await GH.getJSON('users.json');
+      if (!data || !data.users || !data.users.length) throw Object.assign(new Error('users.json vacío'), {status: 0});
+      S.remote = Object.assign(S.remote || {}, {users: data}); await DB.set('remote', S.remote);
+      if (!S.cfg.user || !data.users.some(u => u.id === S.cfg.user)) S.cfg.user = data.users[0].id;
+      await DB.set('cfg', S.cfg); derive();
+      if (cfg.user && data.users.some(u => u.id === cfg.user)) { S.ui.setup = null; go('#/hoy'); sync(); }
+      else { S.ui.setup = 'who'; views.inicio(); }
+    } catch (e) {
+      S.cfg = prev; setSync('error');
+      toast(e.status === 401 ? 'Token no válido' : e.status === 404 ? 'No encuentro ese repo (¿token sin acceso?)' : 'No se pudo conectar');
+    }
+  };
+  $('#go-code').onclick = () => { const c = readCode($('#code').value); if (!c) return toast('Ese código no parece válido'); connect(c); };
+  $('#go-tok').onclick = () => connect({repo: $('#repo').value, token: $('#tok').value});
+  $('#local').onclick = async () => { S.cfg = {local: true, user: 'yo'}; await DB.set('cfg', S.cfg); derive(); go('#/hoy'); };
+};
+
+/* ------------------------------------------------------------------ week planner */
+function routineOptions(sel) {
+  return S.routineList.map(r => `<option value="${esc(r.id)}" ${r.id === sel ? 'selected' : ''}>${esc(r.name)}</option>`).join('');
+}
+views.semana = () => {
+  const t = today(), mon0 = monday(t), goal = S.plan.goalPerWeek || 2, wk = S.plan.weekly || {};
+  let html = `<h1>Semana</h1><p class="mut small">Plan de ${esc(S.me.name)}. Toca un día para cambiar la sesión.</p>`;
+  for (let w = 0; w < 4; w++) {
+    const mon = addDays(mon0, 7 * w);
+    const planned = [...Array(7)].filter((_, i) => plannedFor(addDays(mon, i))).length;
+    html += `<h2>${w === 0 ? 'Esta semana' : w === 1 ? 'La próxima' : 'Semana del ' + esc(short(mon))} <span class="chip ${weekCount(mon) >= goal ? 'acc' : ''}">${weekCount(mon)}/${goal} hechas · ${planned} planificadas</span></h2><div class="card"><ul class="list">`;
+    for (let i = 0; i < 7; i++) {
+      const d = addDays(mon, i), p = plannedFor(d), r = p && S.routines[p.routine], dn = logsOn(d);
+      const own = d in (S.plan.dates || {});
+      html += `<li data-day="${d}" style="cursor:pointer;${d < t ? 'opacity:.6' : ''}"><div style="width:62px" class="${d === t ? '' : 'mut'} small"><b>${esc(DAYS[parseD(d).getDay()])} ${parseD(d).getDate()}</b></div>
+        <div class="grow">${dn.length ? dn.map(l => `<span class="chip acc">✓ ${esc(l.name)}</span>`).join('') : ''}${r && !dn.some(l => l.routineId === r.id) ? `<b>${esc(r.name)}</b>` : !dn.length ? '<span class="mut">—</span>' : ''}
+        ${p && p.note ? `<div class="tiny mut">📝 ${esc(p.note)}</div>` : ''}${own ? '' : r ? '<div class="tiny mut">de la plantilla semanal</div>' : ''}</div><span class="mut">›</span></li>`;
+    }
+    html += `</ul></div>`;
+  }
+  html += `<h2>Plantilla semanal</h2><p class="small mut">Lo que toca cada semana si un día no tiene nada asignado.</p><div class="card"><ul class="list">
+    ${[1, 2, 3, 4, 5, 6, 0].map(wd => `<li><div style="width:70px"><b>${DAYS_L[wd]}</b></div><select data-wd="${wd}" class="grow sel"><option value="">—</option>${routineOptions(wk[String(wd)])}</select></li>`).join('')}</ul></div>
+    <p><a class="btn" href="#/rutinas">Rutinas: ver, crear y editar ›</a></p>`;
+  app().innerHTML = html;
+  app().onchange = async ev => { const s = ev.target.closest('[data-wd]'); if (!s) return;
+    await change({t: 'plan', user: S.user, kind: 'weekly', wd: s.dataset.wd, value: s.value || null}); toast('Plantilla guardada'); };
+  app().onclick = ev => { const li = ev.target.closest('[data-day]'); if (li) daySheet(li.dataset.day); };
+};
+function daySheet(d) {
+  const p = plannedFor(d), own = d in (S.plan.dates || {}), wkR = (S.plan.weekly || {})[String(parseD(d).getDay())];
+  openSheet(`<div class="row between"><h2 style="margin:0">${esc(nice(d))}</h2><button class="btn small ghost" data-close>Cerrar</button></div>
+    <p class="small mut">${wkR ? `Plantilla: ${esc((S.routines[wkR] || {}).name || wkR)}` : 'La plantilla no tiene nada este día.'}</p>
+    <label class="small mut">Sesión</label><select id="d-r" class="sel" style="width:100%"><option value="__tpl" ${!own ? 'selected' : ''}>Según la plantilla</option><option value="" ${own && !p ? 'selected' : ''}>Descanso (nada)</option>${routineOptions(own && p ? p.routine : '')}</select>
+    <label class="small mut" style="display:block;margin-top:10px">Nota (opcional)</label><textarea id="d-n" rows="2" placeholder="p. ej. Rodilla: si pasa de 3/10, cambia">${esc(own && p ? p.note || '' : '')}</textarea>
+    <button class="btn primary big" style="margin-top:12px" id="d-save">Guardar</button>
+    ${p && S.routines[p.routine] && d >= today() ? `<a class="btn ghost big" style="margin-top:8px" href="#/rutina/${esc(p.routine)}" data-close>Ver la rutina</a>` : ''}`);
+  $('#d-save').onclick = async () => {
+    const v = $('#d-r').value, note = $('#d-n').value.trim();
+    const value = v === '__tpl' ? undefined : v === '' ? null : note ? {routine: v, note} : {routine: v};
+    closeSheet(); await change({t: 'plan', user: S.user, kind: 'date', date: d, value}); toast('Guardado'); views.semana();
+  };
+}
+
+/* ------------------------------------------------------------------ routines: list + editor */
+views.rutinas = () => {
+  const mine = r => r._src === 'data';
+  app().innerHTML = `<a href="#/semana" class="small">‹ Semana</a><h1>Rutinas</h1>
+    <p class="small mut">Las de la <b>biblioteca</b> vienen con la app; para cambiarlas, duplícalas. Las <b>vuestras</b> se sincronizan${synced() ? '' : ' (al conectar la app)'}.</p>
+    <button class="btn primary" data-new>＋ Nueva rutina</button>
+    <div class="card"><ul class="list">${S.routineList.slice().sort((a, b) => mine(b) - mine(a)).map(r => `<li><div class="grow"><b>${esc(r.name)}</b><div class="mut small">~${estMinutes(r)} min · ${mine(r) ? (r.for && r.for.length ? 'solo ' + r.for.map(u => (S.users.find(x => x.id === u) || {name: u}).name).join(', ') : 'compartida') : 'biblioteca'}</div></div>
+      <a class="btn small ghost" href="#/rutina/${esc(r.id)}">Ver</a>${mine(r) ? `<a class="btn small" href="#/editar/${esc(r.id)}">Editar</a>` : `<button class="btn small" data-dup="${esc(r.id)}">Duplicar</button>`}</li>`).join('')}</ul></div>`;
+  app().onclick = ev => {
+    if (ev.target.closest('[data-new]')) { S.ui.draft = {id: '', name: '', goal: '', kit: '', for: [S.user], blocks: [{title: 'Fuerza', items: []}]}; go('#/editar/nueva'); }
+    const d = ev.target.closest('[data-dup]');
+    if (d) { const r = JSON.parse(JSON.stringify(S.routines[d.dataset.dup])); delete r._src; r.id = ''; r.name = r.name + ' (copia)'; r.for = [S.user]; S.ui.draft = r; go('#/editar/nueva'); }
+  };
+};
+const slug = s => (s || 'rutina').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 30);
+function parseReps(v) { const m = String(v).match(/^\s*(\d+)\s*[-–]\s*(\d+)\s*$/); if (m) return [+m[1], +m[2]]; const n = parseInt(v, 10); return isNaN(n) ? undefined : n; }
+views.editar = (id) => {
+  if (!S.ui.draft || (id !== 'nueva' && S.ui.draft.id !== id)) {
+    const r = S.routines[id]; if (!r || r._src !== 'data') return go('#/rutinas');
+    S.ui.draft = JSON.parse(JSON.stringify(r)); delete S.ui.draft._src;
+  }
+  const D = S.ui.draft;
+  const num = (bi, ii, k, v, w = 52, ph = '') => `<input data-f="${bi}.${ii}.${k}" value="${v ?? ''}" placeholder="${ph}" inputmode="${k === 'tempo' || k === 'reps' ? 'text' : 'numeric'}" style="width:${w}px;padding:6px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit">`;
+  app().innerHTML = `<a href="#/rutinas" class="small">‹ Rutinas</a><h1>${id === 'nueva' ? 'Nueva rutina' : 'Editar rutina'}</h1>
+    <div class="card">
+      <label class="small mut">Nombre</label><input type="search" data-r="name" value="${esc(D.name)}" placeholder="p. ej. Fuerza C · Subidas">
+      <label class="small mut" style="display:block;margin-top:8px">Para qué (una línea)</label><input type="search" data-r="goal" value="${esc(D.goal || '')}">
+      <label class="small mut" style="display:block;margin-top:8px">Material del día</label><input type="search" data-r="kit" value="${esc(D.kit || '')}" placeholder="Mancuernas a 12 kg · KB 16">
+      <div class="small mut" style="margin-top:8px">Visible para: ${S.users.map(u => `<label style="margin-right:12px"><input type="checkbox" data-for="${esc(u.id)}" ${(!D.for || !D.for.length || D.for.includes(u.id)) ? 'checked' : ''}> ${esc(u.name)}</label>`).join('')}</div>
+    </div>
+    ${D.blocks.map((b, bi) => `<div class="card"><div class="row"><input type="search" data-b="${bi}.title" value="${esc(b.title || '')}" class="grow" placeholder="Bloque">
+        <label class="small"><input type="checkbox" data-b="${bi}.circuit" ${b.circuit ? 'checked' : ''}> circuito</label>${b.circuit ? num(bi, 'x', 'rounds', b.rounds || 3, 44) + '<span class="small mut">rondas</span>' : ''}
+        <button class="btn small ghost" data-delb="${bi}" aria-label="Borrar bloque">✕</button></div>
+      <ul class="list">${b.items.map((it, ii) => { const e = S.ex[it.ex] || {name: it.ex, measure: 'reps'}; const t = e.measure === 'time';
+        return `<li style="flex-wrap:wrap"><div class="row grow" style="min-width:100%"><b class="grow">${esc(e.name)}</b>
+            <button class="btn small ghost" data-mv="${bi}.${ii}.-1" aria-label="Subir">↑</button><button class="btn small ghost" data-mv="${bi}.${ii}.1" aria-label="Bajar">↓</button><button class="btn small ghost" data-del="${bi}.${ii}" aria-label="Quitar">✕</button></div>
+          <div class="row wrap small mut" style="gap:6px">${b.circuit ? '' : num(bi, ii, 'sets', it.sets || 3, 40) + 'series'}
+            ${t ? num(bi, ii, 'time', it.time || 30, 48) + 's' : num(bi, ii, 'reps', Array.isArray(it.reps) ? it.reps.join('-') : it.reps || 10, 56, '8-12') + 'reps'}
+            ${e.load ? num(bi, ii, 'kg', it.kg ?? '', 44) + 'kg' : ''} ${num(bi, ii, 'rest', it.rest ?? 60, 44)}s desc. ${t ? '' : num(bi, ii, 'tempo', it.tempo || '', 56, '3-1-1') + 'tempo'}</div>
+          <input type="search" data-f="${bi}.${ii}.note" value="${esc(it.note || '')}" placeholder="Nota (opcional)" style="margin-top:4px;padding:6px"></li>`; }).join('')}</ul>
+      <button class="btn small" data-add="${bi}">＋ Ejercicio</button></div>`).join('')}
+    <button class="btn ghost" data-addb>＋ Bloque</button>
+    <div class="row" style="margin-top:16px"><button class="btn primary grow big" id="r-save">Guardar</button></div>
+    ${id !== 'nueva' ? '<button class="btn ghost" id="r-del" style="color:var(--clay);margin-top:8px">Borrar rutina</button>' : ''}`;
+  app().oninput = app().onchange = ev => {
+    const el = ev.target;
+    if (el.dataset.r) D[el.dataset.r] = el.value;
+    if (el.dataset.for) { const all = S.users.map(u => u.id); let f = D.for && D.for.length ? D.for.slice() : all.slice();
+      f = el.checked ? [...new Set([...f, el.dataset.for])] : f.filter(x => x !== el.dataset.for); D.for = f.length === all.length ? undefined : f; }
+    if (el.dataset.b) { const [bi, k] = el.dataset.b.split('.'); if (k === 'circuit') { D.blocks[bi].circuit = el.checked || undefined; if (el.checked) D.blocks[bi].rounds = D.blocks[bi].rounds || 3; if (ev.type === 'change') views.editar(id); } else D.blocks[bi][k] = el.value; }
+    if (el.dataset.f) { const [bi, ii, k] = el.dataset.f.split('.'); const v = el.value;
+      if (ii === 'x') { D.blocks[bi].rounds = parseInt(v, 10) || 3; return; }
+      const it = D.blocks[bi].items[ii];
+      if (k === 'reps') it.reps = parseReps(v); else if (k === 'tempo' || k === 'note') it[k] = v.trim() || undefined;
+      else if (k === 'kg') it.kg = v === '' ? undefined : parseFloat(v.replace(',', '.')); else it[k] = parseInt(v, 10) || undefined; }
+  };
+  app().onclick = ev => {
+    const q = s => ev.target.closest(s);
+    if (q('[data-addb]')) { D.blocks.push({title: 'Bloque', items: []}); return views.editar(id); }
+    const db = q('[data-delb]'); if (db) { if (D.blocks[db.dataset.delb].items.length && !confirm('¿Borrar el bloque y sus ejercicios?')) return; D.blocks.splice(+db.dataset.delb, 1); return views.editar(id); }
+    const mv = q('[data-mv]'); if (mv) { const [bi, ii, d] = mv.dataset.mv.split('.').map(Number); const L = D.blocks[bi].items; const j = ii + d; if (j < 0 || j >= L.length) return; [L[ii], L[j]] = [L[j], L[ii]]; return views.editar(id); }
+    const dl = q('[data-del]'); if (dl) { const [bi, ii] = dl.dataset.del.split('.').map(Number); D.blocks[bi].items.splice(ii, 1); return views.editar(id); }
+    const ad = q('[data-add]'); if (ad) return pickExercise(e => { const it = {ex: e.id, sets: 3, rest: 60}; if (e.measure === 'time') it.time = 30; else it.reps = [8, 12]; D.blocks[+ad.dataset.add].items.push(it); views.editar(id); });
+  };
+  $('#r-save').onclick = async () => {
+    if (!D.name.trim()) return toast('Ponle un nombre');
+    if (!D.blocks.some(b => b.items.length)) return toast('Añade al menos un ejercicio');
+    D.blocks = D.blocks.filter(b => b.items.length);
+    if (!D.id) { D.id = slug(D.name); if (S.allRoutines[D.id]) D.id += '-' + Date.now().toString(36).slice(-4); }
+    D.short = D.short || D.name.replace(/^Fuerza\s*/i, '').slice(0, 3);
+    const r = JSON.parse(JSON.stringify(D)); S.ui.draft = null;
+    await change({t: 'routine', id: r.id, routine: r}); toast('Rutina guardada'); go('#/rutinas');
+  };
+  const del = $('#r-del'); if (del) del.onclick = async () => { if (!confirm('¿Borrar esta rutina? Los días del plan que la usen quedarán vacíos.')) return; const rid = D.id; S.ui.draft = null; await change({t: 'routine', id: rid, routine: null}); go('#/rutinas'); };
+};
+function pickExercise(cb) {
+  const list = q => S.exList.filter(e => !q || (e.name + ' ' + (ZONES[e.zone] || '')).toLowerCase().includes(q.toLowerCase()));
+  const draw = q => `<ul class="list" id="pk-l">${list(q).map(e => `<li data-pick="${esc(e.id)}" style="cursor:pointer"><div class="thumb" style="${isSvg(e) ? 'background:#3E5C76' : ''}">${imgHTML(e)}</div><div class="grow"><b>${esc(e.name)}</b><div class="tiny mut">${esc(ZONES[e.zone] || '')} · ${e.measure === 'time' ? 'tiempo' : 'reps'}</div></div></li>`).join('')}</ul>`;
+  openSheet(`<div class="row between"><h2 style="margin:0">Añadir ejercicio</h2><button class="btn small ghost" data-close>Cerrar</button></div><input type="search" id="pk-q" placeholder="Buscar" style="margin:10px 0">${draw('')}`);
+  $('#pk-q').oninput = e => { $('#pk-l').outerHTML = draw(e.target.value); };
+  $('#sheet').onclick = e => { const p = e.target.closest('[data-pick]'); if (p) { closeSheet(); cb(S.ex[p.dataset.pick]); } else if (e.target.id === 'sheet' || e.target.closest('[data-close]')) closeSheet(); };
+}
+
 /* ------------------------------------------------------------------ settings */
 views.ajustes = () => {
   const s = S.settings;
-  const tog = (k, lab) => `<li><label class="row grow" style="cursor:pointer"><span class="grow">${lab}</span><input type="checkbox" data-set="${k}" ${s[k] ? 'checked' : ''} style="width:22px;height:22px;accent-color:var(--acc)"></label></li>`;
+  const tog = (k, lab, val) => `<li><label class="row grow" style="cursor:pointer"><span class="grow">${lab}</span><input type="checkbox" data-set="${k}" ${val ? 'checked' : ''} style="width:22px;height:22px;accent-color:var(--acc)"></label></li>`;
+  const pending = S.ui.pending ?? '…';
   app().innerHTML = `<h1>Ajustes</h1>
-    <div class="card"><ul class="list">${tog('sound', 'Pitidos en descansos y sostenes')}${tog('vibrate', 'Vibración')}${tog('knee', 'Preguntar por la rodilla al terminar')}</ul></div>
-    <h2>Tus datos</h2><div class="card"><p class="small mut">${S.logs.length} sesiones guardadas en este dispositivo. Hasta que llegue la sincronización (fase 2), haz una copia de vez en cuando.</p>
-      <div class="row wrap" style="margin-top:8px"><button class="btn" id="exp">⬇ Exportar copia</button><label class="btn ghost">⬆ Importar<input type="file" id="imp" accept="application/json" hidden></label></div></div>
-    <h2>Rutinas</h2><div class="card"><ul class="list">${S.routineList.map(r => `<li><a class="li" href="#/rutina/${r.id}"><div class="grow"><b>${esc(r.name)}</b><div class="mut small">~${estMinutes(r)} min</div></div>›</a></li>`).join('')}</ul></div>
+    <div class="card"><div class="row between"><div><div class="mut small">Usuario</div><b style="font-size:1.2rem">${esc(S.me.name)}</b></div>${S.users.length > 1 ? '<button class="btn small" id="who">Cambiar</button>' : ''}</div></div>
+    <div class="card"><ul class="list">${tog('sound', 'Pitidos en descansos y sostenes', s.sound)}${navigator.vibrate ? tog('vibrate', 'Vibración', s.vibrate) : ''}${tog('knee_' + S.user, 'Preguntar por la rodilla al terminar', kneeOn())}</ul></div>
+    <h2>Sincronización</h2><div class="card">${synced()
+      ? `<p class="small">Repo <b>${esc(S.cfg.repo)}</b> · <span id="syncline">${syncLine()}</span></p><p class="small mut">Cambios pendientes de subir: <span id="pend">${pending}</span></p>
+         <div class="row wrap" style="margin-top:8px"><button class="btn" id="sync-now">⟳ Sincronizar ahora</button><button class="btn ghost" id="invite">📱 Añadir otro móvil</button></div>
+         <button class="btn ghost small" id="disc" style="margin-top:10px">Desconectar este dispositivo</button>`
+      : `<p class="small mut">${S.cfg && S.cfg.local ? 'Usando la app sin sincronizar: el historial solo está en este dispositivo.' : ''}</p><a class="btn primary" href="#/inicio" id="connect">Conectar con el repo de datos</a>`}</div>
+    <h2>Copia de seguridad</h2><div class="card"><p class="small mut">${S.logs.length} sesiones de ${esc(S.me.name)} en este dispositivo.</p>
+      <div class="row wrap" style="margin-top:8px"><button class="btn" id="exp">⬇ Exportar</button><label class="btn ghost">⬆ Importar<input type="file" id="imp" accept="application/json,.json" hidden></label></div></div>
+    <p><a class="btn" href="#/rutinas">Rutinas ›</a></p>
+    <h2>Instalar en el móvil</h2><div class="card small"><p><b>Android (Chrome):</b> menú ⋮ → <i>Añadir a pantalla de inicio</i>.</p><p><b>iPhone (Safari):</b> botón Compartir → <i>Añadir a pantalla de inicio</i>. Ábrela siempre desde el icono.</p></div>
     <h2>Créditos</h2><div class="card small"><p>Exercise data by <a href="https://repdb.co" target="_blank" rel="noopener">RepDB (repdb.co)</a>: textos en español e ilustraciones.</p>
       <p>Ilustraciones adicionales: <a href="https://github.com/bryllim/workout-guide" target="_blank" rel="noopener">Workout Guide</a> de Bryl Lim, basadas en Everkinetic, bajo <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.</p>
-      <p class="mut">Fuerza v${VERSION} · plan actualizado ${esc(S.plan.updated || '')}</p></div>
-    <button class="btn ghost" id="wipe" style="color:var(--clay);margin-top:8px">Borrar todo el historial</button>`;
+      <p class="mut">Fuerza v${VERSION}</p></div>`;
+  DB.get('outbox').then(o => { S.ui.pending = (o || []).length; const p = $('#pend'); if (p) p.textContent = S.ui.pending; });
   app().onchange = async ev => {
     const c = ev.target.closest('[data-set]');
     if (c) { S.settings[c.dataset.set] = c.checked; await DB.set('settings', S.settings); }
     if (ev.target.id === 'imp' && ev.target.files[0]) {
       try {
         const d = JSON.parse(await ev.target.files[0].text()); let n = 0;
-        for (const l of d.logs || []) { if (l && l.id && Array.isArray(l.sets)) { await DB.putLog(l); n++; } }
-        S.logs = (await DB.allLogs()).sort((a, b) => (a.start || '').localeCompare(b.start || ''));
-        toast(`${n} sesiones importadas`); views.ajustes();
+        for (const l of d.logs || []) { if (l && l.id && Array.isArray(l.sets)) { l.user = l.user || S.user; delete l._sha; await DB.putLog(l); if (synced()) await enqueue({t: 'log', id: l.id}); n++; } }
+        S.allLogs = await DB.allLogs(); derive(); toast(`${n} sesiones importadas`); sync(); views.ajustes();
       } catch (e) { toast('No se pudo leer ese archivo'); }
     }
   };
-  $('#exp').onclick = () => {
-    const blob = new Blob([JSON.stringify({app: 'fuerza', version: VERSION, exportedAt: new Date().toISOString(), logs: S.logs, settings: S.settings}, null, 1)], {type: 'application/json'});
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `fuerza-copia-${today()}.json`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
-  };
-  $('#wipe').onclick = async () => { if (!confirm('¿Borrar TODAS las sesiones de este dispositivo? No se puede deshacer (salvo que tengas una copia exportada).')) return; await DB.clearLogs(); S.logs = []; views.ajustes(); };
+  const on = (id, f) => { const el = $('#' + id); if (el) el.onclick = f; };
+  on('who', () => openSheet(`<h2 style="margin-top:0">¿Quién eres?</h2>${S.users.map(u => `<button class="btn big ${u.id === S.user ? 'primary' : ''}" style="margin-bottom:8px" data-who="${esc(u.id)}">${esc(u.name)}</button>`).join('')}`));
+  on('sync-now', () => sync().then(() => views.ajustes()));
+  on('invite', () => openSheet(`<h2 style="margin-top:0">Añadir otro móvil</h2><p class="small">Elige para quién es. Copia el código y envíaselo por un canal privado. En el otro móvil: abre la app → <i>Con código de dispositivo</i>.</p>
+      ${S.users.map(u => `<button class="btn big" style="margin-bottom:8px" data-code="${esc(u.id)}">Código para ${esc(u.name)}</button>`).join('')}
+      <p class="tiny mut">El código lleva dentro el token: quien lo tenga puede leer y escribir vuestros datos de fuerza. Si se pierde un móvil, revoca el token en GitHub.</p>`));
+  on('disc', async () => { if (!confirm('¿Desconectar? Lo que ya esté sincronizado sigue en GitHub; este dispositivo deja de sincronizar.')) return; S.cfg = null; await DB.del('cfg'); await DB.del('outbox'); go('#/inicio'); });
+  on('exp', () => {
+    const blob = new Blob([JSON.stringify({app: 'fuerza', version: VERSION, user: S.user, exportedAt: new Date().toISOString(), logs: S.logs.map(stripLog)}, null, 1)], {type: 'application/json'});
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `fuerza-${S.user}-${today()}.json`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  });
 };
+document.addEventListener('click', async ev => {
+  const w = ev.target.closest('#sheet [data-who]');
+  if (w) { S.cfg = Object.assign(S.cfg || {}, {user: w.dataset.who}); await DB.set('cfg', S.cfg); derive(); closeSheet(); toast(`Hola, ${S.me.name}`); go('#/hoy'); sync(); }
+  const c = ev.target.closest('#sheet [data-code]');
+  if (c) { const code = makeCode(c.dataset.code); try { await navigator.clipboard.writeText(code); toast('Código copiado'); } catch (e) { prompt('Copia este código:', code); } }
+});
 
 /* ------------------------------------------------------------------ router */
 function go(h) { if (location.hash === h) render(); else location.hash = h; }
 function render() {
   stopTicker(); closeSheet();
-  const [, name = 'hoy', arg] = (location.hash || '#/hoy').split('/');
-  if (name !== 'sesion' && name !== 'fin') document.body.classList.remove('in-session');
-  const tab = {hoy: 'hoy', rutina: 'hoy', historial: 'historial', log: 'historial', ex: 'historial', catalogo: 'catalogo', cat: 'catalogo', ajustes: 'ajustes'}[name];
+  let [, name = 'hoy', arg] = (location.hash || '#/hoy').split('/');
+  if (!S.cfg && name !== 'inicio') { location.hash = '#/inicio'; return; }
+  if (name !== 'sesion' && name !== 'fin' && name !== 'inicio') document.body.classList.remove('in-session');
+  const tab = {hoy: 'hoy', rutina: 'hoy', semana: 'semana', rutinas: 'semana', editar: 'semana', historial: 'historial', log: 'historial', ex: 'historial', catalogo: 'catalogo', cat: 'catalogo', ajustes: 'ajustes'}[name];
   document.querySelectorAll('#tabs a').forEach(a => a.classList.toggle('on', a.dataset.tab === tab));
-  app().onclick = null; app().onchange = null;
+  app().onclick = null; app().onchange = null; app().oninput = null; $('#sheet').onclick = null;
   (views[name] || views.hoy)(arg && decodeURIComponent(arg));
   if (name !== 'sesion') window.scrollTo(0, 0);
+}
+/** Re-render after a background sync, but never under the user's fingers (session, forms). */
+function softRender() {
+  const name = (location.hash || '#/hoy').split('/')[1] || 'hoy';
+  if (['hoy', 'semana', 'historial', 'rutinas'].includes(name) && $('#sheet').hidden) render();
 }
 window.addEventListener('hashchange', render);
 
 (async () => {
   try { await load(); } catch (e) { app().innerHTML = `<div class="card"><h3>No se pudieron cargar los datos</h3><p class="mut small">${esc(e.message)}</p><p>Abre la app con conexión una vez para que se guarde en el móvil.</p></div>`; return; }
-  if (!location.hash && S.cur) location.hash = '#/hoy';
   render();
   if ('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('sw.js').catch(() => {});
+  if (synced()) sync();
 })();

@@ -1,17 +1,18 @@
 [
  {
-  "id": "fuerza-a",
-  "name": "Fuerza A · Pierna y cadera",
-  "goal": "Cuádriceps, glúteo e isquios a una pierna + tendón. Lo que te faltó en las bajadas de Montearagón 2023.",
-  "kit": "Mancuernas a 12 kg · KB 16 y 20 · goma · cajón",
+  "id": "cuerpo-a",
+  "short": "CA",
+  "name": "Cuerpo completo A",
+  "goal": "Sesión base para cualquier nivel: pierna, empuje, tirón y core. Ajusta los kg a tu nivel la primera vez.",
+  "kit": "Mancuernas a 8 kg · KB 12 · cajón",
   "blocks": [
    {
     "title": "Calentamiento",
     "items": [
      {
-      "ex": "banded-lateral-walk",
+      "ex": "bird-dog",
       "sets": 1,
-      "reps": 10,
+      "reps": 8,
       "rest": 15
      },
      {
@@ -23,19 +24,6 @@
     ]
    },
    {
-    "title": "Tendón",
-    "items": [
-     {
-      "ex": "spanish-squat",
-      "sets": 4,
-      "time": 45,
-      "rest": 60,
-      "alt": "wall-sit",
-      "note": "Rodilla: hasta 3/10 vale, y debería ir a menos."
-     }
-    ]
-   },
-   {
     "title": "Fuerza",
     "items": [
      {
@@ -43,151 +31,40 @@
       "sets": 3,
       "reps": [
        8,
-       10
+       12
       ],
-      "kg": 20,
+      "kg": 12,
       "tempo": "3-1-1",
-      "rest": 90,
-      "alt": "wall-sit"
+      "rest": 75
      },
      {
-      "ex": "bulgarian-split-squat",
+      "ex": "romanian-deadlift",
       "sets": 3,
       "reps": [
        8,
-       10
+       12
       ],
-      "kg": 12,
-      "rest": 90,
-      "alt": "isometric-split-squat"
+      "kg": 8,
+      "rest": 75
      },
      {
-      "ex": "single-leg-rdl",
+      "ex": "push-up",
       "sets": 3,
-      "reps": 8,
-      "kg": 16,
-      "rest": 60
-     },
-     {
-      "ex": "hip-thrust",
-      "sets": 3,
-      "reps": 12,
-      "kg": 20,
-      "tempo": "1-2-2",
-      "rest": 60,
-      "note": "Pausa de 2 s arriba."
-     }
-    ]
-   },
-   {
-    "title": "Estabilidad y gemelo",
-    "items": [
-     {
-      "ex": "side-plank-abduction",
-      "sets": 2,
-      "time": 30,
-      "rest": 20
-     },
-     {
-      "ex": "copenhagen-plank",
-      "sets": 2,
-      "time": 20,
-      "rest": 20,
-      "alt": "side-lying-abduction-hold"
-     },
-     {
-      "ex": "single-leg-calf-raise",
-      "sets": 3,
-      "reps": 12,
-      "kg": 12,
-      "tempo": "2-1-2",
-      "rest": 45
-     }
-    ]
-   }
-  ],
-  "short": "A"
- },
- {
-  "id": "fuerza-b",
-  "name": "Fuerza B · Cuerpo completo + core",
-  "goal": "Hombro sano, tirón, empuje, potencia de cadera y un core que no se tuerce al correr.",
-  "kit": "Mancuernas a 12 kg · KB 20 · goma · torre",
-  "blocks": [
-   {
-    "title": "Hombro sano (5')",
-    "items": [
-     {
-      "ex": "band-external-rotation",
-      "sets": 2,
-      "reps": 15,
-      "tempo": "2-0-3",
-      "rest": 20
-     },
-     {
-      "ex": "band-face-pull",
-      "sets": 2,
-      "reps": 15,
-      "rest": 20
-     },
-     {
-      "ex": "scapular-pull-up",
-      "sets": 2,
-      "reps": 8,
-      "rest": 30
-     }
-    ]
-   },
-   {
-    "title": "Fuerza",
-    "items": [
-     {
-      "ex": "pull-up",
-      "sets": 4,
       "reps": [
        5,
-       8
-      ],
-      "rest": 120,
-      "alt": "band-assisted-pull-up",
-      "note": "Deja 1–2 en reserva."
-     },
-     {
-      "ex": "dips",
-      "sets": 3,
-      "reps": [
-       6,
        10
       ],
-      "rest": 90,
-      "alt": "push-up",
-      "note": "Recorrido corto si notas la parte delantera del hombro."
+      "rest": 60,
+      "note": "Con las manos en el cajón si cuestan las completas."
      },
      {
       "ex": "one-arm-db-row",
       "sets": 3,
       "reps": [
-       10,
+       8,
        12
       ],
-      "kg": 12,
-      "rest": 60
-     },
-     {
-      "ex": "half-kneeling-press",
-      "sets": 3,
-      "reps": [
-       8,
-       10
-      ],
-      "kg": 12,
-      "rest": 60
-     },
-     {
-      "ex": "kettlebell-swing",
-      "sets": 4,
-      "reps": 15,
-      "kg": 20,
+      "kg": 8,
       "rest": 60
      }
     ]
@@ -196,32 +73,106 @@
     "title": "Core",
     "items": [
      {
-      "ex": "pallof-press",
+      "ex": "plank",
       "sets": 3,
-      "reps": 10,
-      "tempo": "1-2-1",
+      "time": 30,
       "rest": 30
      },
      {
-      "ex": "vertical-knee-raise",
-      "sets": 3,
-      "reps": [
-       10,
-       12
-      ],
-      "rest": 45
-     },
-     {
-      "ex": "suitcase-carry",
+      "ex": "dead-bug",
       "sets": 2,
-      "time": 40,
-      "kg": 20,
+      "reps": 8,
       "rest": 30
      }
     ]
    }
-  ],
-  "short": "B"
+  ]
+ },
+ {
+  "id": "cuerpo-b",
+  "short": "CB",
+  "name": "Cuerpo completo B",
+  "goal": "Pierna a una pierna, glúteo, hombro y core lateral.",
+  "kit": "Mancuernas a 8 kg · KB 12 · goma · cajón · torre",
+  "blocks": [
+   {
+    "title": "Calentamiento",
+    "items": [
+     {
+      "ex": "banded-lateral-walk",
+      "sets": 1,
+      "reps": 10,
+      "rest": 15
+     },
+     {
+      "ex": "band-pull-apart",
+      "sets": 1,
+      "reps": 15,
+      "rest": 15
+     }
+    ]
+   },
+   {
+    "title": "Fuerza",
+    "items": [
+     {
+      "ex": "reverse-lunge",
+      "sets": 3,
+      "reps": [
+       8,
+       10
+      ],
+      "kg": 8,
+      "rest": 75
+     },
+     {
+      "ex": "hip-thrust",
+      "sets": 3,
+      "reps": 12,
+      "kg": 12,
+      "tempo": "1-2-2",
+      "rest": 60
+     },
+     {
+      "ex": "band-assisted-pull-up",
+      "sets": 3,
+      "reps": [
+       3,
+       6
+      ],
+      "rest": 90,
+      "alt": "negative-pull-up"
+     },
+     {
+      "ex": "half-kneeling-press",
+      "sets": 3,
+      "reps": [
+       8,
+       10
+      ],
+      "kg": 8,
+      "rest": 60
+     }
+    ]
+   },
+   {
+    "title": "Core",
+    "items": [
+     {
+      "ex": "side-plank",
+      "sets": 2,
+      "time": 20,
+      "rest": 20
+     },
+     {
+      "ex": "pallof-press",
+      "sets": 2,
+      "reps": 10,
+      "rest": 30
+     }
+    ]
+   }
+  ]
  },
  {
   "id": "expres-20",
@@ -267,67 +218,6 @@
    }
   ],
   "short": "20'"
- },
- {
-  "id": "rodilla",
-  "name": "Rodilla tranquila",
-  "goal": "Mientras moleste la rodilla: isométricos y fuerza lenta sin flexión profunda ni saltos.",
-  "kit": "KB 12, 16 y 20 · mancuernas a 12 kg · goma · cajón",
-  "blocks": [
-   {
-    "title": "Tendón",
-    "items": [
-     {
-      "ex": "spanish-squat",
-      "sets": 5,
-      "time": 45,
-      "rest": 60
-     }
-    ]
-   },
-   {
-    "title": "Fuerza sin dolor",
-    "items": [
-     {
-      "ex": "hip-thrust",
-      "sets": 3,
-      "reps": 12,
-      "kg": 20,
-      "tempo": "1-2-2",
-      "rest": 60
-     },
-     {
-      "ex": "single-leg-rdl",
-      "sets": 3,
-      "reps": 8,
-      "kg": 16,
-      "rest": 60
-     },
-     {
-      "ex": "soleus-raise",
-      "sets": 3,
-      "reps": 12,
-      "kg": 12,
-      "tempo": "2-1-2",
-      "rest": 45
-     },
-     {
-      "ex": "side-plank-abduction",
-      "sets": 2,
-      "time": 30,
-      "rest": 20
-     },
-     {
-      "ex": "tibialis-raise",
-      "sets": 2,
-      "reps": 15,
-      "kg": 12,
-      "rest": 30
-     }
-    ]
-   }
-  ],
-  "short": "Rod"
  },
  {
   "id": "prehab-cadera",
