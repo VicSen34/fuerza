@@ -4,7 +4,7 @@
  */
 'use strict';
 
-const VERSION = '0.2.2';
+const VERSION = '0.2.3';
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pad = n => String(n).padStart(2, '0');
@@ -12,7 +12,7 @@ const DAYS = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
 const DAYS_L = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
 const MONTHS = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
 const FEELS = [['😌', 'Fácil'], ['🙂', 'Bien'], ['😮‍💨', 'Dura'], ['🥵', 'Al límite']];
-const ZONES = {legs: 'Pierna y cadera', iso: 'Isométricos', calf: 'Pie y gemelo', plyo: 'Pliometría', upper: 'Tren superior', shoulder: 'Hombro', core: 'Core'};
+const ZONES = {legs: 'Pierna y cadera', iso: 'Isométricos', calf: 'Pie y gemelo', plyo: 'Pliometría', upper: 'Tren superior', shoulder: 'Hombro', core: 'Core', pilates: 'Pilates y movilidad'};
 const EQUIP = {kb: 'Kettlebell', db: 'Mancuernas', band: 'Goma', bar: 'Torre', box: 'Cajón', rope: 'Comba', bw: 'Peso corporal'};
 
 /* ------------------------------------------------------------------ dates */

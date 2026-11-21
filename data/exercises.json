@@ -2083,5 +2083,331 @@
   ],
   "credit": "repdb",
   "met": 5.0
+ },
+ {
+  "id": "hammer-curl",
+  "name": "Hammer Curl",
+  "measure": "reps",
+  "load": "db",
+  "zone": "upper",
+  "equip": [
+   "db"
+  ],
+  "knee": "ok",
+  "why": "Bíceps y antebrazo con agarre neutro, más amable con codo y muñeca.",
+  "cues": [
+   "Palmas mirándose, codos pegados al cuerpo",
+   "Sube 1 s, baja 3 s",
+   "Hombros abajo, sin balancear"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Una variación del curl de bíceps con agarre neutro que trabaja el braquiorradial.",
+  "steps": [
+   "De pie, sujeta las mancuernas a los lados con las palmas enfrentadas.",
+   "Sube las mancuernas manteniendo las palmas hacia adentro.",
+   "Aprieta en la parte alta y baja de forma controlada.",
+   "Repite."
+  ],
+  "tips": [
+   "Mantén los codos pegados al torso durante todo el recorrido.",
+   "Evita balancear el cuerpo para impulsar las mancuernas."
+  ],
+  "images": [
+   "img/hammer-curl/start.webp",
+   "img/hammer-curl/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "lying-triceps-extension",
+  "name": "Lying Triceps Extension",
+  "measure": "reps",
+  "load": "db",
+  "zone": "upper",
+  "equip": [
+   "db"
+  ],
+  "knee": "ok",
+  "why": "Tríceps tumbado: el suelo sujeta la espalda y el cuello descansa.",
+  "cues": [
+   "Tumbada, una mancuerna con las dos manos sobre el pecho",
+   "Codos fijos apuntando al techo; baja la pesa detrás de la cabeza",
+   "Lento y controlado"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un ejercicio de aislamiento de tríceps tumbado: una mancuerna sujeta con las dos manos se baja por detrás de la cabeza flexionando los codos y se vuelve a subir.",
+  "steps": [
+   "Túmbate boca arriba en un banco y sujeta una mancuerna con las dos manos, estirada por encima del pecho.",
+   "Mantén los brazos casi verticales, con los codos apuntando al techo.",
+   "Baja la mancuerna por detrás de la cabeza flexionando los codos.",
+   "Extiende los brazos de vuelta a la posición inicial.",
+   "Aprieta los tríceps en la parte superior.",
+   "Repite el número de repeticiones deseado."
+  ],
+  "tips": [
+   "Mantén los codos apuntando hacia arriba y cerrados, sin abrirlos hacia los lados.",
+   "Mueve solo los codos, no los hombros."
+  ],
+  "images": [
+   "img/lying-triceps-extension/start.webp",
+   "img/lying-triceps-extension/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "triceps-kickback",
+  "name": "Triceps Kickback",
+  "measure": "reps",
+  "load": "db",
+  "zone": "upper",
+  "equip": [
+   "db",
+   "box"
+  ],
+  "knee": "ok",
+  "why": "Tríceps a un brazo con la espalda apoyada y neutra.",
+  "cues": [
+   "Mano y rodilla libres apoyadas en el cajón",
+   "Codo pegado y alto; solo se mueve el antebrazo",
+   "Aprieta 1 s con el brazo estirado"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Un ejercicio de aislamiento para los tríceps realizado en posición inclinada hacia adelante, con una mancuerna en cada mano.",
+  "steps": [
+   "Inclínate hacia adelante en las caderas sosteniendo una mancuerna en cada mano con los codos doblados a 90 grados.",
+   "Extiende ambos brazos rectos hacia atrás apretando los tríceps.",
+   "Mantén brevemente en la extensión completa.",
+   "Baja con control.",
+   "Repite el número de repeticiones previsto."
+  ],
+  "tips": [
+   "Mantén los codos pegados al cuerpo y termina con los brazos alineados con el torso.",
+   "Usa mancuernas ligeras y evita balancearlas con impulso."
+  ],
+  "images": [
+   "img/triceps-kickback/start.webp",
+   "img/triceps-kickback/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "cat-cow",
+  "name": "Cat-Cow",
+  "measure": "reps",
+  "load": null,
+  "zone": "pilates",
+  "equip": [
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "Movilidad vértebra a vértebra: suelta la espalda tras horas sentada.",
+  "cues": [
+   "A cuatro patas, manos bajo hombros",
+   "Redondea empujando el suelo y luego abre el pecho",
+   "Muévete con la respiración, sin forzar"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Movilidad de columna a cuatro patas, alternando espalda redonda (gato) y pecho abierto (vaca).",
+  "steps": [
+   "Colócate a cuatro patas: manos bajo los hombros, rodillas bajo las caderas.",
+   "Exhala y redondea la espalda, metiendo la barbilla y la pelvis.",
+   "Inhala y abre el pecho, llevando la mirada al frente sin hundir la lumbar.",
+   "Alterna despacio, vértebra a vértebra."
+  ],
+  "tips": [],
+  "images": [
+   "img/cat-cow/cat-cow-stretch-1.svg",
+   "img/cat-cow/cat-cow-stretch-2.svg",
+   "img/cat-cow/cat-cow-stretch-3.svg"
+  ],
+  "credit": "wg"
+ },
+ {
+  "id": "chin-tuck-hold",
+  "name": "Chin Tuck Hold",
+  "measure": "time",
+  "load": null,
+  "zone": "pilates",
+  "equip": [
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "Activa los flexores profundos del cuello: menos tensión en cuello y trapecios.",
+  "cues": [
+   "Mete la barbilla como haciendo papada, sin bajar la cabeza",
+   "Nuca larga, hombros relajados",
+   "Suave: 30 % de esfuerzo"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un ejercicio estático de cuello que retrae la cabeza hacia atrás para fortalecer los flexores profundos del cuello y contrarrestar la postura de cabeza adelantada.",
+  "steps": [
+   "Ponte de pie o siéntate erguido con los hombros relajados.",
+   "Lleva el mentón recto hacia atrás, creando una papada.",
+   "Mantén la cabeza nivelada sin inclinarla.",
+   "Mantén la posición durante el tiempo deseado.",
+   "Suelta y repite durante varias series."
+  ],
+  "tips": [
+   "Imagina deslizar la cabeza hacia atrás sobre la columna, no asentir hacia abajo.",
+   "Mantén la mirada nivelada y la respiración relajada."
+  ],
+  "images": [
+   "img/chin-tuck-hold/main.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "reverse-snow-angel",
+  "name": "Reverse Snow Angel",
+  "measure": "reps",
+  "load": null,
+  "zone": "shoulder",
+  "equip": [
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "Escápulas abajo y atrás: trabaja justo la zona que se carga al estar sentada.",
+  "cues": [
+   "Boca abajo, frente en una toalla, brazos despegados del suelo",
+   "Lleva los brazos de las caderas a por encima de la cabeza en arco",
+   "Hombros lejos de las orejas todo el rato"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Tumbada boca abajo, los brazos dibujan un arco amplio (como un ángel en la nieve) sin tocar el suelo.",
+  "steps": [
+   "Túmbate boca abajo con la frente sobre una toalla y los brazos junto a las caderas.",
+   "Despega ligeramente brazos y pecho, con las escápulas hacia abajo.",
+   "Lleva los brazos en arco por los lados hasta por encima de la cabeza.",
+   "Vuelve por el mismo camino, despacio."
+  ],
+  "tips": [],
+  "images": [
+   "img/reverse-snow-angel/reverse-snow-angel-1.svg",
+   "img/reverse-snow-angel/reverse-snow-angel-2.svg",
+   "img/reverse-snow-angel/reverse-snow-angel-3.svg"
+  ],
+  "credit": "wg"
+ },
+ {
+  "id": "superman-swimming",
+  "name": "Superman (Swimming)",
+  "measure": "reps",
+  "load": null,
+  "zone": "pilates",
+  "equip": [
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "El «swimming» de pilates: espalda, glúteo y escápulas en extensión, sin carga.",
+  "cues": [
+   "Boca abajo, despega brazos y piernas un palmo",
+   "Alarga más que subir; cuello largo, mirada al suelo",
+   "Para el swimming, alterna brazo y pierna contrarios"
+  ],
+  "side": false,
+  "plyo": false,
+  "desc": "Un ejercicio de peso corporal para la zona lumbar realizado en prono, levantando brazos y piernas simultáneamente.",
+  "steps": [
+   "Túmbate boca abajo con los brazos extendidos por encima de la cabeza.",
+   "Levanta simultáneamente los brazos, el pecho y las piernas del suelo.",
+   "Mantén brevemente la posición superior.",
+   "Baja de forma controlada.",
+   "Repite."
+  ],
+  "tips": [
+   "Aprieta los glúteos al levantar.",
+   "Evita los movimientos bruscos."
+  ],
+  "images": [
+   "img/superman-swimming/start.webp",
+   "img/superman-swimming/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 3.5
+ },
+ {
+  "id": "leg-pull-front",
+  "name": "Pilates Leg Pull Front",
+  "measure": "reps",
+  "load": null,
+  "zone": "pilates",
+  "equip": [
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "Plancha de pilates con elevación de pierna: core, glúteo y hombros estables.",
+  "cues": [
+   "Plancha alta, manos bajo los hombros",
+   "Eleva una pierna estirada sin mover la pelvis",
+   "Empuja el suelo: escápulas abiertas"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Una plancha alta con elevaciones alternas de pierna: los hombros permanecen sobre las muñecas mientras se eleva una pierna cada vez, lo que añade una demanda antirrotación a la plancha.",
+  "steps": [
+   "Colócate en plancha alta con las manos bajo los hombros y el cuerpo en línea.",
+   "Aprieta el tronco y los glúteos para que las caderas no puedan rotar.",
+   "Eleva una pierna estirada unos centímetros por encima de la cadera sin que la pelvis se incline.",
+   "Bájala de forma controlada y repite con la otra pierna.",
+   "Sigue alternando las veces indicadas."
+  ],
+  "tips": [
+   "Eleva la pierna desde el glúteo y no arqueando la zona lumbar.",
+   "Reparte el peso entre ambas manos; la tendencia es inclinarse lejos del lado que se eleva."
+  ],
+  "images": [
+   "img/leg-pull-front/start.webp",
+   "img/leg-pull-front/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
+ },
+ {
+  "id": "clamshell",
+  "name": "Clamshell",
+  "measure": "reps",
+  "load": null,
+  "zone": "pilates",
+  "equip": [
+   "band",
+   "bw"
+  ],
+  "knee": "ok",
+  "why": "Glúteo medio, clásico de pilates: estabiliza pelvis y rodillas.",
+  "cues": [
+   "Tumbada de lado, rodillas flexionadas, pies juntos",
+   "Abre la rodilla sin rotar la pelvis hacia atrás",
+   "Con goma encima de las rodillas para más intensidad"
+  ],
+  "side": true,
+  "plyo": false,
+  "desc": "Un ejercicio de abducción de cadera, realizado tumbado de lado, que activa el glúteo medio sin material adicional.",
+  "steps": [
+   "Túmbate de lado con las rodillas dobladas y apiladas una sobre la otra.",
+   "Mantén los pies juntos y las caderas alineadas.",
+   "Abre la rodilla superior hacia el techo sin rotar las caderas.",
+   "Aprieta el glúteo externo en la posición superior.",
+   "Baja de forma controlada. Completa las repeticiones de un lado y luego cambia."
+  ],
+  "tips": [
+   "Sube la rodilla solo hasta donde la pelvis no se mueva.",
+   "Hazlo lento y controlado para notar bien el glúteo medio."
+  ],
+  "images": [
+   "img/clamshell/start.webp",
+   "img/clamshell/peak.webp"
+  ],
+  "credit": "repdb",
+  "met": 5.0
  }
 ]
