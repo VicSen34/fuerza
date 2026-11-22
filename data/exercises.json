@@ -3377,5 +3377,36 @@
   ],
   "credit": "repdb",
   "met": 3.5
+ },
+ {
+  "id": "lumberjack-jumps",
+  "name": "Lumberjack Jumps",
+  "measure": "time",
+  "load": null,
+  "zone": "plyo",
+  "equip": [
+   "bw"
+  ],
+  "knee": "care",
+  "why": "Calentamiento de 1 minuto: sube pulsaciones y activa cadera, piernas y hombros.",
+  "cues": [
+   "Baja en sentadilla con las manos juntas entre los pies",
+   "Salta estirando el cuerpo y llevando las manos por encima de la cabeza, como un leñador",
+   "Aterriza suave y enlaza la siguiente"
+  ],
+  "side": false,
+  "plyo": true,
+  "desc": "Saltos desde media sentadilla con los brazos como si cortaras leña: abajo entre las piernas, arriba por encima de la cabeza al saltar.",
+  "steps": [
+   "De pie, pies algo más abiertos que la cadera y manos juntas.",
+   "Baja a media sentadilla llevando las manos entre los pies.",
+   "Salta extendiendo caderas, rodillas y brazos por encima de la cabeza.",
+   "Aterriza suave en media sentadilla y repite a ritmo continuo."
+  ],
+  "tips": [
+   "Si molesta la rodilla o el isquio, hazlo sin salto (ponte de puntillas arriba)."
+  ],
+  "images": [],
+  "credit": null
  }
 ]

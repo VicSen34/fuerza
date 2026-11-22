@@ -4,7 +4,7 @@
  */
 'use strict';
 
-const VERSION = '0.5.1';
+const VERSION = '0.5.2';
 const $ = (s, el = document) => el.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pad = n => String(n).padStart(2, '0');
@@ -298,6 +298,7 @@ function mkStep(b, bi, it, ii, exId, set, sets, rest, circuit) {
   const swapped = exId !== it.ex;
   const range = Array.isArray(it.reps) ? it.reps : null;
   let time = it.time, reps = range ? range[0] : it.reps;
+  if (swapped && it.altTime) time = it.altTime;            // e.g. 1' lumberjack → 6' rope
   if (e.measure === 'time' && !time) time = 30;            // swapped reps -> hold
   if (e.measure === 'reps' && !reps) reps = 10;
   return {key: `${bi}.${ii}.${set}`, item: `${bi}.${ii}`, block: b.title, ex: exId, set, sets, circuit,
